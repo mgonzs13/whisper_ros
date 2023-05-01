@@ -13,7 +13,6 @@
   <test_depend>ament_lint_common</test_depend>
 
   <depend>rclcpp</depend>
-  <depend>audio_common_msgs</depend>
   <depend>std_msgs</depend>
 
   <export>

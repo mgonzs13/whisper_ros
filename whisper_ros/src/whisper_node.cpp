@@ -1,9 +1,7 @@
 
-#define DR_WAV_IMPLEMENTATION
-#include "dr_wav.h"
-
-#include "whisper.h"
 #include "whisper_ros/whisper_node.hpp"
+#include "common.h"
+#include "whisper.h"
 
 using namespace whisper_ros;
 using std::placeholders::_1;
@@ -12,6 +10,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   std::string model;
   std::string language;
+  int32_t capture_id;
   auto wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
 
   this->declare_parameters<int32_t>("", {
@@ -22,6 +21,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"max_len", 0},
                                             {"max_tokens", 0},
                                             {"audio_ctx", 0},
+                                            {"capture_id", -1},
+                                            {"voice_ms", 10000},
                                         });
   this->declare_parameters<std::string>("", {
                                                 {"model", ""},
@@ -37,6 +38,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                           {"entropy_thold", 2.40f},
                                           {"logprob_thold", -1.00f},
                                           {"no_speech_thold", 0.60f},
+                                          {"vad_thold", 0.60f},
+                                          {"freq_thold", 100.0f},
                                       });
   this->declare_parameters<bool>("", {
                                          {"translate", false},
@@ -52,9 +55,15 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
                                          {"diarize", false},
+                                         {"print_energy", false},
                                      });
 
   this->get_parameter("model", model);
+  this->get_parameter("capture_id", capture_id);
+  this->get_parameter("voice_ms", this->voice_ms);
+  this->get_parameter("vad_thold", this->vad_thold);
+  this->get_parameter("freq_thold", this->freq_thold);
+  this->get_parameter("print_energy", this->print_energy);
 
   this->get_parameter("n_threads", wparams.n_threads);
   this->get_parameter("n_max_text_ctx", wparams.n_max_text_ctx);
@@ -88,85 +97,40 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   this->whisper = std::make_shared<Whisper>(wparams, model);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("stt", 10);
-  this->subscription_ =
-      this->create_subscription<audio_common_msgs::msg::AudioData>(
-          "/audio/audio", 10,
-          std::bind(&WhisperNode::audio_callback, this, _1));
-}
 
-void WhisperNode::audio_callback(
-    const audio_common_msgs::msg::AudioData::SharedPtr msg) {
-
-  RCLCPP_INFO(this->get_logger(), "AudioData (%d data bytes)",
-              int(msg->data.size()));
-
-  std::vector<float> pcmf32;
-  if (!this->msg_to_wav(msg->data, &pcmf32)) {
+  this->audio = std::make_shared<audio_async>(30 * 1000);
+  if (!audio->init(capture_id, WHISPER_SAMPLE_RATE)) {
+    RCLCPP_ERROR(this->get_logger(), "Audio->init() failed");
     return;
   }
-
-  std::string result = this->whisper->transcribe(pcmf32);
-  std_msgs::msg::String result_msg;
-  result_msg.data = result;
-  this->publisher_->publish(result_msg);
 }
 
-bool WhisperNode::msg_to_wav(std::vector<uint8_t> data,
-                             std::vector<float> *pcmf32) {
+void WhisperNode::work() {
 
-  drwav wav;
+  std::vector<float> pcmf32;
+  this->audio->resume();
 
-  if (!drwav_init_memory(&wav, data.data(), data.size(), NULL)) {
-    RCLCPP_ERROR(this->get_logger(), "dr_wav failed to init wav");
-    return false;
+  while (rclcpp::ok()) {
+    this->audio->get(2000, pcmf32);
+
+    if (vad_simple(pcmf32, WHISPER_SAMPLE_RATE, 1250, this->vad_thold,
+                   this->freq_thold, this->print_energy)) {
+
+      this->audio->get(this->voice_ms, pcmf32);
+      std::string text_heard = ::trim(this->whisper->transcribe(pcmf32));
+      RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
+
+      std_msgs::msg::String result_msg;
+      result_msg.data = text_heard;
+      this->publisher_->publish(result_msg);
+    }
   }
-
-  if (wav.channels != 1 && wav.channels != 2) {
-    RCLCPP_ERROR(this->get_logger(), "WAV must be mono or stereo\n");
-    return false;
-  }
-
-  if (wav.sampleRate != WHISPER_SAMPLE_RATE) {
-    RCLCPP_ERROR(this->get_logger(), "WAV must be 16 kHz\n");
-    return false;
-  }
-
-  if (wav.bitsPerSample != 16) {
-    RCLCPP_ERROR(this->get_logger(), "WAV must be 16-bit\n");
-    return false;
-  }
-
-  const uint64_t n = wav.totalPCMFrameCount;
-
-  std::vector<int16_t> pcm16;
-  pcm16.resize(n * wav.channels);
-  drwav_read_pcm_frames_s16(&wav, n, pcm16.data());
-
-  // convert to mono, float
-  pcmf32->resize(n);
-  if (wav.channels == 1) {
-    for (uint64_t i = 0; i < n; i++)
-      (*pcmf32)[i] = float(pcm16[i]) / 32768.0f;
-  } else {
-    for (uint64_t i = 0; i < n; i++)
-      (*pcmf32)[i] = float(pcm16[2 * i] + pcm16[2 * i + 1]) / 65536.0f;
-  }
-
-  RCLCPP_INFO(this->get_logger(),
-              "Processing %d samples, %.1f sec, %d threads, "
-              "lang = %s, task = %s, timestamps = %d",
-              int(pcmf32->size()), float(pcmf32->size()) / WHISPER_SAMPLE_RATE,
-              this->whisper->wparams.n_threads, this->whisper->wparams.language,
-              this->whisper->wparams.translate ? "translate" : "transcribe",
-              this->whisper->wparams.print_timestamps ? 0 : 1);
-
-  drwav_uninit(&wav);
-  return true;
 }
 
 int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<WhisperNode>());
+  auto node = std::make_shared<WhisperNode>();
+  node->work();
   rclcpp::shutdown();
   return 0;
 }

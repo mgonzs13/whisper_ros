@@ -4,10 +4,10 @@
 
 #include <memory>
 
-#include <audio_common_msgs/msg/audio_data.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
+#include "common-sdl.h"
 #include "whisper_ros/whisper.hpp"
 
 namespace whisper_ros {
@@ -16,15 +16,17 @@ class WhisperNode : public rclcpp::Node {
 
 public:
   WhisperNode();
+  void work();
 
 private:
-  void audio_callback(const audio_common_msgs::msg::AudioData::SharedPtr msg);
-  bool msg_to_wav(std::vector<uint8_t> data, std::vector<float> *pcmf32);
+  int32_t voice_ms;
+  float vad_thold;
+  float freq_thold;
+  bool print_energy;
 
   std::shared_ptr<Whisper> whisper;
+  std::shared_ptr<audio_async> audio;
 
-  rclcpp::Subscription<audio_common_msgs::msg::AudioData>::SharedPtr
-      subscription_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
 };
 
