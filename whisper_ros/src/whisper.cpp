@@ -1,4 +1,6 @@
 
+#include <thread>
+
 #include "whisper_ros/whisper.hpp"
 
 using namespace whisper_ros;
@@ -27,6 +29,9 @@ Whisper::Whisper(whisper_full_params wparams, std::string model)
           wparams.n_threads, wparams.language,
           wparams.translate ? "translate" : "transcribe",
           wparams.print_timestamps ? 0 : 1);
+
+  fprintf(stderr, "system_info: n_threads = %d / %d | %s\n", wparams.n_threads,
+          std::thread::hardware_concurrency(), whisper_print_system_info());
 }
 
 Whisper::~Whisper() { whisper_free(this->ctx); }

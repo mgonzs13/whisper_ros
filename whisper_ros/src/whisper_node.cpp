@@ -19,7 +19,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"offset_ms", 0},
                                             {"duration_ms", 0},
                                             {"max_len", 0},
-                                            {"max_tokens", 0},
+                                            {"max_tokens", 32},
                                             {"audio_ctx", 0},
                                             {"capture_id", -1},
                                             {"voice_ms", 10000},
@@ -54,7 +54,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                          {"speed_up", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
-                                         {"diarize", false},
                                          {"print_energy", false},
                                      });
 
@@ -103,6 +102,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
     RCLCPP_ERROR(this->get_logger(), "Audio->init() failed");
     return;
   }
+
+  RCLCPP_INFO(this->get_logger(), "Whisper node started");
 }
 
 void WhisperNode::work() {
@@ -116,7 +117,9 @@ void WhisperNode::work() {
     if (vad_simple(pcmf32, WHISPER_SAMPLE_RATE, 1250, this->vad_thold,
                    this->freq_thold, this->print_energy)) {
 
+      RCLCPP_INFO(this->get_logger(), "Speech detected");
       this->audio->get(this->voice_ms, pcmf32);
+      RCLCPP_INFO(this->get_logger(), "Transcribing");
       std::string text_heard = ::trim(this->whisper->transcribe(pcmf32));
       RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
 
