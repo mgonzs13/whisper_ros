@@ -9,12 +9,11 @@ using std::placeholders::_1;
 WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   std::string model;
-  std::string language;
   int32_t capture_id;
   auto wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
 
   this->declare_parameters<int32_t>("", {
-                                            {"n_threads", 4},
+                                            {"n_threads", 8},
                                             {"n_max_text_ctx", 16384},
                                             {"offset_ms", 0},
                                             {"duration_ms", 0},
@@ -87,14 +86,14 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("speed_up", wparams.speed_up);
   this->get_parameter("audio_ctx", wparams.audio_ctx);
 
-  this->get_parameter("language", language);
-  wparams.language = language.c_str();
+  this->get_parameter("language", this->language);
+  wparams.language = this->language.c_str();
 
   this->get_parameter("suppress_blank", wparams.suppress_blank);
   this->get_parameter("suppress_non_speech_tokens",
                       wparams.suppress_non_speech_tokens);
 
-  this->whisper = std::make_shared<Whisper>(wparams, model);
+  this->whisper = std::make_shared<Whisper>(model, wparams);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("stt", 10);
 
   this->audio = std::make_shared<audio_async>(30 * 1000);

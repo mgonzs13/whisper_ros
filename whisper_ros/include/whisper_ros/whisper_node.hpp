@@ -24,6 +24,8 @@ private:
   float freq_thold;
   bool print_energy;
 
+  std::string language;
+
   std::shared_ptr<Whisper> whisper;
   std::shared_ptr<audio_async> audio;
 

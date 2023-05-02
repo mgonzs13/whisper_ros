@@ -5,7 +5,7 @@
 
 using namespace whisper_ros;
 
-Whisper::Whisper(whisper_full_params wparams, std::string model)
+Whisper::Whisper(const std::string &model, const whisper_full_params &wparams)
     : wparams(wparams) {
 
   if (whisper_lang_id(wparams.language) == -1) {
@@ -17,21 +17,23 @@ Whisper::Whisper(whisper_full_params wparams, std::string model)
   this->ctx = whisper_init_from_file(model.c_str());
 
   if (!whisper_is_multilingual(this->ctx)) {
-    if (std::string(wparams.language) != "en" || wparams.translate) {
-      wparams.language = "en";
-      wparams.translate = false;
+    if (std::string(this->wparams.language) != "en" ||
+        this->wparams.translate) {
+      this->wparams.language = "en";
+      this->wparams.translate = false;
       fprintf(stderr, "Model is not multilingual, ignoring language and "
                       "translation options\n");
     }
   }
   fprintf(stderr,
           "Processing, %d threads, lang = %s, task = %s, timestamps = %d ...\n",
-          wparams.n_threads, wparams.language,
-          wparams.translate ? "translate" : "transcribe",
-          wparams.print_timestamps ? 0 : 1);
+          this->wparams.n_threads, this->wparams.language,
+          this->wparams.translate ? "translate" : "transcribe",
+          this->wparams.print_timestamps ? 0 : 1);
 
-  fprintf(stderr, "system_info: n_threads = %d / %d | %s\n", wparams.n_threads,
-          std::thread::hardware_concurrency(), whisper_print_system_info());
+  fprintf(stderr, "system_info: n_threads = %d / %d | %s\n",
+          this->wparams.n_threads, std::thread::hardware_concurrency(),
+          whisper_print_system_info());
 }
 
 Whisper::~Whisper() { whisper_free(this->ctx); }

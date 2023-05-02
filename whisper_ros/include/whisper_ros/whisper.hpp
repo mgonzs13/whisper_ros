@@ -12,7 +12,7 @@ namespace whisper_ros {
 class Whisper {
 
 public:
-  Whisper(whisper_full_params wparams, std::string model);
+  Whisper(const std::string &model, const whisper_full_params &wparams);
   ~Whisper();
 
   whisper_full_params wparams;
