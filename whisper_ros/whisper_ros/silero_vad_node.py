@@ -22,6 +22,24 @@ class SileroVadNode(Node):
 
         super().__init__("siler_vad_node")
 
+        # params
+        self.declare_parameters(
+            namespace="",
+            parameters=[
+                ("channels", 1),
+                ("rate", 16000),
+                ("chunk", 4096)
+            ]
+        )
+
+        self.CHANNELS = self.get_parameter(
+            "channels").get_parameter_value().integer_value
+        self.RATE = self.get_parameter(
+            "rate").get_parameter_value().integer_value
+        self.CHUNK = self.get_parameter(
+            "chunk").get_parameter_value().integer_value
+
+        # recording
         self.recording = False
         self.data: List[float] = [0.0] * self.CHUNK
 
