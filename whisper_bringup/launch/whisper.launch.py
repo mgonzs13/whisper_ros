@@ -3,7 +3,6 @@ import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
-from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -15,7 +14,6 @@ def generate_launch_description():
             name="whisper_node",
             parameters=[{
                 "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-base-q5_0.bin")))),
-                "language": LaunchConfiguration("language", default="en"),
 
                 "n_threads": LaunchConfiguration("n_threads", default=8),
                 "n_max_text_ctx": LaunchConfiguration("n_max_text_ctx", default=16384),
@@ -40,8 +38,20 @@ def generate_launch_description():
                 "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
 
+                "language": LaunchConfiguration("language", default="en"),
+                "detect_language": LaunchConfiguration("detect_language", default=False),
+
                 "suppress_blank": LaunchConfiguration("suppress_blank", default=True),
                 "suppress_non_speech_tokens": LaunchConfiguration("suppress_non_speech_tokens", default=False),
+
+                "temperature": LaunchConfiguration("temperature", default=0.00),
+                "max_initial_ts": LaunchConfiguration("max_initial_ts", default=1.00),
+                "length_penalty": LaunchConfiguration("length_penalty", default=-1.00),
+
+                "temperature_inc": LaunchConfiguration("temperature_inc", default=0.40),
+                "entropy_thold": LaunchConfiguration("entropy_thold", default=2.40),
+                "logprob_thold": LaunchConfiguration("logprob_thold", default=-1.00),
+                "no_speech_thold": LaunchConfiguration("no_speech_thold", default=0.60),
             }]
         ),
 

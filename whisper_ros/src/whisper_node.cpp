@@ -46,9 +46,9 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
                                          {"speed_up", false},
+                                         {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
-                                         {"print_energy", false},
                                      });
 
   this->get_parameter("model", model);
@@ -78,10 +78,20 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   this->get_parameter("language", this->language);
   wparams.language = this->language.c_str();
+  this->get_parameter("detect_language", wparams.detect_language);
 
   this->get_parameter("suppress_blank", wparams.suppress_blank);
   this->get_parameter("suppress_non_speech_tokens",
                       wparams.suppress_non_speech_tokens);
+
+  this->get_parameter("temperature", wparams.temperature);
+  this->get_parameter("max_initial_ts", wparams.max_initial_ts);
+  this->get_parameter("length_penalty", wparams.length_penalty);
+
+  this->get_parameter("temperature_inc", wparams.temperature_inc);
+  this->get_parameter("entropy_thold", wparams.entropy_thold);
+  this->get_parameter("logprob_thold", wparams.logprob_thold);
+  this->get_parameter("no_speech_thold", wparams.no_speech_thold);
 
   this->whisper = std::make_shared<Whisper>(model, wparams);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("stt", 10);
