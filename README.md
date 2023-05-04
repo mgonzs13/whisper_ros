@@ -13,3 +13,7 @@ $ colcon build
 ```
 
 ## Usage
+
+```shell
+$ ros2 launch whisper_bringup whisper.launch.py
+```

@@ -20,11 +20,10 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"max_tokens", 32},
                                             {"audio_ctx", 0},
                                         });
-  this->declare_parameters<std::string>(
-      "", {
-              {"model", "/home/miguel/whisper.cpp/models/ggml-base-q5_0.bin"},
-              {"language", "en"},
-          });
+  this->declare_parameters<std::string>("", {
+                                                {"model", ""},
+                                                {"language", "en"},
+                                            });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
                                           {"thold_ptsum", 0.01f},
@@ -35,8 +34,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                           {"entropy_thold", 2.40f},
                                           {"logprob_thold", -1.00f},
                                           {"no_speech_thold", 0.60f},
-                                          {"vad_thold", 0.60f},
-                                          {"freq_thold", 100.0f},
                                       });
   this->declare_parameters<bool>("", {
                                          {"translate", false},
@@ -99,7 +96,7 @@ void WhisperNode::vad_callback(
     const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
 
   RCLCPP_INFO(this->get_logger(), "Transcribing");
-  std::string text_heard = this->whisper->transcribe(msg->data);
+  std::string text_heard = trim(this->whisper->transcribe(msg->data));
   RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
 
   std_msgs::msg::String result_msg;

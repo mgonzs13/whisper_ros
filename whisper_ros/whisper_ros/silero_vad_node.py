@@ -69,6 +69,8 @@ class SileroVadNode(Node):
         self.pub_ = self.create_publisher(Float32MultiArray, "/silero_vad", 10)
         self.create_timer(0.001, self.work)
 
+        self.get_logger().info("Silero VAD node started")
+
     @staticmethod
     def normalize(sound):
         abs_max = np.abs(sound).max()
