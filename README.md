@@ -1,6 +1,6 @@
 # whisper_ros
 
-This repositiory provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/mgonzs13/whisper_ros) into ROS 2. Besides, [seliro-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
+This repositiory provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2. Besides, [seliro-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
 
 ## Installation
 
