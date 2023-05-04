@@ -32,4 +32,10 @@ install(TARGETS
   whisper_node
   DESTINATION lib/${PROJECT_NAME})
 
+install(PROGRAMS
+  whisper_ros/silero_vad_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME silero_vad_node
+)
+
 ament_package()

@@ -9,7 +9,6 @@ using std::placeholders::_1;
 WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   std::string model;
-  int32_t capture_id;
   auto wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
 
   this->declare_parameters<int32_t>("", {
@@ -20,13 +19,12 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"max_len", 0},
                                             {"max_tokens", 32},
                                             {"audio_ctx", 0},
-                                            {"capture_id", -1},
-                                            {"voice_ms", 10000},
                                         });
-  this->declare_parameters<std::string>("", {
-                                                {"model", ""},
-                                                {"language", "en"},
-                                            });
+  this->declare_parameters<std::string>(
+      "", {
+              {"model", "/home/miguel/whisper.cpp/models/ggml-base-q5_0.bin"},
+              {"language", "en"},
+          });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
                                           {"thold_ptsum", 0.01f},
@@ -57,11 +55,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                      });
 
   this->get_parameter("model", model);
-  this->get_parameter("capture_id", capture_id);
-  this->get_parameter("voice_ms", this->voice_ms);
-  this->get_parameter("vad_thold", this->vad_thold);
-  this->get_parameter("freq_thold", this->freq_thold);
-  this->get_parameter("print_energy", this->print_energy);
 
   this->get_parameter("n_threads", wparams.n_threads);
   this->get_parameter("n_max_text_ctx", wparams.n_max_text_ctx);
@@ -95,44 +88,29 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   this->whisper = std::make_shared<Whisper>(model, wparams);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("stt", 10);
-
-  this->audio = std::make_shared<audio_async>(30 * 1000);
-  if (!audio->init(capture_id, WHISPER_SAMPLE_RATE)) {
-    RCLCPP_ERROR(this->get_logger(), "Audio->init() failed");
-    return;
-  }
+  this->subscription_ =
+      this->create_subscription<std_msgs::msg::Float32MultiArray>(
+          "/silero_vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
 
   RCLCPP_INFO(this->get_logger(), "Whisper node started");
 }
 
-void WhisperNode::work() {
+void WhisperNode::vad_callback(
+    const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
 
-  std::vector<float> pcmf32;
-  this->audio->resume();
+  RCLCPP_INFO(this->get_logger(), "Transcribing");
+  std::string text_heard = this->whisper->transcribe(msg->data);
+  RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
 
-  while (rclcpp::ok()) {
-    this->audio->get(2000, pcmf32);
-
-    if (vad_simple(pcmf32, WHISPER_SAMPLE_RATE, 1250, this->vad_thold,
-                   this->freq_thold, this->print_energy)) {
-
-      RCLCPP_INFO(this->get_logger(), "Speech detected");
-      this->audio->get(this->voice_ms, pcmf32);
-      RCLCPP_INFO(this->get_logger(), "Transcribing");
-      std::string text_heard = ::trim(this->whisper->transcribe(pcmf32));
-      RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
-
-      std_msgs::msg::String result_msg;
-      result_msg.data = text_heard;
-      this->publisher_->publish(result_msg);
-    }
-  }
+  std_msgs::msg::String result_msg;
+  result_msg.data = text_heard;
+  this->publisher_->publish(result_msg);
 }
 
 int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
   auto node = std::make_shared<WhisperNode>();
-  node->work();
+  rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }

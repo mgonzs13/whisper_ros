@@ -5,9 +5,9 @@
 #include <memory>
 
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/float32_multi_array.hpp>
 #include <std_msgs/msg/string.hpp>
 
-#include "common-sdl.h"
 #include "whisper_ros/whisper.hpp"
 
 namespace whisper_ros {
@@ -16,20 +16,17 @@ class WhisperNode : public rclcpp::Node {
 
 public:
   WhisperNode();
-  void work();
 
 private:
-  int32_t voice_ms;
-  float vad_thold;
-  float freq_thold;
-  bool print_energy;
-
   std::string language;
 
   std::shared_ptr<Whisper> whisper;
-  std::shared_ptr<audio_async> audio;
 
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr
+      subscription_;
+
+  void vad_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
 };
 
 } // namespace whisper_ros
