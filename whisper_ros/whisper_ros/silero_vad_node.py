@@ -57,7 +57,6 @@ class SileroVadNode(Node):
         if audio is None:
             self.get_logger().error(f"Format {msg.audio.info.format} unknown")
             return
-
         speech_dict = self.vad_iterator(torch.from_numpy(audio))
 
         if speech_dict:
@@ -69,7 +68,6 @@ class SileroVadNode(Node):
 
             elif self.recording and "end" in speech_dict:
                 self.recording = False
-
                 msg = Float32MultiArray()
                 msg.data = self.data
                 self.pub_.publish(msg)

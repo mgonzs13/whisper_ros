@@ -59,7 +59,7 @@ def generate_launch_description():
             package="whisper_ros",
             executable="silero_vad_node",
             name="silero_vad_node",
-            remappings=[("audio", "audio")]
+            remappings=[("audio", "/audio/in")]
         ),
 
         Node(
@@ -72,6 +72,6 @@ def generate_launch_description():
                 "rate": LaunchConfiguration("rate", default=16000),
                 "chunk": LaunchConfiguration("chunk", default=4096),
             }],
-            remappings=[("audio", "audio")]
+            remappings=[("audio", "/audio/in")]
         )
     ])
