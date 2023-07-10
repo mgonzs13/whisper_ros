@@ -35,7 +35,7 @@ def generate_launch_description():
             executable="whisper_node",
             name="whisper_node",
             parameters=[{
-                "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-base-q5_0.bin")))),
+                "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-medium-q4_0.bin")))),
 
                 "n_threads": LaunchConfiguration("n_threads", default=8),
                 "n_max_text_ctx": LaunchConfiguration("n_max_text_ctx", default=16384),
