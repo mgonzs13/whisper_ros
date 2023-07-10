@@ -16,6 +16,8 @@ $ colcon build
 
 ## Usage
 
+Download the models and place them in `~/whisper_models`.
+
 ```shell
 $ ros2 launch whisper_bringup whisper.launch.py
 ```
