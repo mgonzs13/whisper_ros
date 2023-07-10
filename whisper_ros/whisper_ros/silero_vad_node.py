@@ -41,17 +41,19 @@ class SileroVadNode(Node):
 
     def __init__(self) -> None:
 
-        super().__init__("siler_vad_node")
+        super().__init__("silero_vad_node")
 
         # recording
         self.recording = False
         self.data: List[float] = []
 
         # silerio torch model
-        model, utils = torch.hub.load(repo_or_dir="snakers4/silero-vad",
-                                      model="silero_vad",
-                                      force_reload=True,
-                                      onnx=False)
+        model, utils = torch.hub.load(
+            repo_or_dir="snakers4/silero-vad",
+            model="silero_vad",
+            force_reload=False,
+            onnx=True
+        )
         (get_speech_timestamps,
          save_audio,
          read_audio,
