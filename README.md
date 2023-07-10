@@ -6,8 +6,10 @@ This repositiory provides a set of ROS 2 packages to integrate [whisper.cpp](htt
 
 ```shell
 $ cd ~/ros2_ws/src
+$ git clone https://github.com/mgonzs13/audio_common.git
 $ git clone --recurse-submodules https://github.com/AGI4ROS/whisper_ros.git
 $ pip3 install -r whisper_ros/requirements.txt
+$ pip3 install -r audio_common/requirements.txt
 $ cd ~/ros2_ws
 $ colcon build
 ```
