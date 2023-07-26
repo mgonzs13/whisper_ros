@@ -33,19 +33,20 @@ namespace whisper_ros {
 class Whisper {
 
 public:
-  Whisper(const std::string &model, const whisper_full_params &wparams);
+  Whisper(const std::string &model, const std::string &openvino_encode_device,
+          const whisper_full_params &wparams);
   ~Whisper();
 
   whisper_full_params wparams;
+
+  // print progress
+  int progress_prev;
+  int progress_step = 5;
 
   std::string transcribe(const std::vector<float> &pcmf32);
 
 protected:
   whisper_context *ctx;
-
-private:
-  bool force_speak;
-  float prob0;
 };
 
 } // namespace whisper_ros

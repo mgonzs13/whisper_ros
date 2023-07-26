@@ -36,8 +36,9 @@ def generate_launch_description():
             name="whisper_node",
             parameters=[{
                 "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-medium-q4_0.bin")))),
+                "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 
-                "n_threads": LaunchConfiguration("n_threads", default=8),
+                "n_threads": LaunchConfiguration("n_threads", default=-1),
                 "n_max_text_ctx": LaunchConfiguration("n_max_text_ctx", default=16384),
                 "offset_ms": LaunchConfiguration("offset_ms", default=0),
                 "duration_ms": LaunchConfiguration("duration_ms", default=0),
@@ -57,6 +58,7 @@ def generate_launch_description():
                 "split_on_word": LaunchConfiguration("split_on_word", default=False),
                 "max_tokens": LaunchConfiguration("max_tokens", default=32),
 
+                "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
                 "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
 

@@ -26,7 +26,9 @@
 
 using namespace whisper_ros;
 
-Whisper::Whisper(const std::string &model, const whisper_full_params &wparams)
+Whisper::Whisper(const std::string &model,
+                 const std::string &openvino_encode_device,
+                 const whisper_full_params &wparams)
     : wparams(wparams) {
 
   if (whisper_lang_id(wparams.language) == -1) {
@@ -37,6 +39,10 @@ Whisper::Whisper(const std::string &model, const whisper_full_params &wparams)
   // init whisper
   this->ctx = whisper_init_from_file(model.c_str());
 
+  if (this->ctx == nullptr) {
+    fprintf(stderr, "error: failed to initialize whisper context\n");
+  }
+
   if (!whisper_is_multilingual(this->ctx)) {
     if (std::string(this->wparams.language) != "en" ||
         this->wparams.translate) {
@@ -46,6 +52,13 @@ Whisper::Whisper(const std::string &model, const whisper_full_params &wparams)
                       "translation options\n");
     }
   }
+
+  // initialize openvino encoder
+  // this has no effect on whisper.cpp builds
+  // that don't have OpenVINO configured
+  whisper_ctx_init_openvino_encoder(this->ctx, nullptr,
+                                    openvino_encode_device.c_str(), nullptr);
+
   fprintf(stderr,
           "Processing, %d threads, lang = %s, task = %s, timestamps = %d ...\n",
           this->wparams.n_threads, this->wparams.language,

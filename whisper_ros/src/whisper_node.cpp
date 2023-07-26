@@ -30,6 +30,7 @@ using std::placeholders::_1;
 WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   std::string model;
+  std::string openvino_encode_device;
   auto wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
 
   this->declare_parameters<int32_t>("", {
@@ -41,10 +42,12 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"max_tokens", 32},
                                             {"audio_ctx", 0},
                                         });
-  this->declare_parameters<std::string>("", {
-                                                {"model", ""},
-                                                {"language", "en"},
-                                            });
+  this->declare_parameters<std::string>("",
+                                        {
+                                            {"model", ""},
+                                            {"language", "en"},
+                                            {"openvino_encode_device", "CPU"},
+                                        });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
                                           {"thold_ptsum", 0.01f},
@@ -73,6 +76,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                      });
 
   this->get_parameter("model", model);
+  this->get_parameter("openvino_encode_device", openvino_encode_device);
 
   this->get_parameter("n_threads", wparams.n_threads);
   this->get_parameter("n_max_text_ctx", wparams.n_max_text_ctx);
@@ -94,6 +98,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("split_on_word", wparams.split_on_word);
   this->get_parameter("max_tokens", wparams.max_tokens);
 
+  this->get_parameter("tinydiarize", wparams.tdrz_enable);
   this->get_parameter("speed_up", wparams.speed_up);
   this->get_parameter("audio_ctx", wparams.audio_ctx);
 
@@ -114,7 +119,13 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("logprob_thold", wparams.logprob_thold);
   this->get_parameter("no_speech_thold", wparams.no_speech_thold);
 
-  this->whisper = std::make_shared<Whisper>(model, wparams);
+  // check threads number
+  if (wparams.n_threads < 0) {
+    wparams.n_threads = std::thread::hardware_concurrency();
+  }
+
+  this->whisper =
+      std::make_shared<Whisper>(model, openvino_encode_device, wparams);
   this->publisher_ =
       this->create_publisher<std_msgs::msg::String>("whisper", 10);
   this->subscription_ =
