@@ -44,11 +44,8 @@ public:
 
   whisper_full_params wparams;
 
-  // print progress
-  int progress_prev;
-  int progress_step = 5;
-
   transcription_output transcribe(const std::vector<float> &pcmf32);
+  std::string trim(const std::string &s);
 
 protected:
   whisper_context *ctx;

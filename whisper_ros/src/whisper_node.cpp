@@ -141,7 +141,7 @@ void WhisperNode::vad_callback(
 
   RCLCPP_INFO(this->get_logger(), "Transcribing");
   transcription_output result = this->whisper->transcribe(msg->data);
-  std::string text = trim(result.text);
+  std::string text = this->whisper->trim(result.text);
   RCLCPP_INFO(this->get_logger(), "Text heard: %s", text.c_str());
 
   std_msgs::msg::String result_msg;

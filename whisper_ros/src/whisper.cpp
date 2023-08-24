@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <regex>
 #include <thread>
 
 #include "whisper_ros/whisper.hpp"
@@ -103,4 +104,9 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
   }
 
   return result;
+}
+
+std::string Whisper::trim(const std::string &s) {
+  std::regex e("^\\s+|\\s+$");
+  return std::regex_replace(s, e, "");
 }
