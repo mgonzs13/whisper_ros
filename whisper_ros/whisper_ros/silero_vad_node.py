@@ -23,6 +23,8 @@
 # SOFTWARE.
 
 
+import torch
+import numpy as np
 from typing import List
 
 import rclpy
@@ -33,9 +35,6 @@ from std_srvs.srv import SetBool
 
 from audio_common.utils import msg_to_array
 from audio_common_msgs.msg import AudioStamped
-
-import torch
-import numpy as np
 
 
 class SileroVadNode(Node):
@@ -48,24 +47,13 @@ class SileroVadNode(Node):
         self.recording = False
         self.data: List[float] = []
 
-        # silerio torch model
-        model, utils = torch.hub.load(
-            repo_or_dir="snakers4/silero-vad",
-            model="silero_vad",
-            force_reload=False,
-            onnx=True
-        )
-        (get_speech_timestamps,
-         save_audio,
-         read_audio,
-         VADIterator,
-         collect_chunks) = utils
-        self.vad_iterator = VADIterator(model)
-
         # enable
         self.declare_parameter("enabled", True)
         self.enabled = self.chunk = self.get_parameter(
             "enabled").get_parameter_value().bool_value
+
+        # silerio torch model
+        self._enable(self.enabled)
 
         # ros
         self._enable_srv = self.create_service(
@@ -112,19 +100,37 @@ class SileroVadNode(Node):
         if self.recording:
             self.data.extend((audio).tolist())
 
+    def init_silero(self) -> None:
+        model, utils = torch.hub.load(
+            repo_or_dir="snakers4/silero-vad",
+            model="silero_vad",
+            force_reload=False,
+            onnx=True
+        )
+        (get_speech_timestamps,
+         save_audio, read_audio,
+         VADIterator,
+         collect_chunks) = utils
+        self.vad_iterator = VADIterator(model)
+
     def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
-
-        self.enabled = req.data
-
         res.success = True
-        if self.enabled:
-            res.message = "Silero enabled"
-        else:
-            res.message = "Silero disabled"
-
+        res.message = self._enable(req.data)
         self.get_logger().info(res.message)
-
         return res
+
+    def _enable(self, enabled: bool) -> str:
+        self.enabled = enabled
+
+        if self.enabled:
+            message = "Silero enabled"
+            self.init_silero()
+        else:
+            message = "Silero disabled"
+            self.data = []
+            self.vad_iterator = None
+
+        return message
 
 
 def main():
