@@ -5,7 +5,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
+option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
 
 # find dependencies
 find_package(SDL2 REQUIRED)
@@ -38,6 +38,12 @@ install(PROGRAMS
   whisper_ros/silero_vad_node.py
   DESTINATION lib/${PROJECT_NAME}
   RENAME silero_vad_node
+)
+
+install(PROGRAMS
+  whisper_ros/whisper_manager_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME whisper_manager_node
 )
 
 ament_package()

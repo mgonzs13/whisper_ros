@@ -29,6 +29,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Float32MultiArray
+from std_srvs.srv import SetBool
 
 from audio_common.utils import msg_to_array
 from audio_common_msgs.msg import AudioStamped
@@ -41,7 +42,7 @@ class SileroVadNode(Node):
 
     def __init__(self) -> None:
 
-        super().__init__("silero_vad_node")
+        super().__init__("vad_node", namespace="silero")
 
         # recording
         self.recording = False
@@ -61,9 +62,17 @@ class SileroVadNode(Node):
          collect_chunks) = utils
         self.vad_iterator = VADIterator(model)
 
+        # enable
+        self.declare_parameter("enabled", True)
+        self.enabled = self.chunk = self.get_parameter(
+            "enabled").get_parameter_value().bool_value
+
         # ros
-        self.pub_ = self.create_publisher(Float32MultiArray, "/silero_vad", 10)
-        self.sub_ = self.create_subscription(
+        self._enable_srv = self.create_service(
+            SetBool, "enable", self.enable_cb)
+
+        self._pub = self.create_publisher(Float32MultiArray, "vad", 10)
+        self._sub = self.create_subscription(
             AudioStamped, "audio", self.audio_cb, qos_profile_sensor_data)
 
         self.get_logger().info("Silero VAD node started")
@@ -77,6 +86,9 @@ class SileroVadNode(Node):
         return sound
 
     def audio_cb(self, msg: AudioStamped) -> None:
+
+        if not self.enabled:
+            return
 
         audio = msg_to_array(msg.audio.audio_data, msg.audio.info.format)
         if audio is None:
@@ -93,12 +105,17 @@ class SileroVadNode(Node):
 
             elif self.recording and "end" in speech_dict:
                 self.recording = False
-                msg = Float32MultiArray()
-                msg.data = self.data
-                self.pub_.publish(msg)
+                vad_msg = Float32MultiArray()
+                vad_msg.data = self.data
+                self._pub.publish(vad_msg)
 
         if self.recording:
             self.data.extend((audio).tolist())
+
+    def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
+        self.enabled = req.data
+        res.success = True
+        return res
 
 
 def main():

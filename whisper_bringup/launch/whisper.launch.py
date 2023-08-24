@@ -83,7 +83,16 @@ def generate_launch_description():
             package="whisper_ros",
             executable="silero_vad_node",
             name="silero_vad_node",
+            parameters=[{
+                "enabled": LaunchConfiguration("enabled", default=False),
+            }],
             remappings=[("audio", "/audio/in")]
+        ),
+
+        Node(
+            package="whisper_ros",
+            executable="whisper_manager_node",
+            name="whisper_manager_node",
         ),
 
         Node(

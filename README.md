@@ -22,3 +22,7 @@ Download the models and place them in `~/whisper_models`.
 ```shell
 $ ros2 launch whisper_bringup whisper.launch.py
 ```
+
+```shell
+$ ros2 action send_goal /stt whisper_msgs/action/STT "{}"
+```
