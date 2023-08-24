@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "whisper_ros/whisper_node.hpp"
+#include <regex>
+
 #include "common.h"
 #include "whisper.h"
+#include "whisper_ros/whisper_node.hpp"
 
 using namespace whisper_ros;
 using std::placeholders::_1;
@@ -138,11 +140,12 @@ void WhisperNode::vad_callback(
     const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
 
   RCLCPP_INFO(this->get_logger(), "Transcribing");
-  std::string text_heard = trim(this->whisper->transcribe(msg->data));
-  RCLCPP_INFO(this->get_logger(), "Text heard: %s", text_heard.c_str());
+  transcription_output result = this->whisper->transcribe(msg->data);
+  std::string text = trim(result.text);
+  RCLCPP_INFO(this->get_logger(), "Text heard: %s", text.c_str());
 
   std_msgs::msg::String result_msg;
-  result_msg.data = text_heard;
+  result_msg.data = text;
   this->publisher_->publish(result_msg);
 }
 

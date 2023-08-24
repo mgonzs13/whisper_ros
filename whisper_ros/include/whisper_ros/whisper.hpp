@@ -28,6 +28,11 @@
 
 #include "whisper.h"
 
+struct transcription_output {
+  std::string text;
+  float prob;
+};
+
 namespace whisper_ros {
 
 class Whisper {
@@ -43,7 +48,7 @@ public:
   int progress_prev;
   int progress_step = 5;
 
-  std::string transcribe(const std::vector<float> &pcmf32);
+  transcription_output transcribe(const std::vector<float> &pcmf32);
 
 protected:
   whisper_context *ctx;

@@ -72,34 +72,34 @@ Whisper::Whisper(const std::string &model,
 
 Whisper::~Whisper() { whisper_free(this->ctx); }
 
-std::string Whisper::transcribe(const std::vector<float> &pcmf32) {
-
-  float prob = 0.0f;
-
-  if (whisper_full(this->ctx, this->wparams, pcmf32.data(), pcmf32.size())) {
-    return "";
-  }
+transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
 
   int prob_n = 0;
-  std::string result;
+  transcription_output result;
+  result.text = "";
+  result.prob = 0.0f;
+
+  if (whisper_full(this->ctx, this->wparams, pcmf32.data(), pcmf32.size())) {
+    return result;
+  }
 
   const int n_segments = whisper_full_n_segments(this->ctx);
   for (int i = 0; i < n_segments; ++i) {
     const char *text = whisper_full_get_segment_text(this->ctx, i);
 
-    result += text;
+    result.text += text;
 
     const int n_tokens = whisper_full_n_tokens(this->ctx, i);
     for (int j = 0; j < n_tokens; ++j) {
       const auto token = whisper_full_get_token_data(this->ctx, i, j);
 
-      prob += token.p;
+      result.prob += token.p;
       ++prob_n;
     }
   }
 
   if (prob_n > 0) {
-    prob /= prob_n;
+    result.prob /= prob_n;
   }
 
   return result;
