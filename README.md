@@ -24,5 +24,5 @@ $ ros2 launch whisper_bringup whisper.launch.py
 ```
 
 ```shell
-$ ros2 action send_goal /stt whisper_msgs/action/STT "{}"
+$ ros2 action send_goal /whisper/listen whisper_msgs/action/STT "{}"
 ```

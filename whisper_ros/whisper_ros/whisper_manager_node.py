@@ -50,16 +50,16 @@ class WhisperManagerNode(Node):
 
         # ros
         self._enable_client = self.create_client(
-            SetBool, "/silero/enable", callback_group=ReentrantCallbackGroup())
+            SetBool, "enable_vad", callback_group=ReentrantCallbackGroup())
         self._sub = self.create_subscription(
-            String, "/whisper", self.whisper_cb, 10, callback_group=ReentrantCallbackGroup())
+            String, "text", self.whisper_cb, 10, callback_group=ReentrantCallbackGroup())
 
         self._goal_handle = None
         self._goal_lock = threading.Lock()
         self._action_server = ActionServer(
             self,
             STT,
-            "stt",
+            "listen",
             execute_callback=self.execute_callback,
             goal_callback=self.goal_callback,
             handle_accepted_callback=self.handle_accepted_callback,
@@ -88,6 +88,7 @@ class WhisperManagerNode(Node):
         with self._goal_lock:
             if self._goal_handle is not None and self._goal_handle.is_active:
                 self._goal_handle.abort()
+                self.enable_silero(False)
             self._goal_handle = goal_handle
         goal_handle.execute()
 
@@ -107,11 +108,11 @@ class WhisperManagerNode(Node):
         self.enable_silero(True)
 
         # wait for whisper text
+        self.get_logger().info("Waiting for whisper text")
         while no_text:
             time.sleep(0.01)
 
             if not goal_handle.is_active:
-                self.enable_silero(False)
                 return result
 
             if goal_handle.is_cancel_requested:

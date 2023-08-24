@@ -126,11 +126,10 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   this->whisper =
       std::make_shared<Whisper>(model, openvino_encode_device, wparams);
-  this->publisher_ =
-      this->create_publisher<std_msgs::msg::String>("whisper", 10);
+  this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(
-          "/silero/vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
+          "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
 
   RCLCPP_INFO(this->get_logger(), "Whisper node started");
 }

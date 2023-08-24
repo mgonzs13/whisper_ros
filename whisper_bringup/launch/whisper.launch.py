@@ -34,6 +34,7 @@ def generate_launch_description():
             package="whisper_ros",
             executable="whisper_node",
             name="whisper_node",
+            namespace="whisper",
             parameters=[{
                 "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-medium-q4_0.bin")))),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
@@ -83,6 +84,7 @@ def generate_launch_description():
             package="whisper_ros",
             executable="silero_vad_node",
             name="silero_vad_node",
+            namespace="whisper",
             parameters=[{
                 "enabled": LaunchConfiguration("enabled", default=False),
             }],
@@ -93,6 +95,7 @@ def generate_launch_description():
             package="whisper_ros",
             executable="whisper_manager_node",
             name="whisper_manager_node",
+            namespace="whisper",
         ),
 
         Node(

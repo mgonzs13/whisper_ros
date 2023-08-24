@@ -42,7 +42,7 @@ class SileroVadNode(Node):
 
     def __init__(self) -> None:
 
-        super().__init__("vad_node", namespace="silero")
+        super().__init__("silero_vad_node")
 
         # recording
         self.recording = False
@@ -69,7 +69,7 @@ class SileroVadNode(Node):
 
         # ros
         self._enable_srv = self.create_service(
-            SetBool, "enable", self.enable_cb)
+            SetBool, "enable_vad", self.enable_cb)
 
         self._pub = self.create_publisher(Float32MultiArray, "vad", 10)
         self._sub = self.create_subscription(
@@ -113,8 +113,17 @@ class SileroVadNode(Node):
             self.data.extend((audio).tolist())
 
     def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
+
         self.enabled = req.data
+
         res.success = True
+        if self.enabled:
+            res.message = "Silero enabled"
+        else:
+            res.message = "Silero disabled"
+
+        self.get_logger().info(res.message)
+
         return res
 
 
