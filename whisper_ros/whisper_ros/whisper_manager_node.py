@@ -57,9 +57,7 @@ class WhisperManagerNode(Node):
         self._goal_handle = None
         self._goal_lock = threading.Lock()
         self._action_server = ActionServer(
-            self,
-            STT,
-            "listen",
+            self, STT, "listen",
             execute_callback=self.execute_callback,
             goal_callback=self.goal_callback,
             handle_accepted_callback=self.handle_accepted_callback,
@@ -100,11 +98,9 @@ class WhisperManagerNode(Node):
         result = STT.Result()
         no_text = True
 
-        # reset whisper text
+        # reset whisper text and enable silero
         with self.whisper_text_lock:
             self.whisper_text = ""
-
-        # enable silero
         self.enable_silero(True)
 
         # wait for whisper text

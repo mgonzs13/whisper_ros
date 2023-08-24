@@ -107,10 +107,7 @@ class SileroVadNode(Node):
             force_reload=False,
             onnx=True
         )
-        (get_speech_timestamps,
-         save_audio, read_audio,
-         VADIterator,
-         collect_chunks) = utils
+        (_, _, _, VADIterator, _) = utils
         self.vad_iterator = VADIterator(model)
 
     def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
