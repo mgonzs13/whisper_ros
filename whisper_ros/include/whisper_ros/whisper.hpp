@@ -39,16 +39,16 @@ class Whisper {
 
 public:
   Whisper(const std::string &model, const std::string &openvino_encode_device,
-          const whisper_full_params &wparams);
+          const struct whisper_full_params &wparams);
   ~Whisper();
 
-  whisper_full_params wparams;
+  struct whisper_full_params wparams;
 
   transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
 
 protected:
-  whisper_context *ctx;
+  struct whisper_context *ctx;
 };
 
 } // namespace whisper_ros

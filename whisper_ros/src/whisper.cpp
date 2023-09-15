@@ -80,7 +80,8 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
   result.text = "";
   result.prob = 0.0f;
 
-  if (whisper_full(this->ctx, this->wparams, pcmf32.data(), pcmf32.size())) {
+  if (whisper_full(this->ctx, this->wparams, pcmf32.data(), pcmf32.size()) !=
+      0) {
     return result;
   }
 

@@ -39,7 +39,7 @@ def generate_launch_description():
                 "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-medium-q4_0.bin")))),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 
-                "n_threads": LaunchConfiguration("n_threads", default=-1),
+                "n_threads": LaunchConfiguration("n_threads", default=4),
                 "n_max_text_ctx": LaunchConfiguration("n_max_text_ctx", default=16384),
                 "offset_ms": LaunchConfiguration("offset_ms", default=0),
                 "duration_ms": LaunchConfiguration("duration_ms", default=0),
