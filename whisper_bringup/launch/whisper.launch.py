@@ -21,22 +21,26 @@
 # SOFTWARE.
 
 
-import os
-from launch import LaunchDescription
+from launch import LaunchDescription, LaunchContext
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
+from launch.actions import OpaqueFunction, DeclareLaunchArgument
+from huggingface_hub import hf_hub_download
 
 
 def generate_launch_description():
 
-    return LaunchDescription([
-        Node(
+    def run_whisper(context: LaunchContext, repo, file):
+        repo = str(context.perform_substitution(repo))
+        file = str(context.perform_substitution(file))
+
+        return Node(
             package="whisper_ros",
             executable="whisper_node",
             name="whisper_node",
             namespace="whisper",
             parameters=[{
-                "model": LaunchConfiguration("model", default=os.path.abspath(os.path.normpath(os.path.expanduser("~/whisper_models/ggml-medium-q4_0.bin")))),
+                "model": LaunchConfiguration("model", default=hf_hub_download(repo_id=repo, filename=file, force_download=False)),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 
                 "n_threads": LaunchConfiguration("n_threads", default=4),
@@ -79,6 +83,24 @@ def generate_launch_description():
                 "no_speech_thold": LaunchConfiguration("no_speech_thold", default=0.60),
             }]
         ),
+
+    model_repo = LaunchConfiguration("model_repo")
+    model_repo_cmd = DeclareLaunchArgument(
+        "model_repo",
+        default_value="ggerganov/whisper.cpp",
+        description="Hugging Face model repo")
+
+    model_filename = LaunchConfiguration("model_filename")
+    model_filename_cmd = DeclareLaunchArgument(
+        "model_filename",
+        default_value="ggml-medium.en-q5_0.bin",
+        description="Hugging Face model filename")
+
+    return LaunchDescription([
+        model_repo_cmd,
+        model_filename_cmd,
+        OpaqueFunction(function=run_whisper, args=[
+                       model_repo, model_filename]),
 
         Node(
             package="whisper_ros",
