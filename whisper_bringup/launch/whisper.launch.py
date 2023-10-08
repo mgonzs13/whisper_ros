@@ -93,7 +93,7 @@ def generate_launch_description():
     model_filename = LaunchConfiguration("model_filename")
     model_filename_cmd = DeclareLaunchArgument(
         "model_filename",
-        default_value="ggml-medium.en-q5_0.bin",
+        default_value="ggml-small.bin",
         description="Hugging Face model filename")
 
     return LaunchDescription([
