@@ -43,6 +43,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"max_len", 0},
                                             {"max_tokens", 32},
                                             {"audio_ctx", 0},
+                                            {"greedy_best_of", -1},
+                                            {"beam_search_beam_size", -1},
                                         });
   this->declare_parameters<std::string>("",
                                         {
@@ -60,6 +62,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                           {"entropy_thold", 2.40f},
                                           {"logprob_thold", -1.00f},
                                           {"no_speech_thold", 0.60f},
+                                          {"beam_search_patience", -1.00f},
                                       });
   this->declare_parameters<bool>("", {
                                          {"translate", false},
@@ -72,6 +75,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
                                          {"speed_up", false},
+                                         {"tinydiarize", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
@@ -100,9 +104,9 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("split_on_word", wparams.split_on_word);
   this->get_parameter("max_tokens", wparams.max_tokens);
 
-  this->get_parameter("tinydiarize", wparams.tdrz_enable);
   this->get_parameter("speed_up", wparams.speed_up);
   this->get_parameter("audio_ctx", wparams.audio_ctx);
+  this->get_parameter("tinydiarize", wparams.tdrz_enable);
 
   this->get_parameter("language", this->language);
   wparams.language = this->language.c_str();
@@ -120,6 +124,10 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("entropy_thold", wparams.entropy_thold);
   this->get_parameter("logprob_thold", wparams.logprob_thold);
   this->get_parameter("no_speech_thold", wparams.no_speech_thold);
+
+  this->get_parameter("greedy_best_of", wparams.greedy.best_of);
+  this->get_parameter("beam_search_beam_size", wparams.beam_search.beam_size);
+  this->get_parameter("beam_search_patience", wparams.beam_search.patience);
 
   // check threads number
   if (wparams.n_threads < 0) {

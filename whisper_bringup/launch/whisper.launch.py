@@ -63,9 +63,9 @@ def generate_launch_description():
                 "split_on_word": LaunchConfiguration("split_on_word", default=False),
                 "max_tokens": LaunchConfiguration("max_tokens", default=32),
 
-                "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
                 "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
+                "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
 
                 "language": LaunchConfiguration("language", default="en"),
                 "detect_language": LaunchConfiguration("detect_language", default=False),
@@ -81,6 +81,10 @@ def generate_launch_description():
                 "entropy_thold": LaunchConfiguration("entropy_thold", default=2.40),
                 "logprob_thold": LaunchConfiguration("logprob_thold", default=-1.00),
                 "no_speech_thold": LaunchConfiguration("no_speech_thold", default=0.60),
+
+                "greedy_best_of": LaunchConfiguration("greedy_best_of", default=-1),
+                "beam_search_beam_size": LaunchConfiguration("beam_search_beam_size", default=-1),
+                "beam_search_patience": LaunchConfiguration("beam_search_patience", default=-1.00),
             }]
         ),
 
