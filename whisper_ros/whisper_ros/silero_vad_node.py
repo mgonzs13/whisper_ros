@@ -43,19 +43,15 @@ class SileroVadNode(Node):
 
         super().__init__("silero_vad_node")
 
-        # recording
         self.recording = False
         self.data: List[float] = []
 
-        # enable
         self.declare_parameter("enabled", True)
         self.enabled = self.chunk = self.get_parameter(
             "enabled").get_parameter_value().bool_value
 
-        # silerio torch model
         self._enable(self.enabled)
 
-        # ros
         self._enable_srv = self.create_service(
             SetBool, "enable_vad", self.enable_cb)
 

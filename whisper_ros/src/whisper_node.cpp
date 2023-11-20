@@ -156,11 +156,3 @@ void WhisperNode::vad_callback(
   result_msg.data = text;
   this->publisher_->publish(result_msg);
 }
-
-int main(int argc, char *argv[]) {
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<WhisperNode>();
-  rclcpp::spin(node);
-  rclcpp::shutdown();
-  return 0;
-}

@@ -44,11 +44,9 @@ class WhisperManagerNode(Node):
 
         super().__init__("whisper_manager_node")
 
-        # whisper text
         self.whisper_text_lock = threading.Lock()
         self.whisper_text = ""
 
-        # ros
         self._enable_client = self.create_client(
             SetBool, "enable_vad", callback_group=ReentrantCallbackGroup())
         self._sub = self.create_subscription(
