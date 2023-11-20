@@ -21,6 +21,7 @@ INCLUDE_DIRECTORIES(
 add_subdirectory(whisper_cpp)
 
 add_executable(whisper_node
+  src/whisper_main.cpp
   src/whisper_node.cpp
   src/whisper.cpp
   whisper_cpp/examples/common-sdl.cpp
