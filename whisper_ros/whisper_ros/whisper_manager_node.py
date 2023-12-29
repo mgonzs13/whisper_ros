@@ -34,6 +34,7 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
 
 from std_msgs.msg import String
+from std_msgs.msg import Float32MultiArray
 from std_srvs.srv import SetBool
 from whisper_msgs.action import STT
 
@@ -45,12 +46,16 @@ class WhisperManagerNode(Node):
         super().__init__("whisper_manager_node")
 
         self.whisper_text_lock = threading.Lock()
+        self.vad_lock = threading.Lock()
         self.whisper_text = ""
+        self.vad_data = None
 
         self._enable_client = self.create_client(
             SetBool, "enable_vad", callback_group=ReentrantCallbackGroup())
-        self._sub = self.create_subscription(
+        self._text_sub = self.create_subscription(
             String, "text", self.whisper_cb, 10, callback_group=ReentrantCallbackGroup())
+        self._vad_sub = self.create_subscription(
+            Float32MultiArray, "vad", self.vad_cb, 10, callback_group=ReentrantCallbackGroup())
 
         self._goal_handle = None
         self._goal_lock = threading.Lock()
@@ -72,6 +77,12 @@ class WhisperManagerNode(Node):
     def whisper_cb(self, msg: String) -> None:
         with self.whisper_text_lock:
             self.whisper_text = msg.data
+
+    def vad_cb(self, msg: Float32MultiArray) -> None:
+        with self.vad_lock:
+            if self.vad_data is None:
+                self.enable_silero(False)
+            self.vad_data = msg
 
     def destroy_node(self) -> bool:
         self._action_server.destroy()
@@ -96,9 +107,11 @@ class WhisperManagerNode(Node):
         result = STT.Result()
         no_text = True
 
-        # reset whisper text and enable silero
+        # reset data and enable silero
         with self.whisper_text_lock:
             self.whisper_text = ""
+        with self.vad_lock:
+            self.vad_data = None
         self.enable_silero(True)
 
         # wait for whisper text
@@ -118,6 +131,11 @@ class WhisperManagerNode(Node):
                 if self.whisper_text:
                     no_text = False
                     result.text = self.whisper_text
+                else:
+                    with self.vad_lock:
+                        if self.vad_data is not None:
+                            self.enable_silero(True)
+                        self.vad_data = None
 
         goal_handle.succeed()
         self.enable_silero(False)

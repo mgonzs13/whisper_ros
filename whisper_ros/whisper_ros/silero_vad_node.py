@@ -50,7 +50,7 @@ class SileroVadNode(Node):
         self.enabled = self.chunk = self.get_parameter(
             "enabled").get_parameter_value().bool_value
 
-        self._enable(self.enabled)
+        self.init_silero()
 
         self._enable_srv = self.create_service(
             SetBool, "enable_vad", self.enable_cb)
@@ -108,22 +108,17 @@ class SileroVadNode(Node):
 
     def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
         res.success = True
-        res.message = self._enable(req.data)
-        self.get_logger().info(res.message)
-        return res
-
-    def _enable(self, enabled: bool) -> str:
-        self.enabled = enabled
+        self.enabled = req.data
 
         if self.enabled:
-            message = "Silero enabled"
-            self.init_silero()
+            res.message = "Silero enabled"
         else:
-            message = "Silero disabled"
+            res.message = "Silero disabled"
+            self.recording = False
             self.data = []
-            self.vad_iterator = None
 
-        return message
+        self.get_logger().info(res.message)
+        return res
 
 
 def main():
