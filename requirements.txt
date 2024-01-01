@@ -1,5 +1,4 @@
-numpy
-torch==2.1.0
-torchaudio==2.1.0
-onnxruntime==1.13.1
-huggingface_hub==0.17.3
+torch==2.1.2
+torchaudio==2.1.2
+onnxruntime==1.16.3
+huggingface-hub==0.20.1
