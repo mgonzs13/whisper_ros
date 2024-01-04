@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "González-Santamarta"
+    given-names: "Miguel Á."
+title: "whisper_ros"
+date-released: 2023-05-01
+url: "https://github.com/mgonzs13/whisper_ros"
