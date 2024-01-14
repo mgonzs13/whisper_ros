@@ -67,6 +67,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->declare_parameters<bool>("", {
                                          {"translate", false},
                                          {"no_context", true},
+                                         {"no_timestamps", false},
                                          {"single_segment", true},
                                          {"print_special", false},
                                          {"print_progress", false},
@@ -91,6 +92,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   this->get_parameter("translate", wparams.translate);
   this->get_parameter("no_context", wparams.no_context);
+  this->get_parameter("no_timestamps", wparams.no_timestamps);
   this->get_parameter("single_segment", wparams.single_segment);
   this->get_parameter("print_special", wparams.print_special);
   this->get_parameter("print_progress", wparams.print_progress);
