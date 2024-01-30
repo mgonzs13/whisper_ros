@@ -15,6 +15,14 @@ $ cd ~/ros2_ws
 $ colcon build
 ```
 
+### CUDA
+
+To run llama_ros with CUDA, you have to install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) and the following line in the [CMakeLists.txt](whisper_ros/CMakeLists.txt) must be uncommented:
+
+```
+option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
+```
+
 ## Usage
 
 ```shell
