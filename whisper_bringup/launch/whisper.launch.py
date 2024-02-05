@@ -50,6 +50,7 @@ def generate_launch_description():
 
                 "translate": LaunchConfiguration("translate", default=False),
                 "no_context": LaunchConfiguration("no_context", default=True),
+                "no_timestamps": LaunchConfiguration("no_timestamps", default=False),
                 "single_segment": LaunchConfiguration("single_segment", default=True),
                 "print_special": LaunchConfiguration("print_special", default=False),
                 "print_progress": LaunchConfiguration("print_progress", default=False),
