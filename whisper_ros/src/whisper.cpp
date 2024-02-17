@@ -28,9 +28,10 @@
 using namespace whisper_ros;
 
 Whisper::Whisper(const std::string &model,
-                 const std::string &openvino_encode_device,
+                 const std::string &openvino_encode_device, int n_processors,
+                 const struct whisper_context_params cparams,
                  const whisper_full_params &wparams)
-    : wparams(wparams) {
+    : n_processors(n_processors), wparams(wparams) {
 
   if (whisper_lang_id(wparams.language) == -1) {
     fprintf(stderr, "Unknown language '%s'\n", wparams.language);
@@ -38,7 +39,7 @@ Whisper::Whisper(const std::string &model,
   }
 
   // init whisper
-  this->ctx = whisper_init_from_file(model.c_str());
+  this->ctx = whisper_init_from_file_with_params(model.c_str(), cparams);
 
   if (this->ctx == nullptr) {
     fprintf(stderr, "error: failed to initialize whisper context\n");
@@ -80,8 +81,8 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
   result.text = "";
   result.prob = 0.0f;
 
-  if (whisper_full(this->ctx, this->wparams, pcmf32.data(), pcmf32.size()) !=
-      0) {
+  if (whisper_full_parallel(this->ctx, this->wparams, pcmf32.data(),
+                            pcmf32.size(), this->n_processors) != 0) {
     return result;
   }
 

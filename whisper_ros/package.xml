@@ -17,6 +17,7 @@
   <depend>std_srvs</depend>
   <depend>audio_common</depend>
   <depend>audio_common_msgs</depend>
+  <depend>whisper_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -87,6 +87,10 @@ def generate_launch_description():
                 "greedy_best_of": LaunchConfiguration("greedy_best_of", default=-1),
                 "beam_search_beam_size": LaunchConfiguration("beam_search_beam_size", default=-1),
                 "beam_search_patience": LaunchConfiguration("beam_search_patience", default=-1.00),
+
+                "n_processors": LaunchConfiguration("n_processors", default=1),
+                "use_gpu": LaunchConfiguration("use_gpu", default=True),
+                "gpu_device": LaunchConfiguration("gpu_device", default=0),
             }]
         ),
 

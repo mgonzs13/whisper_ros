@@ -33,7 +33,9 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   std::string model;
   std::string openvino_encode_device;
+  int n_processors;
   auto wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+  struct whisper_context_params cparams = whisper_context_default_params();
 
   this->declare_parameters<int32_t>("", {
                                             {"n_threads", 8},
@@ -45,6 +47,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"audio_ctx", 0},
                                             {"greedy_best_of", -1},
                                             {"beam_search_beam_size", -1},
+                                            {"n_processors", 1},
+                                            {"gpu_device", 0},
                                         });
   this->declare_parameters<std::string>("",
                                         {
@@ -80,6 +84,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
+                                         {"use_gpu", true},
                                      });
 
   this->get_parameter("model", model);
@@ -131,13 +136,17 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("beam_search_beam_size", wparams.beam_search.beam_size);
   this->get_parameter("beam_search_patience", wparams.beam_search.patience);
 
+  this->get_parameter("n_processors", n_processors);
+  this->get_parameter("use_gpu", cparams.use_gpu);
+  this->get_parameter("gpu_device", cparams.gpu_device);
+
   // check threads number
   if (wparams.n_threads < 0) {
     wparams.n_threads = std::thread::hardware_concurrency();
   }
 
-  this->whisper =
-      std::make_shared<Whisper>(model, openvino_encode_device, wparams);
+  this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
+                                            n_processors, cparams, wparams);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(

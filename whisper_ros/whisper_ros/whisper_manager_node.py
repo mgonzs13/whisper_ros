@@ -75,6 +75,7 @@ class WhisperManagerNode(Node):
     def enable_silero(self, enable: bool) -> None:
         req = SetBool.Request()
         req.data = enable
+        self._enable_client.wait_for_service()
         self._enable_client.call(req)
 
     def whisper_cb(self, msg: String) -> None:
@@ -130,20 +131,24 @@ class WhisperManagerNode(Node):
             time.sleep(0.01)
 
             if not goal_handle.is_active:
-                return result
+                break
 
             if goal_handle.is_cancel_requested:
-                goal_handle.canceled()
-                self.enable_silero(False)
-                return result
+                break
 
             with self.whisper_text_lock:
                 if self.whisper_text:
                     no_text = False
                     result.text = self.whisper_text
 
-        goal_handle.succeed()
+        if goal_handle.is_cancel_requested:
+            goal_handle.canceled()
+        else:
+            goal_handle.succeed()
+
+        # disable silero
         self.enable_silero(False)
+
         return result
 
 

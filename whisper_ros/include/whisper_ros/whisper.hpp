@@ -39,15 +39,16 @@ class Whisper {
 
 public:
   Whisper(const std::string &model, const std::string &openvino_encode_device,
+          int n_processors, const struct whisper_context_params cparams,
           const struct whisper_full_params &wparams);
   ~Whisper();
-
-  struct whisper_full_params wparams;
 
   transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
 
 protected:
+  int n_processors;
+  struct whisper_full_params wparams;
   struct whisper_context *ctx;
 };
 

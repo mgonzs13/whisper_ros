@@ -12,6 +12,7 @@ find_package(SDL2 REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(whisper_msgs REQUIRED)
 
 INCLUDE_DIRECTORIES(
   include
@@ -28,7 +29,7 @@ add_executable(whisper_node
   whisper_cpp/examples/common.cpp)
 target_include_directories(whisper_node PUBLIC ${SDL2_INCLUDE_DIRS})
 target_link_libraries(whisper_node whisper ${SDL2_LIBRARIES})
-ament_target_dependencies(whisper_node rclcpp std_msgs)
+ament_target_dependencies(whisper_node rclcpp std_msgs whisper_msgs)
 
 # INSTALL
 install(TARGETS
@@ -45,6 +46,12 @@ install(PROGRAMS
   whisper_ros/whisper_manager_node.py
   DESTINATION lib/${PROJECT_NAME}
   RENAME whisper_manager_node
+)
+
+install(PROGRAMS
+  whisper_ros/whisper_client_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME whisper_client_node
 )
 
 ament_package()
