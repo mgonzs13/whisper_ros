@@ -7,7 +7,9 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "action/STT.action"
-  DEPENDENCIES
+  "msg/GrammarConfig.msg"
+  "srv/SetGrammar.srv"
+  "srv/SetInitPrompt.srv"
 )
 
 ament_package()

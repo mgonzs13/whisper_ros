@@ -12,6 +12,7 @@ find_package(SDL2 REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(whisper_msgs REQUIRED)
 
 INCLUDE_DIRECTORIES(
@@ -26,10 +27,12 @@ add_executable(whisper_node
   src/whisper_node.cpp
   src/whisper.cpp
   whisper_cpp/examples/common-sdl.cpp
-  whisper_cpp/examples/common.cpp)
+  whisper_cpp/examples/common.cpp
+  whisper_cpp/examples/grammar-parser.cpp
+)
 target_include_directories(whisper_node PUBLIC ${SDL2_INCLUDE_DIRS})
 target_link_libraries(whisper_node whisper ${SDL2_LIBRARIES})
-ament_target_dependencies(whisper_node rclcpp std_msgs whisper_msgs)
+ament_target_dependencies(whisper_node rclcpp std_msgs std_srvs whisper_msgs)
 
 # INSTALL
 install(TARGETS

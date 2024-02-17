@@ -45,6 +45,10 @@ public:
 
   transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
+  bool set_grammar(std::string grammar, std::string start_rule,
+                   float grammar_penalty);
+  void reset_grammar();
+  void set_init_prompt(std::string prompt);
 
 protected:
   int n_processors;

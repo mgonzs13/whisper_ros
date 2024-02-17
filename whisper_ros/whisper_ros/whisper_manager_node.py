@@ -35,8 +35,11 @@ from rclpy.executors import MultiThreadedExecutor
 
 from std_msgs.msg import String
 from std_msgs.msg import Float32MultiArray
+from std_srvs.srv import Empty
 from std_srvs.srv import SetBool
 from whisper_msgs.action import STT
+from whisper_msgs.srv import SetGrammar
+from whisper_msgs.srv import SetInitPrompt
 
 
 class WhisperManagerNode(Node):
@@ -58,6 +61,16 @@ class WhisperManagerNode(Node):
             callback_group=ReentrantCallbackGroup())
         self._vad_sub = self.create_subscription(
             Float32MultiArray, "vad", self.vad_cb, 10,
+            callback_group=ReentrantCallbackGroup())
+
+        self._set_grammar_client = self.create_client(
+            SetGrammar, "set_grammar",
+            callback_group=ReentrantCallbackGroup())
+        self._reset_grammar_client = self.create_client(
+            Empty, "reset_grammar",
+            callback_group=ReentrantCallbackGroup())
+        self._set_init_prompt = self.create_client(
+            SetInitPrompt, "set_init_prompt",
             callback_group=ReentrantCallbackGroup())
 
         self._goal_handle = None
@@ -118,6 +131,17 @@ class WhisperManagerNode(Node):
         result = STT.Result()
         no_text = True
 
+        # set grammar and prompt
+        req = SetGrammar.Request()
+        req.grammar_config = goal_handle.request.grammar_config
+        self._set_grammar_client.wait_for_service()
+        self._set_grammar_client.call(req)
+
+        req = SetInitPrompt.Request()
+        req.prompt = goal_handle.request.prompt
+        self._set_init_prompt.wait_for_service()
+        self._set_init_prompt.call(req)
+
         # reset data and enable silero
         with self.whisper_text_lock:
             self.whisper_text = ""
@@ -148,6 +172,16 @@ class WhisperManagerNode(Node):
 
         # disable silero
         self.enable_silero(False)
+
+        # reset grammar and prompt
+        req = Empty.Request()
+        self._reset_grammar_client.wait_for_service()
+        self._reset_grammar_client.call(req)
+
+        req = SetInitPrompt.Request()
+        req.prompt = ""
+        self._set_init_prompt.wait_for_service()
+        self._set_init_prompt.call(req)
 
         return result
 

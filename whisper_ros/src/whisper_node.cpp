@@ -28,6 +28,7 @@
 
 using namespace whisper_ros;
 using std::placeholders::_1;
+using std::placeholders::_2;
 
 WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
@@ -139,6 +140,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("n_processors", n_processors);
   this->get_parameter("use_gpu", cparams.use_gpu);
   this->get_parameter("gpu_device", cparams.gpu_device);
+  wparams.initial_prompt =
+      "d4 d5 knight to c3, pawn to a1, bishop to b2 king e8,";
 
   // check threads number
   if (wparams.n_threads < 0) {
@@ -151,6 +154,19 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(
           "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
+
+  this->set_grammar_service_ =
+      this->create_service<whisper_msgs::srv::SetGrammar>(
+          "set_grammar",
+          std::bind(&WhisperNode::set_grammar_service_callback, this, _1, _2));
+  this->reset_grammar_service_ = this->create_service<std_srvs::srv::Empty>(
+      "reset_grammar",
+      std::bind(&WhisperNode::reset_grammar_service_callback, this, _1, _2));
+  this->set_init_prompt_service_ =
+      this->create_service<whisper_msgs::srv::SetInitPrompt>(
+          "set_init_prompt",
+          std::bind(&WhisperNode::set_init_prompt_service_callback, this, _1,
+                    _2));
 
   RCLCPP_INFO(this->get_logger(), "Whisper node started");
 }
@@ -166,4 +182,33 @@ void WhisperNode::vad_callback(
   std_msgs::msg::String result_msg;
   result_msg.data = text;
   this->publisher_->publish(result_msg);
+}
+
+void WhisperNode::set_grammar_service_callback(
+    const std::shared_ptr<whisper_msgs::srv::SetGrammar::Request> request,
+    std::shared_ptr<whisper_msgs::srv::SetGrammar::Response> response) {
+
+  response->success = this->whisper->set_grammar(
+      request->grammar_config.grammar,        // grammar text
+      request->grammar_config.start_rule,     // grammar start rule
+      request->grammar_config.grammar_penalty // grammar penalty
+  );
+}
+
+void WhisperNode::reset_grammar_service_callback(
+    const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+    std::shared_ptr<std_srvs::srv::Empty::Response> response) {
+
+  (void)request;
+  (void)response;
+
+  this->whisper->reset_grammar();
+}
+
+void WhisperNode::set_init_prompt_service_callback(
+    const std::shared_ptr<whisper_msgs::srv::SetInitPrompt::Request> request,
+    std::shared_ptr<whisper_msgs::srv::SetInitPrompt::Response> response) {
+
+  this->whisper->set_init_prompt(request->prompt);
+  response->success = true;
 }

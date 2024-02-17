@@ -1,5 +1,3 @@
-string prompt
 GrammarConfig grammar_config
 ---
-string text
----
+bool success
