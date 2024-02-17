@@ -129,14 +129,15 @@ def generate_launch_description():
         Node(
             package="audio_common",
             executable="audio_capturer_node",
-            name="audio_capturer_node",
+            name="capturer_node",
+            namespace="audio",
             parameters=[{
                 "format": LaunchConfiguration("channels", default=1),
                 "channels": LaunchConfiguration("channels", default=1),
                 "rate": LaunchConfiguration("rate", default=16000),
                 "chunk": LaunchConfiguration("chunk", default=4096),
             }],
-            remappings=[("audio", "/audio/in")],
+            remappings=[("audio", "in")],
             condition=IfCondition(PythonExpression(
                 [LaunchConfiguration("launch_audio_capturer", default=True)]))
         )
