@@ -41,6 +41,7 @@ def generate_launch_description():
             name="whisper_node",
             namespace="whisper",
             parameters=[{
+                "sampling_strategy": LaunchConfiguration("sampling_strategy", default=1),
                 "model": LaunchConfiguration("model", default=hf_hub_download(repo_id=repo, filename=file, force_download=False)),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 
@@ -84,8 +85,8 @@ def generate_launch_description():
                 "logprob_thold": LaunchConfiguration("logprob_thold", default=-1.00),
                 "no_speech_thold": LaunchConfiguration("no_speech_thold", default=0.60),
 
-                "greedy_best_of": LaunchConfiguration("greedy_best_of", default=-1),
-                "beam_search_beam_size": LaunchConfiguration("beam_search_beam_size", default=-1),
+                "greedy_best_of": LaunchConfiguration("greedy_best_of", default=5),
+                "beam_search_beam_size": LaunchConfiguration("beam_search_beam_size", default=5),
                 "beam_search_patience": LaunchConfiguration("beam_search_patience", default=-1.00),
 
                 "n_processors": LaunchConfiguration("n_processors", default=1),
