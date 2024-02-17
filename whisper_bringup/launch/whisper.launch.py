@@ -23,9 +23,10 @@
 
 from launch import LaunchDescription, LaunchContext
 from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.actions import OpaqueFunction, DeclareLaunchArgument
 from huggingface_hub import hf_hub_download
+from launch.conditions import IfCondition
 
 
 def generate_launch_description():
@@ -135,6 +136,8 @@ def generate_launch_description():
                 "rate": LaunchConfiguration("rate", default=16000),
                 "chunk": LaunchConfiguration("chunk", default=4096),
             }],
-            remappings=[("audio", "/audio/in")]
+            remappings=[("audio", "/audio/in")],
+            condition=IfCondition(PythonExpression(
+                [LaunchConfiguration("launch_audio_capturer", default=True)]))
         )
     ])
