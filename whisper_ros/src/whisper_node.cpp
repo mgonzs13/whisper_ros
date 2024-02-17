@@ -140,8 +140,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("n_processors", n_processors);
   this->get_parameter("use_gpu", cparams.use_gpu);
   this->get_parameter("gpu_device", cparams.gpu_device);
-  wparams.initial_prompt =
-      "d4 d5 knight to c3, pawn to a1, bishop to b2 king e8,";
 
   // check threads number
   if (wparams.n_threads < 0) {

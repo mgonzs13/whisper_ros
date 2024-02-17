@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "grammar-parser.h"
 #include <regex>
 #include <thread>
 
@@ -114,20 +113,21 @@ std::string Whisper::trim(const std::string &s) {
   return std::regex_replace(s, e, "");
 }
 
-bool Whisper::set_grammar(std::string grammar, std::string start_rule,
-                          float grammar_penalty) {
+bool Whisper::set_grammar(const std::string grammar,
+                          const std::string start_rule, float grammar_penalty) {
 
-  auto grammar_parsed = grammar_parser::parse(grammar.c_str());
+  this->grammar_parsed = grammar_parser::parse(grammar.c_str());
 
-  if (grammar_parsed.rules.empty()) {
+  if (this->grammar_parsed.rules.empty()) {
     return false;
   }
 
-  auto grammar_rules = grammar_parsed.c_rules();
+  this->grammar_rules = this->grammar_parsed.c_rules();
 
-  this->wparams.grammar_rules = grammar_rules.data();
-  this->wparams.n_grammar_rules = grammar_rules.size();
-  this->wparams.i_start_rule = grammar_parsed.symbol_ids.at(start_rule.c_str());
+  this->wparams.grammar_rules = this->grammar_rules.data();
+  this->wparams.n_grammar_rules = this->grammar_rules.size();
+  this->wparams.i_start_rule =
+      this->grammar_parsed.symbol_ids.at(start_rule.c_str());
   this->wparams.grammar_penalty = grammar_penalty;
 
   return true;
@@ -140,6 +140,6 @@ void Whisper::reset_grammar() {
   this->wparams.grammar_penalty = 100.0f;
 }
 
-void Whisper::set_init_prompt(std::string prompt) {
+void Whisper::set_init_prompt(const std::string prompt) {
   this->wparams.initial_prompt = prompt.c_str();
 }

@@ -23,6 +23,7 @@
 #ifndef WHISPER_HPP
 #define WHISPER_HPP
 
+#include "grammar-parser.h"
 #include <string>
 #include <vector>
 
@@ -45,15 +46,18 @@ public:
 
   transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
-  bool set_grammar(std::string grammar, std::string start_rule,
+  bool set_grammar(const std::string grammar, const std::string start_rule,
                    float grammar_penalty);
   void reset_grammar();
-  void set_init_prompt(std::string prompt);
+  void set_init_prompt(const std::string prompt);
 
 protected:
   int n_processors;
   struct whisper_full_params wparams;
+
   struct whisper_context *ctx;
+  grammar_parser::parse_state grammar_parsed;
+  std::vector<const whisper_grammar_element *> grammar_rules;
 };
 
 } // namespace whisper_ros
