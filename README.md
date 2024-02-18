@@ -25,10 +25,20 @@ option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
 
 ## Usage
 
+Run Silero for VAD and Whisper for STT:
+
 ```shell
 $ ros2 launch whisper_bringup whisper.launch.py
 ```
 
+Send a goal action to listen:
+
 ```shell
 $ ros2 action send_goal /whisper/listen whisper_msgs/action/STT "{}"
+```
+
+Or try the example of a whisper client:
+
+```shell
+$ ros2 run whisper_ros whisper_client_node
 ```

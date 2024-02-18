@@ -41,7 +41,7 @@ def generate_launch_description():
             name="whisper_node",
             namespace="whisper",
             parameters=[{
-                "sampling_strategy": LaunchConfiguration("sampling_strategy", default=1),
+                "sampling_strategy": LaunchConfiguration("sampling_strategy", default="beam_search"),
                 "model": LaunchConfiguration("model", default=hf_hub_download(repo_id=repo, filename=file, force_download=False)),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 

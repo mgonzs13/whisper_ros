@@ -23,9 +23,11 @@
 #ifndef WHISPER_HPP
 #define WHISPER_HPP
 
-#include "grammar-parser.h"
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
+
+#include "grammar-parser.h"
 
 #include "whisper.h"
 
@@ -39,8 +41,9 @@ namespace whisper_ros {
 class Whisper {
 
 public:
-  Whisper(const std::string &model, const std::string &openvino_encode_device,
-          int n_processors, const struct whisper_context_params cparams,
+  Whisper(rclcpp::Logger logger, const std::string &model,
+          const std::string &openvino_encode_device, int n_processors,
+          const struct whisper_context_params &cparams,
           const struct whisper_full_params &wparams);
   ~Whisper();
 
@@ -52,6 +55,7 @@ public:
   void set_init_prompt(const std::string prompt);
 
 protected:
+  rclcpp::Logger logger;
   int n_processors;
   struct whisper_full_params wparams;
 

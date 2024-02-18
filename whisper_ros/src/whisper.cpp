@@ -27,22 +27,21 @@
 
 using namespace whisper_ros;
 
-Whisper::Whisper(const std::string &model,
+Whisper::Whisper(rclcpp::Logger logger, const std::string &model,
                  const std::string &openvino_encode_device, int n_processors,
-                 const struct whisper_context_params cparams,
+                 const struct whisper_context_params &cparams,
                  const whisper_full_params &wparams)
-    : n_processors(n_processors), wparams(wparams) {
+    : logger(logger), n_processors(n_processors), wparams(wparams) {
 
   if (whisper_lang_id(wparams.language) == -1) {
-    fprintf(stderr, "Unknown language '%s'\n", wparams.language);
-    exit(0);
+    RCLCPP_ERROR(this->logger, "Unknown language '%s'\n", wparams.language);
   }
 
   // init whisper
   this->ctx = whisper_init_from_file_with_params(model.c_str(), cparams);
 
   if (this->ctx == nullptr) {
-    fprintf(stderr, "error: failed to initialize whisper context\n");
+    RCLCPP_ERROR(this->logger, "failed to initialize whisper context\n");
   }
 
   if (!whisper_is_multilingual(this->ctx)) {
@@ -50,8 +49,9 @@ Whisper::Whisper(const std::string &model,
         this->wparams.translate) {
       this->wparams.language = "en";
       this->wparams.translate = false;
-      fprintf(stderr, "Model is not multilingual, ignoring language and "
-                      "translation options\n");
+      RCLCPP_WARN(this->logger,
+                  "Model is not multilingual, ignoring language and "
+                  "translation options\n");
     }
   }
 
@@ -61,15 +61,16 @@ Whisper::Whisper(const std::string &model,
   whisper_ctx_init_openvino_encoder(this->ctx, nullptr,
                                     openvino_encode_device.c_str(), nullptr);
 
-  fprintf(stderr,
-          "Processing, %d threads, lang = %s, task = %s, timestamps = %d ...\n",
-          this->wparams.n_threads, this->wparams.language,
-          this->wparams.translate ? "translate" : "transcribe",
-          this->wparams.print_timestamps ? 0 : 1);
+  RCLCPP_INFO(
+      this->logger,
+      "Processing, %d threads, lang = %s, task = %s, timestamps = %d ...\n",
+      this->wparams.n_threads, this->wparams.language,
+      this->wparams.translate ? "translate" : "transcribe",
+      this->wparams.print_timestamps ? 0 : 1);
 
-  fprintf(stderr, "system_info: n_threads = %d / %d | %s\n",
-          this->wparams.n_threads, std::thread::hardware_concurrency(),
-          whisper_print_system_info());
+  RCLCPP_INFO(this->logger, "system_info: n_threads = %d / %d | %s\n",
+              this->wparams.n_threads, std::thread::hardware_concurrency(),
+              whisper_print_system_info());
 }
 
 Whisper::~Whisper() { whisper_free(this->ctx); }

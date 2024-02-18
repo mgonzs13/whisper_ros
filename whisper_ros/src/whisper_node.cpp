@@ -36,11 +36,10 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   std::string openvino_encode_device;
   int n_processors;
 
-  int sampling_strategy;
+  std::string sampling_strategy;
   struct whisper_context_params cparams = whisper_context_default_params();
 
   this->declare_parameters<int32_t>("", {
-                                            {"sampling_strategy", 1},
                                             {"n_threads", 8},
                                             {"n_max_text_ctx", 16384},
                                             {"offset_ms", 0},
@@ -53,12 +52,13 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"n_processors", 1},
                                             {"gpu_device", 0},
                                         });
-  this->declare_parameters<std::string>("",
-                                        {
-                                            {"model", ""},
-                                            {"language", "en"},
-                                            {"openvino_encode_device", "CPU"},
-                                        });
+  this->declare_parameters<std::string>(
+      "", {
+              {"sampling_strategy", "beam_search"},
+              {"model", ""},
+              {"language", "en"},
+              {"openvino_encode_device", "CPU"},
+          });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
                                           {"thold_ptsum", 0.01f},
@@ -92,8 +92,14 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
 
   // get sampling method and create default params
   this->get_parameter("sampling_strategy", sampling_strategy);
-  auto wparams = whisper_full_default_params(
-      static_cast<whisper_sampling_strategy>(sampling_strategy));
+
+  struct whisper_full_params wparams;
+
+  if (sampling_strategy == "greedy") {
+    wparams = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+  } else if (sampling_strategy == "beam_search") {
+    wparams = whisper_full_default_params(WHISPER_SAMPLING_BEAM_SEARCH);
+  }
 
   // get params
   this->get_parameter("model", model);
@@ -154,7 +160,8 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
     wparams.n_threads = std::thread::hardware_concurrency();
   }
 
-  this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
+  this->whisper = std::make_shared<Whisper>(this->get_logger(), model,
+                                            openvino_encode_device,
                                             n_processors, cparams, wparams);
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
   this->subscription_ =
