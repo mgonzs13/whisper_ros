@@ -160,9 +160,15 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
     wparams.n_threads = std::thread::hardware_concurrency();
   }
 
+  // create whisper
   this->whisper = std::make_shared<Whisper>(this->get_logger(), model,
                                             openvino_encode_device,
                                             n_processors, cparams, wparams);
+
+  // warm up whisper
+  this->whisper->transcribe({});
+
+  // pubs, subs, services
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(
