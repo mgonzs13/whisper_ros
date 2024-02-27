@@ -166,7 +166,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             n_processors, cparams, wparams);
 
   // warm up whisper
-  this->whisper->transcribe({});
+  this->whisper->transcribe({0.0});
 
   // pubs, subs, services
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
