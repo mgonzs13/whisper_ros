@@ -45,7 +45,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
                                             {"offset_ms", 0},
                                             {"duration_ms", 0},
                                             {"max_len", 0},
-                                            {"max_tokens", 32},
+                                            {"max_tokens", 0},
                                             {"audio_ctx", 0},
                                             {"greedy_best_of", 5},
                                             {"beam_search_beam_size", 5},

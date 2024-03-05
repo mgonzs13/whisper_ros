@@ -51,7 +51,7 @@ def generate_launch_description():
                 "duration_ms": LaunchConfiguration("duration_ms", default=0),
 
                 "translate": LaunchConfiguration("translate", default=False),
-                "no_context": LaunchConfiguration("no_context", default=True),
+                "no_context": LaunchConfiguration("no_context", default=False),
                 "no_timestamps": LaunchConfiguration("no_timestamps", default=False),
                 "single_segment": LaunchConfiguration("single_segment", default=True),
                 "print_special": LaunchConfiguration("print_special", default=False),
@@ -64,7 +64,7 @@ def generate_launch_description():
                 "thold_ptsum": LaunchConfiguration("thold_ptsum", default=0.01),
                 "max_len": LaunchConfiguration("max_len", default=0),
                 "split_on_word": LaunchConfiguration("split_on_word", default=False),
-                "max_tokens": LaunchConfiguration("max_tokens", default=32),
+                "max_tokens": LaunchConfiguration("max_tokens", default=0),
 
                 "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
