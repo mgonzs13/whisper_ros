@@ -25,6 +25,8 @@
 
 import time
 import threading
+import soundfile as sf
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -103,10 +105,14 @@ class WhisperManagerNode(Node):
                     self.vad_data = None
 
     def vad_cb(self, msg: Float32MultiArray) -> None:
+        sample_rate = 16000  # サンプルレート（Hz）
         with self.vad_lock:
             if self.vad_data is None:
                 self.enable_silero(False)
             self.vad_data = msg
+        # msgからarrayに変換して保存
+        audio_np = np.array(self.vad_data.data, dtype=np.float32)
+        sf.write('output_audio.wav', audio_np, sample_rate)
 
     def destroy_node(self) -> bool:
         self._action_server.destroy()
