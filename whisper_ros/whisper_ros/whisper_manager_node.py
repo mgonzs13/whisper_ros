@@ -27,6 +27,8 @@ import time
 import threading
 import soundfile as sf
 import numpy as np
+import os
+from datetime import datetime
 
 import rclpy
 from rclpy.node import Node
@@ -43,6 +45,28 @@ from whisper_msgs.action import STT
 from whisper_msgs.srv import SetGrammar
 from whisper_msgs.srv import SetInitPrompt
 
+def save_audio(audio_data, sample_rate):
+    # msgからarrayに変換して保存
+    audio_np = np.array(audio_data, dtype=np.float32)
+
+    # 現在の日時を取得
+    current_datetime = datetime.now()
+    year = current_datetime.year
+    month = current_datetime.month
+    day = current_datetime.day
+    hour = current_datetime.hour
+    minute = current_datetime.minute
+    second = current_datetime.second
+
+    # 年月日に対応するフォルダ名を作成
+    folder_name = f"record/voice/{year}-{month:02d}-{day:02d}"
+    # フォルダが存在しない場合は作成する
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    
+    # 年月日時間に対応するファイル名を作成
+    file_name = f"{year}-{month:02d}-{day:02d}_{hour:02d}-{minute:02d}-{second:02d}.wav"
+    sf.write(folder_name + "/" + file_name, audio_np, sample_rate)
 
 class WhisperManagerNode(Node):
 
@@ -110,9 +134,7 @@ class WhisperManagerNode(Node):
             if self.vad_data is None:
                 self.enable_silero(False)
             self.vad_data = msg
-        # msgからarrayに変換して保存
-        audio_np = np.array(self.vad_data.data, dtype=np.float32)
-        sf.write('output_audio.wav', audio_np, sample_rate)
+        save_audio(self.vad_data.data, sample_rate)
 
     def destroy_node(self) -> bool:
         self._action_server.destroy()
