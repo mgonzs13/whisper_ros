@@ -61,14 +61,6 @@ class SileroVadNode(Node):
 
         self.get_logger().info("Silero VAD node started")
 
-    @staticmethod
-    def normalize(sound):
-        abs_max = np.abs(sound).max()
-        if abs_max > 0:
-            sound *= 1 / abs_max
-        sound = sound.squeeze()
-        return sound
-
     def audio_cb(self, msg: AudioStamped) -> None:
 
         if not self.enabled:
