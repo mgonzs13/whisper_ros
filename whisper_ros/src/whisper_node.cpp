@@ -161,8 +161,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   }
 
   // create whisper
-  this->whisper = std::make_shared<Whisper>(this->get_logger(), model,
-                                            openvino_encode_device,
+  this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
                                             n_processors, cparams, wparams);
 
   // warm up whisper

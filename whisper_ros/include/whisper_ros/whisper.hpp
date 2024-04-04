@@ -23,13 +23,20 @@
 #ifndef WHISPER_HPP
 #define WHISPER_HPP
 
-#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
 
 #include "grammar-parser.h"
 
 #include "whisper.h"
+
+// llama logs
+#define WHISPER_LOG_ERROR(text, ...)                                           \
+  fprintf(stderr, "[ERROR] " text "\n", ##__VA_ARGS__)
+#define WHISPER_LOG_WARN(text, ...)                                            \
+  fprintf(stderr, "[WARN] " text "\n", ##__VA_ARGS__)
+#define WHISPER_LOG_INFO(text, ...)                                            \
+  fprintf(stderr, "[INFO] " text "\n", ##__VA_ARGS__)
 
 struct transcription_output {
   std::string text;
@@ -41,9 +48,8 @@ namespace whisper_ros {
 class Whisper {
 
 public:
-  Whisper(rclcpp::Logger logger, const std::string &model,
-          const std::string &openvino_encode_device, int n_processors,
-          const struct whisper_context_params &cparams,
+  Whisper(const std::string &model, const std::string &openvino_encode_device,
+          int n_processors, const struct whisper_context_params &cparams,
           const struct whisper_full_params &wparams);
   ~Whisper();
 
@@ -55,7 +61,6 @@ public:
   void set_init_prompt(const std::string prompt);
 
 protected:
-  rclcpp::Logger logger;
   int n_processors;
   struct whisper_full_params wparams;
 
