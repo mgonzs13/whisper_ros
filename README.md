@@ -7,7 +7,8 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 ```shell
 $ cd ~/ros2_ws/src
 $ git clone https://github.com/mgonzs13/audio_common.git
-$ git clone --recurse-submodules https://github.com/mgonzs13/whisper_ros.git
+$ git clone --recursive git@github.com:SaboProject/Whisper_ros.git
+# $ git clone --recurse-submodules https://github.com/mgonzs13/whisper_ros.git
 $ sudo apt install portaudio19-dev
 $ pip3 install -r audio_common/requirements.txt
 $ pip3 install -r whisper_ros/requirements.txt
