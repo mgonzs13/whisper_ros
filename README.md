@@ -28,6 +28,7 @@ option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
 Run Silero for VAD and Whisper for STT:
 
 ```shell
+$ ros2 run audio_common audio_capturer_node
 $ ros2 launch whisper_bringup whisper.launch.py
 ```
 
