@@ -129,21 +129,22 @@ def generate_launch_description():
             executable="whisper_manager_node",
             name="whisper_manager_node",
             namespace="whisper",
-        ),
-
-        Node(
-            package="audio_common",
-            executable="audio_capturer_node",
-            name="capturer_node",
-            namespace="audio",
-            parameters=[{
-                "format": LaunchConfiguration("channels", default=1),
-                "channels": LaunchConfiguration("channels", default=1),
-                "rate": LaunchConfiguration("rate", default=16000),
-                "chunk": LaunchConfiguration("chunk", default=4096),
-            }],
-            remappings=[("audio", "in")],
-            condition=IfCondition(PythonExpression(
-                [LaunchConfiguration("launch_audio_capturer", default=True)]))
         )
+        # ),
+
+        # Node(
+        #     package="audio_common",
+        #     executable="audio_capturer_node",
+        #     name="capturer_node",
+        #     namespace="audio",
+        #     parameters=[{
+        #         "format": LaunchConfiguration("channels", default=1),
+        #         "channels": LaunchConfiguration("channels", default=1),
+        #         "rate": LaunchConfiguration("rate", default=16000),
+        #         "chunk": LaunchConfiguration("chunk", default=4096),
+        #     }],
+        #     remappings=[("audio", "in")],
+        #     condition=IfCondition(PythonExpression(
+        #         [LaunchConfiguration("launch_audio_capturer", default=True)]))
+        # )
     ])
