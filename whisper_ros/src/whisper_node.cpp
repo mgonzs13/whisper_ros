@@ -126,7 +126,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->get_parameter("split_on_word", wparams.split_on_word);
   this->get_parameter("max_tokens", wparams.max_tokens);
 
-  this->get_parameter("speed_up", wparams.speed_up);
   this->get_parameter("audio_ctx", wparams.audio_ctx);
   this->get_parameter("tinydiarize", wparams.tdrz_enable);
 
@@ -163,9 +162,6 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   // create whisper
   this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
                                             n_processors, cparams, wparams);
-
-  // warm up whisper
-  this->whisper->transcribe({0.0});
 
   // pubs, subs, services
   this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
