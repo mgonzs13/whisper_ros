@@ -71,7 +71,6 @@ def generate_launch_description():
                 "split_on_word": LaunchConfiguration("split_on_word", default=False),
                 "max_tokens": LaunchConfiguration("max_tokens", default=0),
 
-                "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
                 "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
 
