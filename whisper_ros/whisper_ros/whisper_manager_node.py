@@ -151,7 +151,7 @@ class WhisperManagerNode(Node):
 
         # wait for whisper text
         self.get_logger().info("Waiting for whisper text")
-        while no_text:
+        while no_text and not goal_handle.is_cancel_requested:
             time.sleep(0.01)
 
             if not goal_handle.is_active:
