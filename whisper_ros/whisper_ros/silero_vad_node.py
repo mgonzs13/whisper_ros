@@ -75,11 +75,11 @@ class SileroVadNode(Node):
         if not self.enabled:
             return
 
-        audio = int2float(msg_to_array(msg.audio.audio_data, msg.audio.info.format))
-        if audio is None:
+        audio_array = int2float(msg_to_array(msg.audio.audio_data))
+        if audio_array is None:
             self.get_logger().error(f"Format {msg.audio.info.format} unknown")
             return
-        speech_dict = self.vad_iterator(torch.from_numpy(audio))
+        speech_dict = self.vad_iterator(torch.from_numpy(audio_array))
 
         if speech_dict:
             self.get_logger().info(str(speech_dict))
@@ -95,7 +95,7 @@ class SileroVadNode(Node):
                 self._pub.publish(vad_msg)
 
         if self.recording:
-            self.data.extend((audio).tolist())
+            self.data.extend((audio_array).tolist())
 
     def init_silero(self) -> None:
         model, utils = torch.hub.load(

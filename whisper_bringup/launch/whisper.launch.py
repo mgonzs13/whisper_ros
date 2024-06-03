@@ -31,9 +31,14 @@ from launch.conditions import IfCondition
 
 def generate_launch_description():
 
-    def run_whisper(context: LaunchContext, repo, file):
+    def run_whisper(context: LaunchContext, repo, file, model_path):
         repo = str(context.perform_substitution(repo))
         file = str(context.perform_substitution(file))
+        model_path = str(context.perform_substitution(model_path))
+
+        if not model_path:
+            model_path = hf_hub_download(
+                repo_id=repo, filename=file, force_download=False)
 
         return Node(
             package="whisper_ros",
@@ -42,7 +47,7 @@ def generate_launch_description():
             namespace="whisper",
             parameters=[{
                 "sampling_strategy": LaunchConfiguration("sampling_strategy", default="beam_search"),
-                "model": LaunchConfiguration("model", default=hf_hub_download(repo_id=repo, filename=file, force_download=False)),
+                "model": LaunchConfiguration("model", default=model_path),
                 "openvino_encode_device": LaunchConfiguration("openvino_encode_device", default="CPU"),
 
                 "n_threads": LaunchConfiguration("n_threads", default=4),
@@ -66,7 +71,6 @@ def generate_launch_description():
                 "split_on_word": LaunchConfiguration("split_on_word", default=False),
                 "max_tokens": LaunchConfiguration("max_tokens", default=0),
 
-                "speed_up": LaunchConfiguration("speed_up", default=False),
                 "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
                 "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
 
@@ -107,11 +111,18 @@ def generate_launch_description():
         default_value="ggml-distil-large-v3.bin",
         description="Hugging Face model filename")
 
+    model_path = LaunchConfiguration("model_path")
+    model_path_cmd = DeclareLaunchArgument(
+        "model_path",
+        default_value="",
+        description="Local path to the model file")
+
     return LaunchDescription([
         model_repo_cmd,
         model_filename_cmd,
+        model_path_cmd,
         OpaqueFunction(function=run_whisper, args=[
-                       model_repo, model_filename]),
+                       model_repo, model_filename, model_path]),
 
         Node(
             package="whisper_ros",
