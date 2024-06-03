@@ -148,7 +148,7 @@ def generate_launch_description():
             name="capturer_node",
             namespace="audio",
             parameters=[{
-                "format": LaunchConfiguration("channels", default=1),
+                "format": LaunchConfiguration("format", default=1),
                 "channels": LaunchConfiguration("channels", default=1),
                 "rate": LaunchConfiguration("rate", default=16000),
                 "chunk": LaunchConfiguration("chunk", default=4096),
