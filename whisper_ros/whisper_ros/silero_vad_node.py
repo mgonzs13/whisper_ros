@@ -37,6 +37,15 @@ from audio_common.utils import msg_to_array
 from audio_common_msgs.msg import AudioStamped
 
 
+def int2float(sound):
+    abs_max = np.abs(sound).max()
+    sound = sound.astype('float32')
+    if abs_max > 0:
+        sound *= 1/32768
+    sound = sound.squeeze()  # depends on the use case
+    return sound
+
+
 class SileroVadNode(Node):
 
     def __init__(self) -> None:
@@ -66,7 +75,7 @@ class SileroVadNode(Node):
         if not self.enabled:
             return
 
-        audio_array = msg_to_array(msg.audio)
+        audio_array = int2float(msg_to_array(msg.audio.audio_data))
         if audio_array is None:
             self.get_logger().error(f"Format {msg.audio.info.format} unknown")
             return
