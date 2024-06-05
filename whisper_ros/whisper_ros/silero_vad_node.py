@@ -45,19 +45,15 @@ def int2float(audio_data: np.ndarray) -> np.ndarray:
     from_type = type(audio_data[0])
 
     if from_type == np.uint8:
-        # Convert uint8 to float32 first, centered around 0
         audio_data = (audio_data.astype(np.float32) - 128) / 128.0
 
     elif from_type == np.int8:
-        # Convert int8 to float32
         audio_data = audio_data.astype(np.float32) / 128.0
 
     elif from_type == np.int16:
-        # Convert int16 to float32
         audio_data = audio_data.astype(np.float32) / 32768.0
 
     elif from_type == np.int32:
-        # Convert int32 to float32
         audio_data = audio_data.astype(np.float32) / 2147483648.0
 
     elif from_type == np.float32:
