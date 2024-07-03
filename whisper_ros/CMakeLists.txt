@@ -5,7 +5,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
+# CUDA
+if(DEFINED ENV{WHISPER_CUDA})
+    message(STATUS "WHISPER_CUDA")
+    string(TOLOWER "$ENV{WHISPER_CUDA}" WHISPER_CUDA)
+    if(WHISPER_CUDA STREQUAL "on")
+        message(STATUS "Compiling whisper_ros with CUDA")
+        set(GGML_CUDA ON)
+    endif()
+endif()
 
 # find dependencies
 find_package(SDL2 REQUIRED)
@@ -52,9 +60,9 @@ install(PROGRAMS
 )
 
 install(PROGRAMS
-  whisper_ros/whisper_client_node.py
+  whisper_ros/whisper_demo_node.py
   DESTINATION lib/${PROJECT_NAME}
-  RENAME whisper_client_node
+  RENAME whisper_demo_node
 )
 
 ament_package()

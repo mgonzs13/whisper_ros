@@ -17,10 +17,10 @@ $ colcon build
 
 ### CUDA
 
-To run llama_ros with CUDA, you have to install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) and the following line in the [CMakeLists.txt](whisper_ros/CMakeLists.txt) must be uncommented:
+To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to set the environment variable `WHIPSER_CUDA` to `on`:
 
-```
-option(WHISPER_CUBLAS "whisper: support for cuBLAS" ON)
+```shell
+export WHIPSER_CUDA="on"
 ```
 
 ## Usage
@@ -40,5 +40,5 @@ $ ros2 action send_goal /whisper/listen whisper_msgs/action/STT "{}"
 Or try the example of a whisper client:
 
 ```shell
-$ ros2 run whisper_ros whisper_client_node
+$ ros2 run whisper_ros whisper_demo_node
 ```

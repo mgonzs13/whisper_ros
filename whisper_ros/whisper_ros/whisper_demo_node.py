@@ -29,10 +29,10 @@ from rclpy.action import ActionClient
 from whisper_msgs.action import STT
 
 
-class WhisperClientNode(Node):
+class WhisperDemoNode(Node):
 
     def __init__(self) -> None:
-        super().__init__("whisper_client_node")
+        super().__init__("whisper_demo_node")
 
         self._action_client = ActionClient(
             self, STT, "/whisper/listen")
@@ -56,7 +56,7 @@ class WhisperClientNode(Node):
 def main():
 
     rclpy.init()
-    node = WhisperClientNode()
+    node = WhisperDemoNode()
     node.listen()
     rclpy.shutdown()
 
