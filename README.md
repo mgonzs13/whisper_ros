@@ -17,10 +17,10 @@ $ colcon build
 
 ### CUDA
 
-To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to set the environment variable `WHIPSER_CUDA` to `on`:
+To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to set the environment variable `WHISPER_CUDA` to `on`:
 
 ```shell
-export WHIPSER_CUDA="on"
+export WHISPER_CUDA="on"
 ```
 
 ## Usage
