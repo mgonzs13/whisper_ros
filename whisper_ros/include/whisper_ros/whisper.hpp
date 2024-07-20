@@ -26,9 +26,8 @@
 #include <string>
 #include <vector>
 
-#include "grammar-parser.h"
-
 #include "whisper.h"
+#include "whisper_ros/grammar-parser.hpp"
 
 // llama logs
 #define WHISPER_LOG_ERROR(text, ...)                                           \

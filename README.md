@@ -7,21 +7,17 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 ```shell
 $ cd ~/ros2_ws/src
 $ git clone https://github.com/mgonzs13/audio_common.git
-$ git clone --recurse-submodules https://github.com/mgonzs13/whisper_ros.git
+$ git clone https://github.com/mgonzs13/whisper_ros.git
 $ sudo apt install portaudio19-dev
 $ pip3 install -r audio_common/requirements.txt
 $ pip3 install -r whisper_ros/requirements.txt
 $ cd ~/ros2_ws
-$ colcon build
+$ colcon build --cmake-args -DWHISPER_CUDA=ON
 ```
 
 ### CUDA
 
-To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to set the environment variable `WHISPER_CUDA` to `on`:
-
-```shell
-export WHISPER_CUDA="on"
-```
+To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to add `--cmake-args -DWHISPER_CUDA=ON` to colcon.
 
 ## Usage
 

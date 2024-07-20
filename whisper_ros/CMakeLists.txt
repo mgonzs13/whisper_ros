@@ -5,42 +5,25 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# CUDA
-if(DEFINED ENV{WHISPER_CUDA})
-    message(STATUS "WHISPER_CUDA")
-    string(TOLOWER "$ENV{WHISPER_CUDA}" WHISPER_CUDA)
-    if(WHISPER_CUDA STREQUAL "on")
-        message(STATUS "Compiling whisper_ros with CUDA")
-        set(GGML_CUDA ON)
-    endif()
-endif()
-
 # find dependencies
-find_package(SDL2 REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(whisper_msgs REQUIRED)
+find_package(whisper_cpp_vendor REQUIRED)
 
-INCLUDE_DIRECTORIES(
-  include
-  whisper_cpp/examples
-)
-
-add_subdirectory(whisper_cpp)
+include_directories(include)
 
 add_executable(whisper_node
   src/whisper_main.cpp
   src/whisper_node.cpp
   src/whisper.cpp
-  whisper_cpp/examples/common-sdl.cpp
-  whisper_cpp/examples/common.cpp
-  whisper_cpp/examples/grammar-parser.cpp
+  src/grammar-parser.cpp
 )
-target_include_directories(whisper_node PUBLIC ${SDL2_INCLUDE_DIRS})
-target_link_libraries(whisper_node whisper ${SDL2_LIBRARIES})
-ament_target_dependencies(whisper_node rclcpp std_msgs std_srvs whisper_msgs)
+target_link_libraries(whisper_node whisper_cpp_vendor::whisper)
+ament_target_dependencies(whisper_node rclcpp std_msgs std_srvs whisper_msgs whisper_cpp_vendor)
+ament_export_dependencies(whisper_cpp_vendor)
 
 # INSTALL
 install(TARGETS

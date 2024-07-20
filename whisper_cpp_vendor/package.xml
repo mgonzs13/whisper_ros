@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>whisper_ros</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <name>whisper_cpp_vendor</name>
+  <version>1.3.1</version>
+  <description>Vendor package for whisper.cpp.</description>
   <maintainer email="mgons@unileon.es">Miguel Ángel González Santamarta</maintainer>
   <license>MIT</license>
 
@@ -11,14 +11,6 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-
-  <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
-  <depend>std_srvs</depend>
-  <depend>audio_common</depend>
-  <depend>audio_common_msgs</depend>
-  <depend>whisper_msgs</depend>
-  <depend>whisper_cpp_vendor</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

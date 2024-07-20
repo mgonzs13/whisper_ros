@@ -22,7 +22,6 @@
 
 #include <regex>
 
-#include "common.h"
 #include "whisper.h"
 #include "whisper_ros/whisper_node.hpp"
 
