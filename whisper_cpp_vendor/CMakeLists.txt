@@ -8,25 +8,18 @@ endif()
 include(FetchContent)
 find_package(ament_cmake REQUIRED)
 
-set(WHISPER_STANDALONE ON)
-set(WHISPER_VERSION_MAJOR 1 CACHE STRING "Major whisper.cpp version.")
-set(WHISPER_VERSION_MINOR 6 CACHE STRING "Minor whisper.cpp version.")
-set(WHISPER_VERSION_PATCH 2 CACHE STRING "Patch whisper.cpp version.")
-
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        v${WHISPER_VERSION_MAJOR}.${WHISPER_VERSION_MINOR}.${WHISPER_VERSION_PATCH}
+  GIT_TAG        v1.6.2
 )
 
 FetchContent_MakeAvailable(whisper)
 
 set_target_properties(
   whisper PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES
-    $<INSTALL_INTERFACE:.>
-  CXX_STANDARD
-    11
+  INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:.>
+  CXX_STANDARD 11
 )
 
 install(
