@@ -12,12 +12,12 @@ $ sudo apt install portaudio19-dev
 $ pip3 install -r audio_common/requirements.txt
 $ pip3 install -r whisper_ros/requirements.txt
 $ cd ~/ros2_ws
-$ colcon build --cmake-args -DWHISPER_CUDA=ON
+$ colcon build --cmake-args -DGGML_CUDA=ON
 ```
 
 ### CUDA
 
-To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to add `--cmake-args -DWHISPER_CUDA=ON` to colcon.
+To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). Then, you have to add `--cmake-args -DGGML_CUDA=ON` to colcon.
 
 ## Usage
 

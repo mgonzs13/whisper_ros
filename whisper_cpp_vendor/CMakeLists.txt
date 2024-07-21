@@ -11,26 +11,27 @@ find_package(ament_cmake REQUIRED)
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        v1.6.2
+  GIT_TAG        f68298ce06ca3edd6e6f3f21c3d0bb5f073942c3
 )
 
 FetchContent_MakeAvailable(whisper)
 
+# Define the target properties
 set_target_properties(
-  whisper PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:.>
+  ggml whisper PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
   CXX_STANDARD 11
-)
-
-install(
-  FILES ${whisper_SOURCE_DIR}/ggml.h
-  DESTINATION include
 )
 
 ament_export_targets(export_whisper HAS_LIBRARY_TARGET)
 
 install(
-  TARGETS whisper
+  FILES ${whisper_SOURCE_DIR}/ggml/include/ggml.h
+  DESTINATION include
+)
+
+install(
+  TARGETS ggml whisper
   EXPORT export_whisper
   LIBRARY DESTINATION lib
   INCLUDES DESTINATION include
