@@ -26,11 +26,6 @@ set_target_properties(
 ament_export_targets(export_whisper HAS_LIBRARY_TARGET)
 
 install(
-  FILES ${whisper_SOURCE_DIR}/ggml/include/ggml.h
-  DESTINATION include
-)
-
-install(
   TARGETS ggml whisper
   EXPORT export_whisper
   LIBRARY DESTINATION lib
