@@ -19,9 +19,8 @@ add_executable(whisper_node
   src/whisper_main.cpp
   src/whisper_node.cpp
   src/whisper.cpp
-  src/grammar-parser.cpp
 )
-target_link_libraries(whisper_node whisper_cpp_vendor::whisper)
+target_link_libraries(whisper_node whisper_cpp_vendor::grammar whisper_cpp_vendor::whisper)
 ament_target_dependencies(whisper_node rclcpp std_msgs std_srvs whisper_msgs whisper_cpp_vendor)
 ament_export_dependencies(whisper_cpp_vendor)
 

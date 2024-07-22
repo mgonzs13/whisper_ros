@@ -16,20 +16,38 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(whisper)
 
-# Define the target properties
+# whisper
 set_target_properties(
   ggml whisper PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
   CXX_STANDARD 11
 )
 
-ament_export_targets(export_whisper HAS_LIBRARY_TARGET)
+# grammar
+add_library(grammar
+  ${whisper_SOURCE_DIR}/examples/grammar-parser.cpp
+)
+
+target_include_directories(grammar
+  PUBLIC
+    $<BUILD_INTERFACE:${whisper_SOURCE_DIR}/examples;${whisper_SOURCE_DIR}/include;${whisper_SOURCE_DIR}/ggml/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+# export
+file(GLOB COMMON_HEADERS ${whisper_SOURCE_DIR}/include/*.h ${whisper_SOURCE_DIR}/examples/*.h)
+install(
+  FILES ${COMMON_HEADERS}
+  DESTINATION include
+)
 
 install(
-  TARGETS ggml whisper
+  TARGETS ggml whisper grammar
   EXPORT export_whisper
   LIBRARY DESTINATION lib
   INCLUDES DESTINATION include
 )
 
+ament_export_include_directories(include)
+ament_export_targets(export_whisper HAS_LIBRARY_TARGET)
 ament_package()

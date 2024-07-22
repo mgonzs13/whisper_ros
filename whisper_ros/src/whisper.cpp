@@ -23,7 +23,7 @@
 #include <regex>
 #include <thread>
 
-#include "whisper_ros/grammar-parser.hpp"
+#include "grammar-parser.h"
 #include "whisper_ros/whisper.hpp"
 
 using namespace whisper_ros;
