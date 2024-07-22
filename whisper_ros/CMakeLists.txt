@@ -27,7 +27,8 @@ ament_export_dependencies(whisper_cpp_vendor)
 # INSTALL
 install(TARGETS
   whisper_node
-  DESTINATION lib/${PROJECT_NAME})
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(PROGRAMS
   whisper_ros/silero_vad_node.py
@@ -39,12 +40,6 @@ install(PROGRAMS
   whisper_ros/whisper_manager_node.py
   DESTINATION lib/${PROJECT_NAME}
   RENAME whisper_manager_node
-)
-
-install(PROGRAMS
-  whisper_ros/whisper_demo_node.py
-  DESTINATION lib/${PROJECT_NAME}
-  RENAME whisper_demo_node
 )
 
 ament_package()
