@@ -16,10 +16,18 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(whisper)
 
+# ggml
+set_target_properties(
+  ggml PROPERTIES
+  OUTPUT_NAME "whisper_ggml"
+  INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+  CXX_STANDARD 11
+)
+
 # whisper
 set_target_properties(
-  ggml whisper PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+  whisper PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:.>
   CXX_STANDARD 11
 )
 
