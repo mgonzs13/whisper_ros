@@ -1,4 +1,4 @@
-torch==2.1.2
-torchaudio==2.1.2
+torch==2.4.0
+torchaudio==2.4.0
 onnxruntime==1.17.0
 huggingface-hub==0.20.3
