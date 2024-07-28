@@ -110,12 +110,17 @@ class SileroVadNode(Node):
 
             elif self.recording and "end" in speech_dict:
                 self.recording = False
+
+                if len(audio_array) / msg.audio.info.rate < 1.0:
+                    pad_size = msg.audio.info.rate - len(audio_array)
+                    self.data = self.data + pad_size * [0.0]
+
                 vad_msg = Float32MultiArray()
                 vad_msg.data = self.data
                 self._pub.publish(vad_msg)
 
         if self.recording:
-            self.data.extend((audio_array).tolist())
+            self.data.extend(audio_array.tolist())
 
     def init_silero(self) -> None:
         model, utils = torch.hub.load(
