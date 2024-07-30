@@ -110,9 +110,11 @@ class SileroVadNode(Node):
 
             elif self.recording and "end" in speech_dict:
                 self.recording = False
+                self.data.extend(audio_array.tolist())
 
-                if len(audio_array) / msg.audio.info.rate < 1.0:
-                    pad_size = msg.audio.info.rate - len(audio_array)
+                if len(self.data) / msg.audio.info.rate < 1.0:
+                    pad_size = msg.audio.info.chunk + \
+                        msg.audio.info.rate - len(self.data)
                     self.data = self.data + pad_size * [0.0]
 
                 vad_msg = Float32MultiArray()
