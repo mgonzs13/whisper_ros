@@ -18,9 +18,9 @@ include_directories(include)
 
 add_executable(whisper_node
   src/whisper_main.cpp
-  src/whisper_node.cpp
-  src/whisper_base_node.cpp
-  src/whisper.cpp
+  src/whisper_ros/whisper_node.cpp
+  src/whisper_ros/whisper_base_node.cpp
+  src/whisper_ros/whisper.cpp
 )
 target_link_libraries(whisper_node 
   whisper_cpp_vendor::grammar
@@ -36,9 +36,9 @@ ament_target_dependencies(whisper_node
 
 add_executable(whisper_server_node
   src/whisper_server_main.cpp
-  src/whisper_server_node.cpp
-  src/whisper_base_node.cpp
-  src/whisper.cpp
+  src/whisper_ros/whisper_server_node.cpp
+  src/whisper_ros/whisper_base_node.cpp
+  src/whisper_ros/whisper.cpp
 )
 target_link_libraries(whisper_server_node
   whisper_cpp_vendor::grammar
