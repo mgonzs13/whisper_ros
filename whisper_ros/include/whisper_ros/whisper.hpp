@@ -54,10 +54,12 @@ public:
 
   transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
+
   bool set_grammar(const std::string grammar, const std::string start_rule,
                    float grammar_penalty);
   void reset_grammar();
   void set_init_prompt(const std::string prompt);
+  void reset_init_prompt();
 
 protected:
   int n_processors;

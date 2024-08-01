@@ -78,11 +78,19 @@ class SileroVadNode(Node):
         self.enabled = self.chunk = self.get_parameter(
             "enabled").get_parameter_value().bool_value
 
-        self.init_silero()
+        # create silero model
+        model, utils = torch.hub.load(
+            repo_or_dir="snakers4/silero-vad",
+            model="silero_vad",
+            force_reload=False,
+            onnx=True
+        )
+        (_, _, _, VADIterator, _) = utils
+        self.vad_iterator = VADIterator(model)
 
+        # srvs, subs, pubs
         self._enable_srv = self.create_service(
             SetBool, "enable_vad", self.enable_cb)
-
         self._pub = self.create_publisher(Float32MultiArray, "vad", 10)
         self._sub = self.create_subscription(
             AudioStamped, "audio", self.audio_cb, qos_profile_sensor_data)
@@ -123,16 +131,6 @@ class SileroVadNode(Node):
 
         if self.recording:
             self.data.extend(audio_array.tolist())
-
-    def init_silero(self) -> None:
-        model, utils = torch.hub.load(
-            repo_or_dir="snakers4/silero-vad",
-            model="silero_vad",
-            force_reload=False,
-            onnx=True
-        )
-        (_, _, _, VADIterator, _) = utils
-        self.vad_iterator = VADIterator(model)
 
     def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
         res.success = True

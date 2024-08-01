@@ -84,6 +84,7 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
 
   if (whisper_full_parallel(this->ctx, this->wparams, pcmf32.data(),
                             pcmf32.size(), this->n_processors) != 0) {
+    WHISPER_LOG_ERROR("Error in whisper_full_parallel");
     return result;
   }
 
@@ -144,3 +145,5 @@ void Whisper::reset_grammar() {
 void Whisper::set_init_prompt(const std::string prompt) {
   this->wparams.initial_prompt = prompt.c_str();
 }
+
+void Whisper::reset_init_prompt() { this->wparams.initial_prompt = ""; }

@@ -162,12 +162,7 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
   this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
                                             n_processors, cparams, wparams);
 
-  // pubs, subs, services
-  this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
-  this->subscription_ =
-      this->create_subscription<std_msgs::msg::Float32MultiArray>(
-          "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
-
+  // services
   this->set_grammar_service_ =
       this->create_service<whisper_msgs::srv::SetGrammar>(
           "set_grammar",
@@ -180,6 +175,16 @@ WhisperNode::WhisperNode() : rclcpp::Node("whisper_node") {
           "set_init_prompt",
           std::bind(&WhisperNode::set_init_prompt_service_callback, this, _1,
                     _2));
+  this->reset_init_prompt_service_ = this->create_service<std_srvs::srv::Empty>(
+      "reset_init_prompt",
+      std::bind(&WhisperNode::reset_init_prompt_service_callback, this, _1,
+                _2));
+
+  // pubs, subs
+  this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
+  this->subscription_ =
+      this->create_subscription<std_msgs::msg::Float32MultiArray>(
+          "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
 
   RCLCPP_INFO(this->get_logger(), "Whisper node started");
 }
@@ -224,4 +229,14 @@ void WhisperNode::set_init_prompt_service_callback(
 
   this->whisper->set_init_prompt(request->prompt);
   response->success = true;
+}
+
+void WhisperNode::reset_init_prompt_service_callback(
+    const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+    std::shared_ptr<std_srvs::srv::Empty::Response> response) {
+
+  (void)request;
+  (void)response;
+
+  this->whisper->reset_init_prompt();
 }

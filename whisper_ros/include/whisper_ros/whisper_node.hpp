@@ -42,10 +42,6 @@ public:
   WhisperNode();
 
 private:
-  std::string language;
-
-  std::shared_ptr<Whisper> whisper;
-
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr
       subscription_;
@@ -55,6 +51,7 @@ private:
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_grammar_service_;
   rclcpp::Service<whisper_msgs::srv::SetInitPrompt>::SharedPtr
       set_init_prompt_service_;
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_init_prompt_service_;
 
   void vad_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
   void set_grammar_service_callback(
@@ -66,6 +63,13 @@ private:
   void set_init_prompt_service_callback(
       const std::shared_ptr<whisper_msgs::srv::SetInitPrompt::Request> request,
       std::shared_ptr<whisper_msgs::srv::SetInitPrompt::Response> response);
+  void reset_init_prompt_service_callback(
+      const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+      std::shared_ptr<std_srvs::srv::Empty::Response> response);
+
+protected:
+  std::string language;
+  std::shared_ptr<Whisper> whisper;
 };
 
 } // namespace whisper_ros
