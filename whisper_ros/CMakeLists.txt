@@ -18,6 +18,7 @@ include_directories(include)
 add_executable(whisper_node
   src/whisper_main.cpp
   src/whisper_node.cpp
+  src/whisper_base_node.cpp
   src/whisper.cpp
 )
 target_link_libraries(whisper_node whisper_cpp_vendor::grammar whisper_cpp_vendor::whisper)

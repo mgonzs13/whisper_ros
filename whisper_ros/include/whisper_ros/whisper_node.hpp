@@ -25,18 +25,17 @@
 
 #include <memory>
 
-#include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/float32_multi_array.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/empty.hpp>
 
 #include "whisper_msgs/srv/set_grammar.hpp"
 #include "whisper_msgs/srv/set_init_prompt.hpp"
-#include "whisper_ros/whisper.hpp"
+#include "whisper_ros/whisper_base_node.hpp"
 
 namespace whisper_ros {
 
-class WhisperNode : public rclcpp::Node {
+class WhisperNode : public WhisperBaseNode {
 
 public:
   WhisperNode();
@@ -66,10 +65,6 @@ private:
   void reset_init_prompt_service_callback(
       const std::shared_ptr<std_srvs::srv::Empty::Request> request,
       std::shared_ptr<std_srvs::srv::Empty::Response> response);
-
-protected:
-  std::string language;
-  std::shared_ptr<Whisper> whisper;
 };
 
 } // namespace whisper_ros
