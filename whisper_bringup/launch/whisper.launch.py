@@ -42,7 +42,7 @@ def generate_launch_description():
 
         return Node(
             package="whisper_ros",
-            executable="whisper_node",
+            executable="whisper_server_node",
             name="whisper_node",
             namespace="whisper",
             parameters=[{
@@ -133,13 +133,6 @@ def generate_launch_description():
                 "enabled": LaunchConfiguration("enabled", default=False),
             }],
             remappings=[("audio", "/audio/in")]
-        ),
-
-        Node(
-            package="whisper_ros",
-            executable="whisper_manager_node",
-            name="whisper_manager_node",
-            namespace="whisper",
         ),
 
         Node(
