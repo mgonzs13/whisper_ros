@@ -1,5 +1,5 @@
 string prompt
 GrammarConfig grammar_config
 ---
-string text
+Transcription transcription
 ---

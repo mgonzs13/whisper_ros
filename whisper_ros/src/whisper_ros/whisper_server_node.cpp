@@ -62,12 +62,9 @@ void WhisperServerNode::vad_callback(
 
   this->enable_silero(false);
 
-  RCLCPP_INFO(this->get_logger(), "Transcribing");
-  transcription_output result = this->whisper->transcribe(msg->data);
-  this->text = this->whisper->trim(result.text);
-  RCLCPP_INFO(this->get_logger(), "Text heard: %s", this->text.c_str());
+  this->transcription_msg = this->transcribe(msg->data);
 
-  this->text_cond.notify_all();
+  this->transcription_cond.notify_all();
 }
 
 rclcpp_action::GoalResponse
@@ -89,7 +86,7 @@ rclcpp_action::CancelResponse WhisperServerNode::handle_cancel(
 
   RCLCPP_INFO(this->get_logger(), "Received request to cancel Whisper node");
   this->enable_silero(false);
-  this->text_cond.notify_all();
+  this->transcription_cond.notify_all();
 
   return rclcpp_action::CancelResponse::ACCEPT;
 }
@@ -114,14 +111,14 @@ void WhisperServerNode::execute(
   this->whisper->set_init_prompt(goal->prompt);
 
   auto result = std::make_shared<STT::Result>();
-  this->text.clear();
+  this->transcription_msg.text.clear();
 
   this->enable_silero(true);
 
   // wait for text
-  while (this->text.empty() && !goal_handle->is_canceling()) {
-    std::unique_lock<std::mutex> lock(this->text_mutex);
-    this->text_cond.wait(lock);
+  while (this->transcription_msg.text.empty() && !goal_handle->is_canceling()) {
+    std::unique_lock<std::mutex> lock(this->transcription_mutex);
+    this->transcription_cond.wait(lock);
   }
 
   // reset
@@ -133,7 +130,7 @@ void WhisperServerNode::execute(
     goal_handle->canceled(result);
 
   } else {
-    result->text = this->text;
+    result->transcription = this->transcription_msg;
     goal_handle->succeed(result);
   }
 }

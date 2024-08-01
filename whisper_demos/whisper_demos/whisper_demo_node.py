@@ -50,7 +50,11 @@ class WhisperDemoNode(Node):
 
         rclpy.spin_until_future_complete(self, get_result_future)
         result: STT.Result = get_result_future.result().result
-        self.get_logger().info(f"I hear: {result.text}")
+        self.get_logger().info(f"I hear: {result.transcription.text}")
+        self.get_logger().info(
+            f"Audio time: {result.transcription.audio_time}")
+        self.get_logger().info(
+            f"Transcription time: {result.transcription.transcription_time}")
 
 
 def main():

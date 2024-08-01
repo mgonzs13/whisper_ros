@@ -50,7 +50,8 @@ WhisperNode::WhisperNode() : WhisperBaseNode() {
                 _2));
 
   // pubs, subs
-  this->publisher_ = this->create_publisher<std_msgs::msg::String>("text", 10);
+  this->publisher_ = this->create_publisher<whisper_msgs::msg::Transcription>(
+      "transcription", 10);
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(
           "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
@@ -61,14 +62,8 @@ WhisperNode::WhisperNode() : WhisperBaseNode() {
 void WhisperNode::vad_callback(
     const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
 
-  RCLCPP_INFO(this->get_logger(), "Transcribing");
-  transcription_output result = this->whisper->transcribe(msg->data);
-  std::string text = this->whisper->trim(result.text);
-  RCLCPP_INFO(this->get_logger(), "Text heard: %s", text.c_str());
-
-  std_msgs::msg::String result_msg;
-  result_msg.data = text;
-  this->publisher_->publish(result_msg);
+  auto transcription_msg = this->transcribe(msg->data);
+  this->publisher_->publish(transcription_msg);
 }
 
 void WhisperNode::set_grammar_service_callback(

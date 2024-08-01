@@ -32,6 +32,7 @@
 #include <std_srvs/srv/set_bool.hpp>
 
 #include "whisper_msgs/action/stt.hpp"
+#include "whisper_msgs/msg/transcription.hpp"
 #include "whisper_ros/whisper_base_node.hpp"
 
 namespace whisper_ros {
@@ -48,9 +49,9 @@ protected:
   void enable_silero(bool enable);
 
 private:
-  std::string text;
-  std::mutex text_mutex;
-  std::condition_variable text_cond;
+  whisper_msgs::msg::Transcription transcription_msg;
+  std::mutex transcription_mutex;
+  std::condition_variable transcription_cond;
 
   std::shared_ptr<GoalHandleSTT> goal_handle_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr

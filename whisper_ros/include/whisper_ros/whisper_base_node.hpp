@@ -26,6 +26,7 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
+#include "whisper_msgs/msg/transcription.hpp"
 #include "whisper_ros/whisper.hpp"
 
 namespace whisper_ros {
@@ -38,6 +39,8 @@ public:
 protected:
   std::string language;
   std::shared_ptr<Whisper> whisper;
+
+  whisper_msgs::msg::Transcription transcribe(const std::vector<float> &audio);
 };
 
 } // namespace whisper_ros

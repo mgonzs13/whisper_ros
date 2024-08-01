@@ -26,9 +26,9 @@
 #include <memory>
 
 #include <std_msgs/msg/float32_multi_array.hpp>
-#include <std_msgs/msg/string.hpp>
 #include <std_srvs/srv/empty.hpp>
 
+#include "whisper_msgs/msg/transcription.hpp"
 #include "whisper_msgs/srv/set_grammar.hpp"
 #include "whisper_msgs/srv/set_init_prompt.hpp"
 #include "whisper_ros/whisper_base_node.hpp"
@@ -41,7 +41,7 @@ public:
   WhisperNode();
 
 private:
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  rclcpp::Publisher<whisper_msgs::msg::Transcription>::SharedPtr publisher_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr
       subscription_;
 

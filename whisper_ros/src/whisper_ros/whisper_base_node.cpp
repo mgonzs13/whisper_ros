@@ -162,3 +162,21 @@ WhisperBaseNode::WhisperBaseNode() : rclcpp::Node("whisper_node") {
   this->whisper = std::make_shared<Whisper>(model, openvino_encode_device,
                                             n_processors, cparams, wparams);
 }
+
+whisper_msgs::msg::Transcription
+WhisperBaseNode::transcribe(const std::vector<float> &audio) {
+
+  auto start_time = this->get_clock()->now();
+  RCLCPP_INFO(this->get_logger(), "Transcribing");
+  transcription_output result = this->whisper->transcribe(audio);
+  std::string text = this->whisper->trim(result.text);
+  auto end_time = this->get_clock()->now();
+
+  RCLCPP_INFO(this->get_logger(), "Text heard: %s", text.c_str());
+  whisper_msgs::msg::Transcription msg;
+  msg.text = text;
+  msg.audio_time = audio.size() / WHISPER_SAMPLE_RATE;
+  msg.transcription_time = (end_time - start_time).seconds();
+
+  return msg;
+}
