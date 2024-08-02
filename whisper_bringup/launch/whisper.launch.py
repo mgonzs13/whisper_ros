@@ -130,8 +130,8 @@ def generate_launch_description():
             name="silero_vad_node",
             namespace="whisper",
             parameters=[{
-                "enabled": LaunchConfiguration("enabled", default=False),
-                "threshold": LaunchConfiguration("threshold", default=0.5),
+                "enabled": LaunchConfiguration("vad_enabled", default=False),
+                "threshold": LaunchConfiguration("vad_threshold", default=0.5),
             }],
             remappings=[("audio", "/audio/in")]
         ),
