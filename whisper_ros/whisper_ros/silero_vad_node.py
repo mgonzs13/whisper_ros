@@ -23,9 +23,9 @@
 # SOFTWARE.
 
 
-import torch
 import numpy as np
 from typing import List
+from silero_vad import VADIterator, load_silero_vad
 
 import rclpy
 from rclpy.node import Node
@@ -79,13 +79,7 @@ class SileroVadNode(Node):
             "enabled").get_parameter_value().bool_value
 
         # create silero model
-        model, utils = torch.hub.load(
-            repo_or_dir="snakers4/silero-vad",
-            model="silero_vad",
-            force_reload=False,
-            onnx=True
-        )
-        (_, _, _, VADIterator, _) = utils
+        model = load_silero_vad(onnx=True)
         self.vad_iterator = VADIterator(model)
 
         # srvs, subs, pubs
@@ -107,7 +101,7 @@ class SileroVadNode(Node):
         if audio_array is None:
             self.get_logger().error(f"Format {msg.audio.info.format} unknown")
             return
-        speech_dict = self.vad_iterator(torch.from_numpy(audio_array))
+        speech_dict = self.vad_iterator(audio_array)
 
         if speech_dict:
             self.get_logger().info(str(speech_dict))
@@ -138,6 +132,7 @@ class SileroVadNode(Node):
 
         if self.enabled:
             res.message = "Silero enabled"
+            self.vad_iterator.reset_states()
         else:
             res.message = "Silero disabled"
             self.recording = False
