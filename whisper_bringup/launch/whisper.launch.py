@@ -131,6 +131,7 @@ def generate_launch_description():
             namespace="whisper",
             parameters=[{
                 "enabled": LaunchConfiguration("enabled", default=False),
+                "threshold": LaunchConfiguration("threshold", default=0.5),
             }],
             remappings=[("audio", "/audio/in")]
         ),

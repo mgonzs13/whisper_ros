@@ -78,9 +78,13 @@ class SileroVadNode(Node):
         self.enabled = self.chunk = self.get_parameter(
             "enabled").get_parameter_value().bool_value
 
+        self.declare_parameter("threshold", 0.5)
+        self.threshold = self.chunk = self.get_parameter(
+            "threshold").get_parameter_value().double_value
+
         # create silero model
         model = load_silero_vad(onnx=True)
-        self.vad_iterator = VADIterator(model)
+        self.vad_iterator = VADIterator(model, threshold=self.threshold)
 
         # srvs, subs, pubs
         self._enable_srv = self.create_service(
