@@ -31,7 +31,10 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 WhisperServerNode::WhisperServerNode() : WhisperBaseNode() {
+  RCLCPP_INFO(this->get_logger(), "WhisperServer node started");
+}
 
+void WhisperServerNode::activate_ros_interfaces() {
   this->enable_silero_client_ =
       this->create_client<std_srvs::srv::SetBool>("enable_vad");
 
@@ -44,8 +47,18 @@ WhisperServerNode::WhisperServerNode() : WhisperBaseNode() {
       this, "listen", std::bind(&WhisperServerNode::handle_goal, this, _1, _2),
       std::bind(&WhisperServerNode::handle_cancel, this, _1),
       std::bind(&WhisperServerNode::handle_accepted, this, _1));
+}
 
-  RCLCPP_INFO(this->get_logger(), "WhisperServer node started");
+void WhisperServerNode::deactivate_ros_interfaces() {
+
+  this->enable_silero_client_.reset();
+  this->enable_silero_client_ = nullptr;
+
+  this->subscription_.reset();
+  this->subscription_ = nullptr;
+
+  this->action_server_.reset();
+  this->action_server_ = nullptr;
 }
 
 void WhisperServerNode::enable_silero(bool enable) {

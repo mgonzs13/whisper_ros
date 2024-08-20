@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(whisper_msgs REQUIRED)
@@ -28,6 +29,7 @@ target_link_libraries(whisper_node
 )
 ament_target_dependencies(whisper_node
   rclcpp
+  rclcpp_lifecycle
   std_msgs
   std_srvs
   whisper_msgs
@@ -47,6 +49,7 @@ target_link_libraries(whisper_server_node
 ament_target_dependencies(whisper_server_node
   rclcpp
   rclcpp_action
+  rclcpp_lifecycle
   std_msgs
   std_srvs
   whisper_msgs

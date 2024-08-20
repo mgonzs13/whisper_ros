@@ -30,7 +30,10 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 WhisperNode::WhisperNode() : WhisperBaseNode() {
+  RCLCPP_INFO(this->get_logger(), "Whisper node started");
+}
 
+void WhisperNode::activate_ros_interfaces() {
   // services
   this->set_grammar_service_ =
       this->create_service<whisper_msgs::srv::SetGrammar>(
@@ -55,8 +58,27 @@ WhisperNode::WhisperNode() : WhisperBaseNode() {
   this->subscription_ =
       this->create_subscription<std_msgs::msg::Float32MultiArray>(
           "vad", 10, std::bind(&WhisperNode::vad_callback, this, _1));
+}
 
-  RCLCPP_INFO(this->get_logger(), "Whisper node started");
+void WhisperNode::deactivate_ros_interfaces() {
+
+  this->set_grammar_service_.reset();
+  this->set_grammar_service_ = nullptr;
+
+  this->reset_grammar_service_.reset();
+  this->reset_grammar_service_ = nullptr;
+
+  this->set_init_prompt_service_.reset();
+  this->set_init_prompt_service_ = nullptr;
+
+  this->reset_init_prompt_service_.reset();
+  this->reset_init_prompt_service_ = nullptr;
+
+  this->publisher_.reset();
+  this->publisher_ = nullptr;
+
+  this->subscription_.reset();
+  this->subscription_ = nullptr;
 }
 
 void WhisperNode::vad_callback(

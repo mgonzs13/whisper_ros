@@ -45,6 +45,9 @@ class WhisperServerNode : public WhisperBaseNode {
 public:
   WhisperServerNode();
 
+  void activate_ros_interfaces();
+  void deactivate_ros_interfaces();
+
 protected:
   void enable_silero(bool enable);
 

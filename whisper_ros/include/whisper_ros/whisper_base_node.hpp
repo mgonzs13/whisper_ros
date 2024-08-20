@@ -25,22 +25,47 @@
 
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
 
 #include "whisper_msgs/msg/transcription.hpp"
 #include "whisper_ros/whisper.hpp"
 
 namespace whisper_ros {
 
-class WhisperBaseNode : public rclcpp::Node {
+using CallbackReturn =
+    rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
+class WhisperBaseNode : public rclcpp_lifecycle::LifecycleNode {
 
 public:
   WhisperBaseNode();
+
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_configure(const rclcpp_lifecycle::State &);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_activate(const rclcpp_lifecycle::State &);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_deactivate(const rclcpp_lifecycle::State &);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_cleanup(const rclcpp_lifecycle::State &);
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_shutdown(const rclcpp_lifecycle::State &);
+
+  virtual void activate_ros_interfaces(){};
+  virtual void deactivate_ros_interfaces(){};
 
 protected:
   std::string language;
   std::shared_ptr<Whisper> whisper;
 
   whisper_msgs::msg::Transcription transcribe(const std::vector<float> &audio);
+
+private:
+  std::string model;
+  std::string openvino_encode_device;
+  int n_processors;
+  struct whisper_context_params cparams = whisper_context_default_params();
+  struct whisper_full_params wparams;
 };
 
 } // namespace whisper_ros

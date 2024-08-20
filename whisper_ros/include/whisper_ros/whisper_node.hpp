@@ -40,6 +40,9 @@ class WhisperNode : public WhisperBaseNode {
 public:
   WhisperNode();
 
+  void activate_ros_interfaces();
+  void deactivate_ros_interfaces();
+
 private:
   rclcpp::Publisher<whisper_msgs::msg::Transcription>::SharedPtr publisher_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr
