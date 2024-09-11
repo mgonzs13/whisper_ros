@@ -11,7 +11,7 @@ find_package(ament_cmake REQUIRED)
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        c4e1861d2c24b186cbbac6c07480aaa298b0e6d9
+  GIT_TAG        a551933542d956ae84634937acd2942eb40efaaf
 )
 
 FetchContent_MakeAvailable(whisper)
