@@ -38,7 +38,7 @@ def generate_launch_description():
                 "stream": "True",
                 "language": "es",
                 "model_repo": "ggerganov/whisper.cpp",
-                "model_filename": "ggml-large-v3-q5_0.bin"
+                "model_filename": "ggml-large-v3-turbo-q5_0.bin"
             }.items()
         )
     ])

@@ -119,13 +119,13 @@ def generate_launch_description():
     model_repo = LaunchConfiguration("model_repo")
     model_repo_cmd = DeclareLaunchArgument(
         "model_repo",
-        default_value="distil-whisper/distil-large-v3-ggml",
+        default_value="ggerganov/whisper.cpp",
         description="Hugging Face model repo")
 
     model_filename = LaunchConfiguration("model_filename")
     model_filename_cmd = DeclareLaunchArgument(
         "model_filename",
-        default_value="ggml-distil-large-v3.bin",
+        default_value="ggml-large-v3-turbo-q5_0.bin",
         description="Hugging Face model filename")
 
     model_path = LaunchConfiguration("model_path")
