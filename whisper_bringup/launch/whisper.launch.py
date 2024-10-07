@@ -66,8 +66,10 @@ def generate_launch_description():
             "split_on_word": LaunchConfiguration("split_on_word", default=False),
             "max_tokens": LaunchConfiguration("max_tokens", default=0),
 
+            "debug_mode": LaunchConfiguration("debug_mode", default=False),
             "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
             "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
+            "suppress_regex": LaunchConfiguration("suppress_regex", default=""),
 
             "language": LaunchConfiguration("language", default="en"),
             "detect_language": LaunchConfiguration("detect_language", default=False),
@@ -91,6 +93,10 @@ def generate_launch_description():
             "n_processors": LaunchConfiguration("n_processors", default=1),
             "use_gpu": LaunchConfiguration("use_gpu", default=True),
             "gpu_device": LaunchConfiguration("gpu_device", default=0),
+            "flash_attn": LaunchConfiguration("flash_attn", default=False),
+            "dtw_n_top": LaunchConfiguration("dtw_n_top", default=-1),
+            "dtw_token_timestamps": LaunchConfiguration("dtw_token_timestamps", default=False),
+            "dtw_aheads": LaunchConfiguration("dtw_aheads", default="none"),
         }
 
         return Node(

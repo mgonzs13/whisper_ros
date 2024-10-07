@@ -44,6 +44,7 @@ WhisperBaseNode::WhisperBaseNode()
                                             {"beam_search_beam_size", 5},
                                             {"n_processors", 1},
                                             {"gpu_device", 0},
+                                            {"dtw_n_top", -1},
                                         });
   this->declare_parameters<std::string>(
       "", {
@@ -51,6 +52,8 @@ WhisperBaseNode::WhisperBaseNode()
               {"model", ""},
               {"language", "en"},
               {"openvino_encode_device", "CPU"},
+              {"dtw_aheads", "none"},
+              {"suppress_regex", ""},
           });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
@@ -75,12 +78,15 @@ WhisperBaseNode::WhisperBaseNode()
                                          {"print_timestamps", false},
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
+                                         {"debug_mode", false},
                                          {"speed_up", false},
                                          {"tinydiarize", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
                                          {"use_gpu", true},
+                                         {"flash_attn", false},
+                                         {"dtw_token_timestamps", false},
                                      });
 }
 
@@ -90,6 +96,8 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   RCLCPP_INFO(get_logger(), "[%s] Configuring...", this->get_name());
 
   // get sampling method and create default params
+  std::string dtw_aheads;
+  std::string suppress_regex;
   std::string sampling_strategy;
   this->get_parameter("sampling_strategy", sampling_strategy);
 
@@ -124,8 +132,10 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("split_on_word", this->wparams.split_on_word);
   this->get_parameter("max_tokens", this->wparams.max_tokens);
 
+  this->get_parameter("debug_mode", this->wparams.debug_mode);
   this->get_parameter("audio_ctx", this->wparams.audio_ctx);
   this->get_parameter("tinydiarize", this->wparams.tdrz_enable);
+  this->get_parameter("suppress_regex", suppress_regex);
 
   this->get_parameter("language", this->language);
   this->wparams.language = this->language.c_str();
@@ -153,10 +163,56 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("n_processors", this->n_processors);
   this->get_parameter("use_gpu", this->cparams.use_gpu);
   this->get_parameter("gpu_device", this->cparams.gpu_device);
+  this->get_parameter("flash_attn", this->cparams.flash_attn);
+  this->get_parameter("dtw_n_top", this->cparams.dtw_n_top);
+  this->get_parameter("dtw_token_timestamps",
+                      this->cparams.dtw_token_timestamps);
+  this->get_parameter("dtw_aheads", dtw_aheads);
 
   // check threads number
   if (this->wparams.n_threads < 0) {
     this->wparams.n_threads = std::thread::hardware_concurrency();
+  }
+
+  // suppress_regex
+  this->wparams.suppress_regex = suppress_regex.c_str();
+
+  // parse dtw_aheads
+  if (dtw_aheads == "tiny") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_TINY;
+
+  } else if (dtw_aheads == "tiny.en") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_TINY_EN;
+
+  } else if (dtw_aheads == "base") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_BASE;
+
+  } else if (dtw_aheads == "base.en") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_BASE_EN;
+
+  } else if (dtw_aheads == "small") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_SMALL;
+
+  } else if (dtw_aheads == "small.en") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_SMALL_EN;
+
+  } else if (dtw_aheads == "medium") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_MEDIUM;
+
+  } else if (dtw_aheads == "medium.en") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_MEDIUM_EN;
+
+  } else if (dtw_aheads == "large.v1") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_LARGE_V1;
+
+  } else if (dtw_aheads == "large.v2") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_LARGE_V2;
+
+  } else if (dtw_aheads == "large.v3") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_LARGE_V3;
+
+  } else {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_NONE;
   }
 
   RCLCPP_INFO(get_logger(), "[%s] Configured", this->get_name());
