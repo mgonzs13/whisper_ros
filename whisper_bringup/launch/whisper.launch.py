@@ -62,7 +62,6 @@ def generate_launch_description():
             "max_tokens": LaunchConfiguration("max_tokens", default=0),
 
             "audio_ctx": LaunchConfiguration("audio_ctx", default=0),
-            "tinydiarize": LaunchConfiguration("tinydiarize", default=False),
             "suppress_regex": LaunchConfiguration("suppress_regex", default=""),
 
             "language": LaunchConfiguration("language", default="en"),

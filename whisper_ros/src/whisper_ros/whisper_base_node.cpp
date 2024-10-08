@@ -74,7 +74,6 @@ WhisperBaseNode::WhisperBaseNode()
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
                                          {"speed_up", false},
-                                         {"tinydiarize", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_non_speech_tokens", false},
@@ -122,7 +121,6 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("max_tokens", this->wparams.max_tokens);
 
   this->get_parameter("audio_ctx", this->wparams.audio_ctx);
-  this->get_parameter("tinydiarize", this->wparams.tdrz_enable);
   this->get_parameter("suppress_regex", suppress_regex);
 
   this->get_parameter("language", this->language);
