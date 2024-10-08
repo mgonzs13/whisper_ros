@@ -52,8 +52,9 @@ public:
           const struct whisper_full_params &wparams);
   ~Whisper();
 
-  transcription_output transcribe(const std::vector<float> &pcmf32);
+  struct transcription_output transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
+  std::string timestamp_to_str(int64_t t, bool comma = false);
 
   bool set_grammar(const std::string grammar, const std::string start_rule,
                    float grammar_penalty);

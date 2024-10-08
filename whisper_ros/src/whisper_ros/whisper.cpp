@@ -61,12 +61,9 @@ Whisper::Whisper(const std::string &model,
   whisper_ctx_init_openvino_encoder(this->ctx, nullptr,
                                     openvino_encode_device.c_str(), nullptr);
 
-  WHISPER_LOG_INFO(
-
-      "Processing, %d threads, lang = %s, task = %s, timestamps = %d ...\n",
-      this->wparams.n_threads, this->wparams.language,
-      this->wparams.translate ? "translate" : "transcribe",
-      this->wparams.print_timestamps ? 0 : 1);
+  WHISPER_LOG_INFO("Processing, %d threads, lang = %s, task = %s",
+                   this->wparams.n_threads, this->wparams.language,
+                   this->wparams.translate ? "translate" : "transcribe");
 
   WHISPER_LOG_INFO("system_info: n_threads = %d / %d | %s\n",
                    this->wparams.n_threads, std::thread::hardware_concurrency(),
@@ -75,10 +72,11 @@ Whisper::Whisper(const std::string &model,
 
 Whisper::~Whisper() { whisper_free(this->ctx); }
 
-transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
+struct transcription_output
+Whisper::transcribe(const std::vector<float> &pcmf32) {
 
   int prob_n = 0;
-  transcription_output result;
+  struct transcription_output result;
   result.text = "";
   result.prob = 0.0f;
 
@@ -89,15 +87,20 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
   }
 
   const int n_segments = whisper_full_n_segments(this->ctx);
+
   for (int i = 0; i < n_segments; ++i) {
     const char *text = whisper_full_get_segment_text(this->ctx, i);
-
     result.text += text;
 
+    int64_t t0 = whisper_full_get_segment_t0(this->ctx, i);
+    int64_t t1 = whisper_full_get_segment_t1(this->ctx, i);
+    WHISPER_LOG_INFO("[%s --> %s]: %s", this->timestamp_to_str(t0).c_str(),
+                     this->timestamp_to_str(t1).c_str(), text);
+
     const int n_tokens = whisper_full_n_tokens(this->ctx, i);
+
     for (int j = 0; j < n_tokens; ++j) {
       const auto token = whisper_full_get_token_data(this->ctx, i, j);
-
       result.prob += token.p;
       ++prob_n;
     }
@@ -113,6 +116,22 @@ transcription_output Whisper::transcribe(const std::vector<float> &pcmf32) {
 std::string Whisper::trim(const std::string &s) {
   std::regex e("^\\s+|\\s+$");
   return std::regex_replace(s, e, "");
+}
+
+std::string Whisper::timestamp_to_str(int64_t t, bool comma) {
+  int64_t msec = t * 10;
+  int64_t hr = msec / (1000 * 60 * 60);
+  msec = msec - hr * (1000 * 60 * 60);
+  int64_t min = msec / (1000 * 60);
+  msec = msec - min * (1000 * 60);
+  int64_t sec = msec / 1000;
+  msec = msec - sec * 1000;
+
+  char buf[32];
+  snprintf(buf, sizeof(buf), "%02d:%02d:%02d%s%03d", (int)hr, (int)min,
+           (int)sec, comma ? "," : ".", (int)msec);
+
+  return std::string(buf);
 }
 
 bool Whisper::set_grammar(const std::string grammar,
