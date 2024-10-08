@@ -70,15 +70,9 @@ WhisperBaseNode::WhisperBaseNode()
   this->declare_parameters<bool>("", {
                                          {"translate", false},
                                          {"no_context", true},
-                                         {"no_timestamps", false},
                                          {"single_segment", true},
-                                         {"print_special", false},
-                                         {"print_progress", false},
-                                         {"print_realtime", false},
-                                         {"print_timestamps", false},
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
-                                         {"debug_mode", false},
                                          {"speed_up", false},
                                          {"tinydiarize", false},
                                          {"detect_language", false},
@@ -118,12 +112,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   this->get_parameter("translate", this->wparams.translate);
   this->get_parameter("no_context", this->wparams.no_context);
-  this->get_parameter("no_timestamps", this->wparams.no_timestamps);
   this->get_parameter("single_segment", this->wparams.single_segment);
-  this->get_parameter("print_special", this->wparams.print_special);
-  this->get_parameter("print_progress", this->wparams.print_progress);
-  this->get_parameter("print_realtime", this->wparams.print_realtime);
-  this->get_parameter("print_timestamps", this->wparams.print_timestamps);
 
   this->get_parameter("token_timestamps", this->wparams.token_timestamps);
   this->get_parameter("thold_pt", this->wparams.thold_pt);
@@ -132,7 +121,6 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("split_on_word", this->wparams.split_on_word);
   this->get_parameter("max_tokens", this->wparams.max_tokens);
 
-  this->get_parameter("debug_mode", this->wparams.debug_mode);
   this->get_parameter("audio_ctx", this->wparams.audio_ctx);
   this->get_parameter("tinydiarize", this->wparams.tdrz_enable);
   this->get_parameter("suppress_regex", suppress_regex);
