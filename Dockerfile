@@ -12,6 +12,7 @@ RUN apt-get update \
     gcc \
     git \
     wget \
+    portaudio19-dev \
     python3 \
     python3-pip
 
