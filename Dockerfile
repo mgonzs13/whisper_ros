@@ -14,6 +14,12 @@ RUN apt-get update \
     wget \
     python3 \
     python3-pip
+
+WORKDIR /root/ros2_ws/src
+RUN git clone https://github.com/mgonzs13/audio_common.git
+WORKDIR /root/ros2_ws
+
+RUN pip3 install -r src/audio_common/requirements.txt
 RUN pip3 install -r src/requirements.txt
 RUN rosdep install --from-paths src --ignore-src -r -y
 
