@@ -6,8 +6,9 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 
 1. [Related Projects](#related-projects)
 2. [Installation](#installation)
-3. [Usage](#usage)
-4. [Demos](#demos)
+3. [Docker](#docker)
+4. [Usage](#usage)
+5. [Demos](#demos)
 
 ## Related Projects
 
@@ -15,7 +16,7 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 
 ## Installation
 
-To run llama_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit).
+To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit).
 
 ```shell
 $ cd ~/ros2_ws/src
@@ -26,6 +27,20 @@ $ pip3 install -r audio_common/requirements.txt
 $ pip3 install -r whisper_ros/requirements.txt
 $ cd ~/ros2_ws
 $ colcon build --cmake-args -DGGML_CUDA=ON # add this for CUDA
+```
+
+## Docker
+
+Build the whisper_ros docker. Additionally, you can choose to build whisper_ros with CUDA (`USE_CUDA`) and choose the CUDA version (`CUDA_VERSION`). Remember that you have to use `DOCKER_BUILDKIT=0` to compile whisper_ros with CUDA when building the image.
+
+```shell
+$ DOCKER_BUILDKIT=0 docker build -t whisper_ros --build-arg USE_CUDA=1 --build-arg CUDA_VERSION=12-6 .
+```
+
+Run the docker container. If you want to use CUDA, you have to install the [NVIDIA Container Tollkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) and add `--gpus all`.
+
+```shell
+$ docker run -it --rm --gpus all whisper_ros
 ```
 
 ## Usage
