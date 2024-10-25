@@ -34,8 +34,7 @@ class WhisperDemoNode(Node):
     def __init__(self) -> None:
         super().__init__("whisper_demo_node")
 
-        self._action_client = ActionClient(
-            self, STT, "/whisper/listen")
+        self._action_client = ActionClient(self, STT, "/whisper/listen")
 
     def listen(self) -> None:
 
@@ -51,10 +50,10 @@ class WhisperDemoNode(Node):
         rclpy.spin_until_future_complete(self, get_result_future)
         result: STT.Result = get_result_future.result().result
         self.get_logger().info(f"I hear: {result.transcription.text}")
+        self.get_logger().info(f"Audio time: {result.transcription.audio_time}")
         self.get_logger().info(
-            f"Audio time: {result.transcription.audio_time}")
-        self.get_logger().info(
-            f"Transcription time: {result.transcription.transcription_time}")
+            f"Transcription time: {result.transcription.transcription_time}"
+        )
 
 
 def main():

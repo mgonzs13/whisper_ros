@@ -30,15 +30,22 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
-    return LaunchDescription([
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(
-                get_package_share_directory("whisper_bringup"), "launch", "whisper.launch.py")),
-            launch_arguments={
-                "stream": "True",
-                "language": "es",
-                "model_repo": "ggerganov/whisper.cpp",
-                "model_filename": "ggml-large-v3-turbo-q5_0.bin"
-            }.items()
-        )
-    ])
+    return LaunchDescription(
+        [
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(
+                        get_package_share_directory("whisper_bringup"),
+                        "launch",
+                        "whisper.launch.py",
+                    )
+                ),
+                launch_arguments={
+                    "stream": "True",
+                    "language": "es",
+                    "model_repo": "ggerganov/whisper.cpp",
+                    "model_filename": "ggml-large-v3-turbo-q5_0.bin",
+                }.items(),
+            )
+        ]
+    )
