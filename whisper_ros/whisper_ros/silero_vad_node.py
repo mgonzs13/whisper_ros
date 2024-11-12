@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 
+import pyaudio
 import numpy as np
 from typing import List
 from silero_vad import VADIterator, load_silero_vad
@@ -33,7 +34,7 @@ from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Float32MultiArray
 from std_srvs.srv import SetBool
 
-from audio_common.utils import msg_to_array
+from audio_common_msgs.msg import Audio
 from audio_common_msgs.msg import AudioStamped
 
 
@@ -63,6 +64,33 @@ def int2float(audio_data: np.ndarray) -> np.ndarray:
         return None
 
     return audio_data
+
+
+def msg_to_array(msg: Audio) -> np.ndarray:
+    data = None
+    audio_format = msg.info.format
+    pyaudio_to_np = {
+        pyaudio.paFloat32: np.float32,
+        pyaudio.paInt32: np.int32,
+        pyaudio.paInt16: np.int16,
+        pyaudio.paInt8: np.int8,
+        pyaudio.paUInt8: np.uint8,
+    }
+
+    if audio_format == pyaudio.paFloat32:
+        data = msg.audio_data.float32_data
+    elif audio_format == pyaudio.paInt32:
+        data = msg.audio_data.int32_data
+    elif audio_format == pyaudio.paInt16:
+        data = msg.audio_data.int16_data
+    elif audio_format == pyaudio.paInt8:
+        data = msg.audio_data.int8_data
+    elif audio_format == pyaudio.paUInt8:
+        data = msg.audio_data.uint8_data
+    if data is not None:
+        data = np.frombuffer(data, pyaudio_to_np[audio_format])
+
+    return data
 
 
 class SileroVadNode(Node):
@@ -121,9 +149,7 @@ class SileroVadNode(Node):
                 self.data.extend(audio_array.tolist())
 
                 if len(self.data) / msg.audio.info.rate < 1.0:
-                    pad_size = (
-                        msg.audio.info.chunk + msg.audio.info.rate - len(self.data)
-                    )
+                    pad_size = msg.audio.info.chunk + msg.audio.info.rate - len(self.data)
                     self.data.extend(pad_size * [0.0])
 
                 vad_msg = Float32MultiArray()
@@ -133,9 +159,7 @@ class SileroVadNode(Node):
         if self.recording:
             self.data.extend(audio_array.tolist())
 
-    def enable_cb(
-        self, req: SetBool.Request, res: SetBool.Response
-    ) -> SetBool.Response:
+    def enable_cb(self, req: SetBool.Request, res: SetBool.Response) -> SetBool.Response:
         res.success = True
         self.enabled = req.data
 
