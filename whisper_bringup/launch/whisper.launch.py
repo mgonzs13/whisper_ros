@@ -112,9 +112,7 @@ def generate_launch_description():
                 name="whisper_node",
                 namespace="whisper",
                 parameters=[params],
-                condition=IfCondition(
-                    PythonExpression([LaunchConfiguration("stream")])
-                ),
+                condition=IfCondition(PythonExpression([LaunchConfiguration("stream")])),
             ),
         )
 
