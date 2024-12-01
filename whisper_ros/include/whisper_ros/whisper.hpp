@@ -29,7 +29,7 @@
 #include "grammar-parser.h"
 #include "whisper.h"
 
-// llama logs
+// whisper logs
 #define WHISPER_LOG_ERROR(text, ...)                                           \
   fprintf(stderr, "[ERROR] " text "\n", ##__VA_ARGS__)
 #define WHISPER_LOG_WARN(text, ...)                                            \
