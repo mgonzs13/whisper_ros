@@ -11,7 +11,7 @@ find_package(ament_cmake REQUIRED)
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        v1.7.2
+  GIT_TAG        v1.7.3
 )
 
 FetchContent_MakeAvailable(whisper)
@@ -21,14 +21,37 @@ set_target_properties(
   ggml PROPERTIES
   OUTPUT_NAME "whisper_ggml"
   INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
-  CXX_STANDARD 11
+  CXX_STANDARD 17
 )
+
+set_target_properties(
+  ggml-base PROPERTIES
+  OUTPUT_NAME "whisper_ggml_base"
+  INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+  CXX_STANDARD 17
+)
+
+set_target_properties(
+  ggml-cpu PROPERTIES
+  OUTPUT_NAME "whisper_ggml_cpu"
+  INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+  CXX_STANDARD 17
+)
+
+if(GGML_CUDA)
+  set_target_properties(
+    ggml-cuda PROPERTIES
+    OUTPUT_NAME "whisper_ggml_cuda"
+    INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+    CXX_STANDARD 17
+  )
+endif()
 
 # whisper
 set_target_properties(
   whisper PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:.>
-  CXX_STANDARD 11
+  CXX_STANDARD 17
 )
 
 # grammar
@@ -43,14 +66,30 @@ target_include_directories(grammar
 )
 
 # export
-file(GLOB COMMON_HEADERS ${whisper_SOURCE_DIR}/include/*.h ${whisper_SOURCE_DIR}/examples/*.h)
+file(GLOB COMMON_HEADERS 
+  ${whisper_SOURCE_DIR}/ggml/include/*.
+  ${whisper_SOURCE_DIR}/include/*.h
+  ${whisper_SOURCE_DIR}/examples/*.h
+)
 install(
   FILES ${COMMON_HEADERS}
   DESTINATION include
 )
 
+set(INSTALL_TARGETS 
+  ggml
+  ggml-base
+  ggml-cpu
+  whisper
+  grammar
+)
+
+if(GGML_CUDA)
+  list(APPEND INSTALL_TARGETS ggml-cuda)
+endif()
+
 install(
-  TARGETS ggml whisper grammar
+  TARGETS ${INSTALL_TARGETS}
   EXPORT export_whisper
   LIBRARY DESTINATION lib
   INCLUDES DESTINATION include
