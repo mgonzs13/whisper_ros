@@ -35,7 +35,8 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 SileroVadNode::SileroVadNode()
-    : rclcpp_lifecycle::LifecycleNode("silero_vad_node"), listening(false) {
+    : rclcpp_lifecycle::LifecycleNode("silero_vad_node"), listening(false),
+      publish(false) {
 
   this->declare_parameter<bool>("enabled", true);
   this->declare_parameter<std::string>("model_path", "");
@@ -52,7 +53,10 @@ SileroVadNode::on_configure(const rclcpp_lifecycle::State &) {
   RCLCPP_INFO(get_logger(), "[%s] Configuring...", this->get_name());
 
   // get params
-  this->get_parameter("enabled", this->enabled);
+  bool enabled;
+  this->get_parameter("enabled", enabled);
+  this->enabled.store(enabled);
+
   this->get_parameter("model_path", this->model_path_);
   this->get_parameter("sample_rate", this->sample_rate_);
   this->get_parameter("frame_size_ms", this->frame_size_ms_);
@@ -185,6 +189,11 @@ void SileroVadNode::audio_callback(
     RCLCPP_INFO(this->get_logger(), "Speech starts...");
     this->listening.store(true);
     this->data.clear();
+
+    if (this->prev_data.size()) {
+      this->data.insert(this->data.end(), this->prev_data.begin(),
+                        this->prev_data.end());
+    }
   }
 
   // Add audio if listening
@@ -192,10 +201,8 @@ void SileroVadNode::audio_callback(
     this->data.insert(this->data.end(), data.begin(), data.end());
   }
 
-  // Check if speech ends
-  if (timestamp.start == -1 && timestamp.end != -1 && this->listening) {
-    RCLCPP_INFO(this->get_logger(), "Speech ends...");
-
+  // Check if publish
+  if (this->publish) {
     if (this->data.size() / msg->audio.info.rate < 1.0) {
       int pad_size =
           msg->audio.info.chunk + msg->audio.info.rate - this->data.size();
@@ -203,11 +210,20 @@ void SileroVadNode::audio_callback(
     }
 
     this->listening.store(false);
+    this->publish.store(false);
     auto vad_msg = std_msgs::msg::Float32MultiArray();
     vad_msg.data = this->data;
     this->publisher_->publish(vad_msg);
     this->data.clear();
   }
+
+  // Check if speech ends
+  if (timestamp.start == -1 && timestamp.end != -1 && this->listening) {
+    RCLCPP_INFO(this->get_logger(), "Speech ends...");
+    this->publish.store(true);
+  }
+
+  this->prev_data = data;
 }
 
 void SileroVadNode::enable_cb(
@@ -218,8 +234,11 @@ void SileroVadNode::enable_cb(
 
   if (request->data && !this->enabled) {
     response->message = "SileroVAD enabled";
-    this->enabled = true;
+    this->enabled.store(true);
+    this->listening.store(false);
+    this->publish.store(false);
     this->data.clear();
+    this->prev_data.clear();
     this->vad_iterator->reset_states();
 
   } else if (request->data && this->enabled) {
@@ -227,8 +246,11 @@ void SileroVadNode::enable_cb(
 
   } else if (!request->data && this->enabled) {
     response->message = "SileroVAD disabled";
+    this->enabled.store(false);
     this->listening.store(false);
+    this->publish.store(false);
     this->data.clear();
+    this->prev_data.clear();
 
   } else if (!request->data && !this->enabled) {
     response->message = "SileroVAD already disabled";

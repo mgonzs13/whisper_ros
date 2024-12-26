@@ -53,12 +53,14 @@ public:
   on_shutdown(const rclcpp_lifecycle::State &);
 
 protected:
-  bool enabled;
+  std::atomic<bool> enabled;
   std::atomic<bool> listening;
+  std::atomic<bool> publish;
   std::vector<float> data;
   std::unique_ptr<VadIterator> vad_iterator;
 
 private:
+  std::vector<float> prev_data;
   std::string model_path_;
   int sample_rate_;
   int frame_size_ms_;
