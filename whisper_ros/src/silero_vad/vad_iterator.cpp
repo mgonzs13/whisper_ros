@@ -42,8 +42,8 @@ VadIterator::VadIterator(const std::string &model_path, int sample_rate,
       state(2 * 1 * 128, 0.0f), sr(1, sample_rate) {
 
   this->input_node_dims[0] = 1;
-  this->input_node_dims[1] = this->window_size_samples;
-  this->input.reserve(context_size + this->window_size_samples);
+  this->input_node_dims[1] = this->context_size + this->window_size_samples;
+  this->input.reserve(this->context_size + this->window_size_samples);
 
   try {
     this->init_onnx_model(model_path);
