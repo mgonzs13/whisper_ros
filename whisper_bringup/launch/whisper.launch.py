@@ -149,14 +149,14 @@ def generate_launch_description():
     silero_vad_model_repo = LaunchConfiguration("silero_vad_model_repo")
     silero_vad_model_repo_cmd = DeclareLaunchArgument(
         "silero_vad_model_repo",
-        default_value="onnx-community/silero-vad",
+        default_value="mgonzs13/silero-vad-onnx",
         description="Hugging Face model repo for SileroVAD",
     )
 
     silero_vad_model_filename = LaunchConfiguration("silero_vad_model_filename")
     silero_vad_model_filename_cmd = DeclareLaunchArgument(
         "silero_vad_model_filename",
-        default_value="onnx/model.onnx",
+        default_value="silero_vad.onnx",
         description="Hugging Face model filename for SileroVAD",
     )
 

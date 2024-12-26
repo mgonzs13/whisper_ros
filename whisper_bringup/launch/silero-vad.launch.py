@@ -54,9 +54,9 @@ def generate_launch_description():
                         "frame_size_ms": LaunchConfiguration("frame_size_ms", default=32),
                         "threshold": LaunchConfiguration("threshold", default=0.5),
                         "min_silence_ms": LaunchConfiguration(
-                            "min_silence_ms", default=100
+                            "min_silence_ms", default=128
                         ),
-                        "speech_pad_ms": LaunchConfiguration("speech_pad_ms", default=30),
+                        "speech_pad_ms": LaunchConfiguration("speech_pad_ms", default=32),
                     }
                 ],
                 remappings=[("audio", "/audio/in")],
@@ -66,7 +66,7 @@ def generate_launch_description():
     model_repo = LaunchConfiguration("model_repo")
     model_repo_cmd = DeclareLaunchArgument(
         "model_repo",
-        default_value="deepghs/silero-vad-onnx",
+        default_value="mgonzs13/silero-vad-onnx",
         description="Hugging Face model repo",
     )
 
