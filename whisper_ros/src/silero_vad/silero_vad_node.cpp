@@ -189,9 +189,7 @@ void SileroVadNode::audio_callback(
 
   // Add audio if listening
   if (this->listening) {
-    for (auto d : data) {
-      this->data.push_back(d);
-    }
+    this->data.insert(this->data.end(), data.begin(), data.end());
   }
 
   // Check if speech ends

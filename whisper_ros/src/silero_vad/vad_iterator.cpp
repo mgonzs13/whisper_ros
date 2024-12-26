@@ -42,7 +42,8 @@ VadIterator::VadIterator(const std::string &model_path, int sample_rate,
       state(2 * 1 * 128, 0.0f), sr(1, sample_rate) {
 
   this->input_node_dims[0] = 1;
-  this->input_node_dims[1] = window_size_samples;
+  this->input_node_dims[1] = this->window_size_samples;
+  this->input.reserve(context_size + this->window_size_samples);
 
   try {
     this->init_onnx_model(model_path);
@@ -78,9 +79,9 @@ void VadIterator::reset_states() {
 Timestamp VadIterator::predict(const std::vector<float> &data) {
   // Pre-fill input with context
   this->input.clear();
-  this->input.reserve(context.size() + data.size());
-  this->input.insert(input.end(), context.begin(), context.end());
-  this->input.insert(input.end(), data.begin(), data.end());
+  this->input.insert(this->input.end(), this->context.begin(),
+                     this->context.end());
+  this->input.insert(this->input.end(), data.begin(), data.end());
 
   // Create input tensors
   Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
@@ -132,8 +133,9 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
       this->triggered = true;
       return Timestamp(start_timestwamp, -1, speech_prob);
     }
+  }
 
-  } else if (speech_prob < this->threshold - 0.15 && this->triggered) {
+  if (speech_prob < this->threshold - 0.15 && this->triggered) {
     if (this->temp_end == 0) {
       this->temp_end = this->current_sample;
     }
