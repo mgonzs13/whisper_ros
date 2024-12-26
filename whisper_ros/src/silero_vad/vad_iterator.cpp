@@ -106,7 +106,7 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
   std::copy(updated_state, updated_state + this->state.size(),
             this->state.begin());
 
-  for (int i = 63; i >= 0; i--) {
+  for (int i = 64; i > 0; i--) {
     this->context.push_back(data.at(data.size() - i));
   }
 

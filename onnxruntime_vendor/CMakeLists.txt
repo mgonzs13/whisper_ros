@@ -30,7 +30,7 @@ install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/lib)
 install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/include)
 
 # Export the onnxruntime library for downstream packages
-ament_export_include_directories(${ONNXRUNTIME_INSTALL_DIR}/include)
+ament_export_include_directories(include)
 ament_export_libraries(onnxruntime)
 
 # Export the package
