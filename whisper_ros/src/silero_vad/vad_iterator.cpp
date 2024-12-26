@@ -1,6 +1,6 @@
 // MIT License
 
-// Copyright (c) 2023  Miguel Ángel González Santamarta
+// Copyright (c) 2024  Miguel Ángel González Santamarta
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <algorithm>
 #include <limits>
 #include <memory>
 #include <string>
@@ -31,23 +32,24 @@ using namespace silero_vad;
 
 VadIterator::VadIterator(const std::string &model_path, int sample_rate,
                          int frame_size_ms, float threshold, int min_silence_ms,
-                         int speech_pad_ms, int min_speech_ms,
-                         float max_speech_s)
+                         int speech_pad_ms)
     : env(ORT_LOGGING_LEVEL_WARNING, "VadIterator"), threshold(threshold),
       sample_rate(sample_rate), sr_per_ms(sample_rate / 1000),
       window_size_samples(frame_size_ms * sr_per_ms),
-      min_speech_samples(sr_per_ms * min_speech_ms),
       speech_pad_samples(sr_per_ms * speech_pad_ms),
-      max_speech_samples(sample_rate * max_speech_s - window_size_samples -
-                         2 * speech_pad_samples),
       min_silence_samples(sr_per_ms * min_silence_ms),
-      min_silence_samples_at_max_speech(sr_per_ms * 98),
-      state(2 * 1 * 128, 0.0f), sr(1, sample_rate), context(64, 0.0f) {
+      context_size(sample_rate == 16000 ? 64 : 32), context(context_size, 0.0f),
+      state(2 * 1 * 128, 0.0f), sr(1, sample_rate) {
 
-  // this->input.resize(window_size_samples);
   this->input_node_dims[0] = 1;
   this->input_node_dims[1] = window_size_samples;
-  this->init_onnx_model(model_path);
+
+  try {
+    this->init_onnx_model(model_path);
+  } catch (const std::exception &e) {
+    throw std::runtime_error("Failed to initialize ONNX model: " +
+                             std::string(e.what()));
+  }
 }
 
 void VadIterator::init_onnx_model(const std::string &model_path) {
@@ -55,8 +57,14 @@ void VadIterator::init_onnx_model(const std::string &model_path) {
   this->session_options.SetInterOpNumThreads(1);
   this->session_options.SetGraphOptimizationLevel(
       GraphOptimizationLevel::ORT_ENABLE_ALL);
-  this->session = std::make_shared<Ort::Session>(this->env, model_path.c_str(),
-                                                 this->session_options);
+
+  try {
+    this->session = std::make_shared<Ort::Session>(
+        this->env, model_path.c_str(), this->session_options);
+  } catch (const std::exception &e) {
+    throw std::runtime_error("Failed to create ONNX session: " +
+                             std::string(e.what()));
+  }
 }
 
 void VadIterator::reset_states() {
@@ -68,16 +76,13 @@ void VadIterator::reset_states() {
 }
 
 Timestamp VadIterator::predict(const std::vector<float> &data) {
-  // Create input tensors
+  // Pre-fill input with context
   this->input.clear();
-  for (auto ele : this->context) {
-    this->input.push_back(ele);
-  }
+  this->input.reserve(context.size() + data.size());
+  this->input.insert(input.end(), context.begin(), context.end());
+  this->input.insert(input.end(), data.begin(), data.end());
 
-  for (auto ele : data) {
-    this->input.push_back(ele);
-  }
-
+  // Create input tensors
   Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
       this->memory_info, this->input.data(), this->input.size(),
       this->input_node_dims, 2);
@@ -95,10 +100,14 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
   this->ort_inputs.emplace_back(std::move(sr_tensor));
 
   // Run inference
-  this->ort_outputs = this->session->Run(
-      Ort::RunOptions{nullptr}, this->input_node_names.data(),
-      this->ort_inputs.data(), this->ort_inputs.size(),
-      this->output_node_names.data(), this->output_node_names.size());
+  try {
+    this->ort_outputs = session->Run(
+        Ort::RunOptions{nullptr}, this->input_node_names.data(),
+        this->ort_inputs.data(), this->ort_inputs.size(),
+        this->output_node_names.data(), this->output_node_names.size());
+  } catch (const std::exception &e) {
+    throw std::runtime_error("ONNX inference failed: " + std::string(e.what()));
+  }
 
   // Process output
   float speech_prob = this->ort_outputs[0].GetTensorMutableData<float>()[0];
@@ -106,9 +115,8 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
   std::copy(updated_state, updated_state + this->state.size(),
             this->state.begin());
 
-  for (int i = 64; i > 0; i--) {
-    this->context.push_back(data.at(data.size() - i));
-  }
+  // Update context with the last 64 samples of data
+  this->context.assign(data.end() - context_size, data.end());
 
   // Handle result
   this->current_sample += this->window_size_samples;
@@ -119,10 +127,10 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
     }
 
     if (!this->triggered) {
+      int start_timestwamp = this->current_sample - this->speech_pad_samples -
+                             this->window_size_samples;
       this->triggered = true;
-      return Timestamp(this->current_sample - this->speech_pad_samples -
-                           this->window_size_samples,
-                       -1, speech_prob);
+      return Timestamp(start_timestwamp, -1, speech_prob);
     }
 
   } else if (speech_prob < this->threshold - 0.15 && this->triggered) {
@@ -131,12 +139,11 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
     }
 
     if (this->current_sample - this->temp_end >= this->min_silence_samples) {
-      this->temp_end = 0;
+      int end_timestamp =
+          this->temp_end + this->speech_pad_samples - this->window_size_samples;
       this->triggered = false;
-      return Timestamp(-1,
-                       this->temp_end + this->speech_pad_samples -
-                           this->window_size_samples,
-                       speech_prob);
+      this->temp_end = 0;
+      return Timestamp(-1, end_timestamp, speech_prob);
     }
   }
 

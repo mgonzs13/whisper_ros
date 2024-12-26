@@ -44,9 +44,6 @@ SileroVadNode::SileroVadNode()
   this->declare_parameter<float>("threshold", 0.5f);
   this->declare_parameter<int>("min_silence_ms", 100);
   this->declare_parameter<int>("speech_pad_ms", 30);
-  this->declare_parameter<int>("min_speech_ms", 32);
-  this->declare_parameter<float>("max_speech_s",
-                                 std::numeric_limits<float>::infinity());
 }
 
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -62,8 +59,6 @@ SileroVadNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("threshold", this->threshold_);
   this->get_parameter("min_silence_ms", this->min_silence_ms_);
   this->get_parameter("speech_pad_ms", this->speech_pad_ms_);
-  this->get_parameter("min_speech_ms", this->min_speech_ms_);
-  this->get_parameter("max_speech_s", this->max_speech_s_);
 
   RCLCPP_INFO(get_logger(), "[%s] Configured", this->get_name());
 
@@ -79,8 +74,7 @@ SileroVadNode::on_activate(const rclcpp_lifecycle::State &) {
   // create silero-vad
   this->vad_iterator = std::make_unique<VadIterator>(
       this->model_path_, this->sample_rate_, this->frame_size_ms_,
-      this->threshold_, this->min_silence_ms_, this->speech_pad_ms_,
-      this->min_speech_ms_, this->max_speech_s_);
+      this->threshold_, this->min_silence_ms_, this->speech_pad_ms_);
 
   this->publisher_ =
       this->create_publisher<std_msgs::msg::Float32MultiArray>("vad", 10);
@@ -185,8 +179,6 @@ void SileroVadNode::audio_callback(
 
   // Predict if speech starts or ends
   auto timestamp = this->vad_iterator->predict(data);
-  // RCLCPP_INFO(this->get_logger(), "Timestampt: %s",
-  //             timestamp.to_string().c_str());
 
   // Check if speech starts
   if (timestamp.start != -1 && timestamp.end == -1 && !this->listening) {
@@ -209,9 +201,7 @@ void SileroVadNode::audio_callback(
     if (this->data.size() / msg->audio.info.rate < 1.0) {
       int pad_size =
           msg->audio.info.chunk + msg->audio.info.rate - this->data.size();
-      for (int i = 0; i < pad_size; i++) {
-        this->data.push_back(0.0);
-      }
+      this->data.insert(this->data.end(), pad_size, 0.0f);
     }
 
     this->listening.store(false);

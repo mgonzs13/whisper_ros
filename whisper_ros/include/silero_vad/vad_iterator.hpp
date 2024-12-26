@@ -38,9 +38,7 @@ class VadIterator {
 public:
   VadIterator(const std::string &model_path, int sample_rate = 16000,
               int frame_size_ms = 32, float threshold = 0.5f,
-              int min_silence_ms = 0, int speech_pad_ms = 32,
-              int min_speech_ms = 32,
-              float max_speech_s = std::numeric_limits<float>::infinity());
+              int min_silence_ms = 100, int speech_pad_ms = 30);
 
   void reset_states();
   Timestamp predict(const std::vector<float> &data);
@@ -58,11 +56,9 @@ private:
   int sample_rate;
   int sr_per_ms;
   int64_t window_size_samples;
-  int min_speech_samples;
   int speech_pad_samples;
-  float max_speech_samples;
   unsigned int min_silence_samples;
-  unsigned int min_silence_samples_at_max_speech;
+  int context_size;
 
   // Model state
   bool triggered = false;
@@ -75,9 +71,9 @@ private:
   std::vector<const char *> input_node_names = {"input", "state", "sr"};
 
   std::vector<float> input;
+  std::vector<float> context;
   std::vector<float> state;
   std::vector<int64_t> sr;
-  std::vector<float> context;
 
   int64_t input_node_dims[2] = {};
   const int64_t state_node_dims[3] = {2, 1, 128};

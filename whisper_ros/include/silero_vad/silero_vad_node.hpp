@@ -65,8 +65,6 @@ private:
   float threshold_;
   int min_silence_ms_;
   int speech_pad_ms_;
-  int min_speech_ms_;
-  float max_speech_s_;
 
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher_;
   rclcpp::Subscription<audio_common_msgs::msg::AudioStamped>::SharedPtr
