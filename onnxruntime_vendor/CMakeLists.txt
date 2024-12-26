@@ -26,8 +26,8 @@ add_custom_target(download_onnxruntime ALL
 )
 
 # Install the ONNX Runtime library and include files
-install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/lib)
-install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/include)
+install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/lib DESTINATION .)
+install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/include DESTINATION .)
 
 # Export the onnxruntime library for downstream packages
 ament_export_include_directories(include)
