@@ -21,12 +21,15 @@
 # SOFTWARE.
 
 
-from launch import LaunchDescription, LaunchContext
+import os
 from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch.actions import OpaqueFunction, DeclareLaunchArgument
-from huggingface_hub import hf_hub_download
+from launch import LaunchDescription, LaunchContext
 from launch.conditions import IfCondition, UnlessCondition
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import OpaqueFunction, DeclareLaunchArgument, IncludeLaunchDescription
+from ament_index_python.packages import get_package_share_directory
+from huggingface_hub import hf_hub_download
 
 
 def generate_launch_description():
@@ -126,19 +129,42 @@ def generate_launch_description():
     model_repo_cmd = DeclareLaunchArgument(
         "model_repo",
         default_value="ggerganov/whisper.cpp",
-        description="Hugging Face model repo",
+        description="Hugging Face model repo for Whisper",
     )
 
     model_filename = LaunchConfiguration("model_filename")
     model_filename_cmd = DeclareLaunchArgument(
         "model_filename",
         default_value="ggml-large-v3-turbo-q5_0.bin",
-        description="Hugging Face model filename",
+        description="Hugging Face model filename for Whisper",
     )
 
     model_path = LaunchConfiguration("model_path")
     model_path_cmd = DeclareLaunchArgument(
-        "model_path", default_value="", description="Local path to the model file"
+        "model_path",
+        default_value="",
+        description="Local path to the model file for Whisper",
+    )
+
+    silero_vad_model_repo = LaunchConfiguration("silero_vad_model_repo")
+    silero_vad_model_repo_cmd = DeclareLaunchArgument(
+        "silero_vad_model_repo",
+        default_value="onnx-community/silero-vad",
+        description="Hugging Face model repo for SileroVAD",
+    )
+
+    silero_vad_model_filename = LaunchConfiguration("silero_vad_model_filename")
+    silero_vad_model_filename_cmd = DeclareLaunchArgument(
+        "silero_vad_model_filename",
+        default_value="onnx/model.onnx",
+        description="Hugging Face model filename for SileroVAD",
+    )
+
+    silero_vad_model_path = LaunchConfiguration("silero_vad_model_path")
+    silero_vad_model_path_cmd = DeclareLaunchArgument(
+        "silero_vad_model_path",
+        default_value="",
+        description="Local path to the model file for SileroVAD",
     )
 
     return LaunchDescription(
@@ -147,24 +173,30 @@ def generate_launch_description():
             model_repo_cmd,
             model_filename_cmd,
             model_path_cmd,
+            silero_vad_model_repo_cmd,
+            silero_vad_model_filename_cmd,
+            silero_vad_model_path_cmd,
             OpaqueFunction(
-                function=run_whisper, args=[model_repo, model_filename, model_path]
+                function=run_whisper,
+                args=[model_repo, model_filename, model_path],
             ),
-            Node(
-                package="whisper_ros",
-                executable="silero_vad_node",
-                name="silero_vad_node",
-                namespace="whisper",
-                parameters=[
-                    {
-                        "enabled": LaunchConfiguration(
-                            "vad_enabled",
-                            default=PythonExpression([LaunchConfiguration("stream")]),
-                        ),
-                        "threshold": LaunchConfiguration("vad_threshold", default=0.5),
-                    }
-                ],
-                remappings=[("audio", "/audio/in")],
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(
+                        get_package_share_directory("whisper_bringup"),
+                        "launch",
+                        "silero-vad.launch.py",
+                    )
+                ),
+                launch_arguments={
+                    "enabled": LaunchConfiguration(
+                        "vad_enabled",
+                        default=PythonExpression([LaunchConfiguration("stream")]),
+                    ),
+                    "model_repo": silero_vad_model_repo,
+                    "model_filename": silero_vad_model_filename,
+                    "model_path": silero_vad_model_path,
+                }.items(),
             ),
             Node(
                 package="audio_common",

@@ -1,6 +1,6 @@
 // MIT License
 
-// Copyright (c) 2024  Miguel Ángel González Santamarta
+// Copyright (c) 2023  Miguel Ángel González Santamarta
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "whisper_ros/whisper_server_node.hpp"
+#include "silero_vad/timestamp.hpp"
 
-using namespace whisper_ros;
+using namespace silero_vad;
 
-int main(int argc, char *argv[]) {
-  rclcpp::init(argc, argv);
+Timestamp::Timestamp(int start, int end, float speech_prob)
+    : start(start), end(end), speech_prob(speech_prob) {}
 
-  auto node = std::make_shared<WhisperServerNode>();
-  node->configure();
-  node->activate();
+Timestamp &Timestamp::operator=(const Timestamp &other) {
+  this->start = other.start;
+  this->end = other.end;
+  this->speech_prob = other.speech_prob;
+  return *this;
+}
 
-  rclcpp::executors::SingleThreadedExecutor executor;
-  executor.add_node(node->get_node_base_interface());
-  executor.spin();
+bool Timestamp::operator==(const Timestamp &other) const {
+  return this->start == other.start && this->end == other.end;
+}
 
-  rclcpp::shutdown();
-  return 0;
+std::string Timestamp::to_string() const {
+  char buffer[256];
+  snprintf(buffer, sizeof(buffer), "{start:%08d,end:%08d,prob:%f}", this->start,
+           this->end, this->speech_prob * 100);
+  return std::string(buffer);
 }

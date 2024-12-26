@@ -33,7 +33,6 @@ To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https:/
 $ cd ~/ros2_ws/src
 $ git clone https://github.com/mgonzs13/audio_common.git
 $ git clone https://github.com/mgonzs13/whisper_ros.git
-$ pip3 install -r whisper_ros/requirements.txt
 $ cd ~/ros2_ws
 $ rosdep install --from-paths src --ignore-src -r -y
 $ colcon build --cmake-args -DGGML_CUDA=ON # add this for CUDA

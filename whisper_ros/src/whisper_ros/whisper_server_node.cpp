@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 #include <memory>
-#include <regex>
 
 #include "whisper.h"
 #include "whisper_ros/whisper_server_node.hpp"

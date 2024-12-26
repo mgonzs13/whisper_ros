@@ -20,10 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <regex>
-
-#include "whisper.h"
 #include "whisper_ros/whisper_base_node.hpp"
+#include "whisper.h"
 
 using namespace whisper_ros;
 using std::placeholders::_1;

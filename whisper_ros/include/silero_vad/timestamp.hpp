@@ -20,21 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "whisper_ros/whisper_server_node.hpp"
+#ifndef TIMESTAMPT_HPP
+#define TIMESTAMPT_HPP
 
-using namespace whisper_ros;
+#include <string>
 
-int main(int argc, char *argv[]) {
-  rclcpp::init(argc, argv);
+namespace silero_vad {
 
-  auto node = std::make_shared<WhisperServerNode>();
-  node->configure();
-  node->activate();
+class Timestamp {
+public:
+  int start;
+  int end;
+  float speech_prob;
 
-  rclcpp::executors::SingleThreadedExecutor executor;
-  executor.add_node(node->get_node_base_interface());
-  executor.spin();
+  Timestamp(int start = -1, int end = -1, float speech_prob = 0);
 
-  rclcpp::shutdown();
-  return 0;
-}
+  Timestamp &operator=(const Timestamp &other);
+  bool operator==(const Timestamp &other) const;
+
+  std::string to_string() const;
+};
+
+} // namespace silero_vad
+
+#endif
