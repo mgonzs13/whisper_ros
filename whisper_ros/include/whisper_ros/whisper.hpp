@@ -37,7 +37,7 @@
 #define WHISPER_LOG_INFO(text, ...)                                            \
   fprintf(stderr, "[INFO] " text "\n", ##__VA_ARGS__)
 
-struct transcription_output {
+struct TranscriptionOutput {
   std::string text;
   float prob;
 };
@@ -52,7 +52,7 @@ public:
           const struct whisper_full_params &wparams);
   ~Whisper();
 
-  struct transcription_output transcribe(const std::vector<float> &pcmf32);
+  struct TranscriptionOutput transcribe(const std::vector<float> &pcmf32);
   std::string trim(const std::string &s);
   std::string timestamp_to_str(int64_t t, bool comma = false);
 

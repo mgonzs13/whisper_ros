@@ -72,11 +72,11 @@ Whisper::Whisper(const std::string &model,
 
 Whisper::~Whisper() { whisper_free(this->ctx); }
 
-struct transcription_output
+struct TranscriptionOutput
 Whisper::transcribe(const std::vector<float> &pcmf32) {
 
   int prob_n = 0;
-  struct transcription_output result;
+  struct TranscriptionOutput result;
   result.text = "";
   result.prob = 0.0f;
 

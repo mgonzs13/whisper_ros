@@ -264,7 +264,7 @@ WhisperBaseNode::transcribe(const std::vector<float> &audio) {
 
   auto start_time = this->get_clock()->now();
   RCLCPP_INFO(this->get_logger(), "Transcribing");
-  transcription_output result = this->whisper->transcribe(audio);
+  struct TranscriptionOutput result = this->whisper->transcribe(audio);
   std::string text = this->whisper->trim(result.text);
   auto end_time = this->get_clock()->now();
 
