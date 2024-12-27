@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "silero_vad/vad_iterator.hpp"
+#include "whisper_utils/logs.hpp"
 
 using namespace silero_vad;
 
@@ -48,9 +49,11 @@ VadIterator::VadIterator(const std::string &model_path, int sample_rate,
   try {
     this->init_onnx_model(model_path);
   } catch (const std::exception &e) {
-    throw std::runtime_error("Failed to initialize ONNX model: " +
-                             std::string(e.what()));
+    WHISPER_LOG_ERROR("Failed to initialize ONNX model: %s", e.what());
+    return;
   }
+
+  WHISPER_LOG_INFO("SileroVAD Iterator started");
 }
 
 void VadIterator::init_onnx_model(const std::string &model_path) {
@@ -77,6 +80,9 @@ void VadIterator::reset_states() {
 }
 
 Timestamp VadIterator::predict(const std::vector<float> &data) {
+
+  WHISPER_LOG_INFO("Processing audio data");
+
   // Pre-fill input with context
   this->input.clear();
   this->input.insert(this->input.end(), this->context.begin(),
@@ -107,7 +113,8 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
         this->ort_inputs.data(), this->ort_inputs.size(),
         this->output_node_names.data(), this->output_node_names.size());
   } catch (const std::exception &e) {
-    throw std::runtime_error("ONNX inference failed: " + std::string(e.what()));
+    WHISPER_LOG_ERROR("ONNX inference failed: %s", e.what());
+    return Timestamp(-1, -1, 0.0f);
   }
 
   // Process output
@@ -115,6 +122,7 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
   float *updated_state = this->ort_outputs[1].GetTensorMutableData<float>();
   std::copy(updated_state, updated_state + this->state.size(),
             this->state.begin());
+  WHISPER_LOG_DEBUG("Speech probability %f", speech_prob);
 
   // Update context with the last 64 samples of data
   this->context.assign(data.end() - context_size, data.end());
@@ -131,6 +139,7 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
       int start_timestwamp = this->current_sample - this->speech_pad_samples -
                              this->window_size_samples;
       this->triggered = true;
+      WHISPER_LOG_DEBUG("Speech starts at %d", start_timestwamp);
       return Timestamp(start_timestwamp, -1, speech_prob);
     }
   }
@@ -145,6 +154,7 @@ Timestamp VadIterator::predict(const std::vector<float> &data) {
           this->temp_end + this->speech_pad_samples - this->window_size_samples;
       this->triggered = false;
       this->temp_end = 0;
+      WHISPER_LOG_DEBUG("Speech ends at %d", end_timestamp);
       return Timestamp(-1, end_timestamp, speech_prob);
     }
   }

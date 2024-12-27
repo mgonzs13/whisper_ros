@@ -72,6 +72,7 @@ add_executable(silero_vad_node
   src/silero_vad/silero_vad_node.cpp
   src/silero_vad/vad_iterator.cpp
   src/silero_vad/timestamp.cpp
+  src/whisper_utils/logs.cpp
 )
 target_link_libraries(silero_vad_node ${PORTAUDIO_LIB})
 ament_target_dependencies(silero_vad_node
