@@ -7,7 +7,10 @@ SHELL ["/bin/bash", "-c"]
 COPY . /root/ros2_ws/src
 
 # Install dependencies
-RUN apt-get update
+RUN apt-get update \
+    && apt-get -y --quiet --no-install-recommends install \
+    python3 \
+    python3-pip
 RUN rosdep update --include-eol-distros && rosdep install --from-paths src --ignore-src -r -y
 RUN pip3 install -r requirements.txt
 
