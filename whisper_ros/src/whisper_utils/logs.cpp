@@ -115,4 +115,9 @@ LogFunction log_warn = default_log_warn;
 LogFunction log_info = default_log_info;
 LogFunction log_debug = default_log_debug;
 
+// Initialize the log level to INFO
+LogLevel log_level = INFO;
+
+void set_log_level(LogLevel log_level) { log_level = log_level; }
+
 } // namespace whisper_utils

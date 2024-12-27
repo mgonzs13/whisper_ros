@@ -81,7 +81,7 @@ void VadIterator::reset_states() {
 
 Timestamp VadIterator::predict(const std::vector<float> &data) {
 
-  WHISPER_LOG_INFO("Processing audio data");
+  WHISPER_LOG_DEBUG("Processing audio data");
 
   // Pre-fill input with context
   this->input.clear();

@@ -46,6 +46,37 @@ extern LogFunction log_info;  ///< Pointer to the info logging function
 extern LogFunction log_debug; ///< Pointer to the debug logging function
 
 /**
+ * @brief Enum representing different log levels for controlling log verbosity.
+ *
+ * This enum defines the severity levels of logs that can be used to control
+ * which log messages should be displayed. The levels are ordered from most
+ * severe to least severe. Only logs at or above the current log level will be
+ * shown.
+ */
+enum LogLevel {
+  /// Log level for error messages. Only critical errors should be logged.
+  ERROR = 0,
+  /// Log level for warning messages. Indicate potential issues that are not
+  /// critical.
+  WARN,
+  /// Log level for informational messages. General runtime information about
+  /// the system's state.
+  INFO,
+  /// Log level for debug messages. Used for detailed information, mainly for
+  /// developers.
+  DEBUG
+};
+
+/**
+ * @brief The current log level for the application.
+ *
+ * This global variable holds the current log level, which determines the
+ * verbosity of the logs. Logs at or above this level will be displayed. The
+ * default level is set to INFO.
+ */
+extern LogLevel log_level;
+
+/**
  * @brief Extracts the filename from a given file path.
  *
  * This function takes a full path to a file and returns just the file name.
@@ -61,19 +92,35 @@ inline const char *extract_filename(const char *path) {
   return filename ? filename + 1 : path;
 }
 
-// Macros for logging with automatic file and function information
 #define WHISPER_LOG_ERROR(text, ...)                                           \
+  if (whisper_utils::log_level >= whisper_utils::ERROR)                        \
   whisper_utils::log_error(whisper_utils::extract_filename(__FILE__),          \
                            __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
+
 #define WHISPER_LOG_WARN(text, ...)                                            \
+  if (whisper_utils::log_level >= whisper_utils::WARN)                         \
   whisper_utils::log_warn(whisper_utils::extract_filename(__FILE__),           \
                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
+
 #define WHISPER_LOG_INFO(text, ...)                                            \
+  if (whisper_utils::log_level >= whisper_utils::INFO)                         \
   whisper_utils::log_info(whisper_utils::extract_filename(__FILE__),           \
                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
+
 #define WHISPER_LOG_DEBUG(text, ...)                                           \
+  if (whisper_utils::log_level >= whisper_utils::DEBUG)                        \
   whisper_utils::log_debug(whisper_utils::extract_filename(__FILE__),          \
                            __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
+
+/**
+ * @brief Sets the log level for the logs.
+ *
+ * This function allows the user to specify the log level error, warning, info,
+ * or debug.
+ *
+ * @param log_level Log level.
+ */
+void set_log_level(LogLevel log_level);
 
 } // namespace whisper_utils
 
