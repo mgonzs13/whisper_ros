@@ -203,17 +203,19 @@ void SileroVadNode::audio_callback(
 
   // Check if publish
   if (this->publish) {
-    if (this->data.size() / msg->audio.info.rate < 1.0) {
+    auto vad_msg = std_msgs::msg::Float32MultiArray();
+    vad_msg.data.assign(this->data.begin(), this->data.end());
+
+    if (vad_msg.data.size() / msg->audio.info.rate < 1.0) {
       int pad_size =
           msg->audio.info.chunk + msg->audio.info.rate - this->data.size();
-      this->data.insert(this->data.end(), pad_size, 0.0f);
+      vad_msg.data.insert(vad_msg.data.end(), pad_size, 0.0f);
     }
+
+    this->publisher_->publish(vad_msg);
 
     this->listening.store(false);
     this->publish.store(false);
-    auto vad_msg = std_msgs::msg::Float32MultiArray();
-    vad_msg.data = this->data;
-    this->publisher_->publish(vad_msg);
     this->data.clear();
   }
 
