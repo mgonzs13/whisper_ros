@@ -35,39 +35,108 @@ namespace whisper_ros {
 using CallbackReturn =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
+/**
+ * @class WhisperBaseNode
+ * @brief A ROS 2 Lifecycle Node for interfacing with the Whisper speech-to-text
+ * system.
+ */
 class WhisperBaseNode : public rclcpp_lifecycle::LifecycleNode {
 
 public:
+  /**
+   * @brief Constructs a new WhisperBaseNode instance.
+   */
   WhisperBaseNode();
 
+  /**
+   * @brief Configures the node during its lifecycle.
+   *
+   * @param state The current state of the lifecycle node.
+   * @return CallbackReturn indicating success or failure.
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_configure(const rclcpp_lifecycle::State &);
-  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_activate(const rclcpp_lifecycle::State &);
-  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_deactivate(const rclcpp_lifecycle::State &);
-  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_cleanup(const rclcpp_lifecycle::State &);
-  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_shutdown(const rclcpp_lifecycle::State &);
+  on_configure(const rclcpp_lifecycle::State &state);
 
+  /**
+   * @brief Activates the node during its lifecycle.
+   *
+   * @param state The current state of the lifecycle node.
+   * @return CallbackReturn indicating success or failure.
+   */
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_activate(const rclcpp_lifecycle::State &state);
+
+  /**
+   * @brief Deactivates the node during its lifecycle.
+   *
+   * @param state The current state of the lifecycle node.
+   * @return CallbackReturn indicating success or failure.
+   */
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_deactivate(const rclcpp_lifecycle::State &state);
+
+  /**
+   * @brief Cleans up resources during its lifecycle.
+   *
+   * @param state The current state of the lifecycle node.
+   * @return CallbackReturn indicating success or failure.
+   */
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_cleanup(const rclcpp_lifecycle::State &state);
+
+  /**
+   * @brief Shuts down the node during its lifecycle.
+   *
+   * @param state The current state of the lifecycle node.
+   * @return CallbackReturn indicating success or failure.
+   */
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_shutdown(const rclcpp_lifecycle::State &state);
+
+  /**
+   * @brief Activates ROS 2 interfaces specific to this node. To be implemented
+   * in derived classes.
+   */
   virtual void activate_ros_interfaces(){};
+
+  /**
+   * @brief Deactivates ROS 2 interfaces specific to this node. To be
+   * implemented in derived classes.
+   */
   virtual void deactivate_ros_interfaces(){};
 
 protected:
+  /// @brief The language for transcription (e.g., "en").
   std::string language;
+
+  /// @brief Shared pointer to the Whisper speech-to-text processor.
   std::shared_ptr<Whisper> whisper;
 
+  /**
+   * @brief Transcribes a given audio input to text.
+   *
+   * @param audio A vector of floating-point audio samples.
+   * @return A Transcription message containing the text and metadata.
+   */
   whisper_msgs::msg::Transcription transcribe(const std::vector<float> &audio);
 
 private:
+  /// @brief The Whisper model to use.
   std::string model;
+
+  /// @brief Device identifier for OpenVINO encoding (e.g., "CPU").
   std::string openvino_encode_device;
+
+  /// @brief Number of processors to use.
   int n_processors;
+
+  /// @brief Whisper context parameters.
   struct whisper_context_params cparams = whisper_context_default_params();
+
+  /// @brief Whisper full transcription parameters.
   struct whisper_full_params wparams;
 };
 
 } // namespace whisper_ros
 
-#endif
+#endif // WHISPER_ROS__WHISPER_BASE_NODE_HPP

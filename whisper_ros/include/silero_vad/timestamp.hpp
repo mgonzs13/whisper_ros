@@ -27,17 +27,38 @@
 
 namespace silero_vad {
 
+/// @class Timestamp
+/// @brief Represents a time interval with speech probability.
 class Timestamp {
 public:
+  /// The start time of the interval, in milliseconds.
   int start;
+
+  /// The end time of the interval, in milliseconds.
   int end;
+
+  /// The probability of speech detected in the interval, ranging from 0 to 1.
   float speech_prob;
 
+  /// @brief Constructs a `Timestamp` object.
+  /// @param start The start time of the interval (default: -1).
+  /// @param end The end time of the interval (default: -1).
+  /// @param speech_prob The speech probability (default: 0).
   Timestamp(int start = -1, int end = -1, float speech_prob = 0);
 
+  /// @brief Assigns the values of another `Timestamp` to this instance.
+  /// @param other The `Timestamp` to copy from.
+  /// @return A reference to this `Timestamp`.
   Timestamp &operator=(const Timestamp &other);
+
+  /// @brief Compares two `Timestamp` objects for equality.
+  /// @param other The `Timestamp` to compare with.
+  /// @return `true` if the start and end times are equal; `false` otherwise.
   bool operator==(const Timestamp &other) const;
 
+  /// @brief Converts the `Timestamp` object to a string representation.
+  /// @return A string representing the `Timestamp` in the format
+  /// `{start:...,end:...,prob:...}`.
   std::string to_string() const;
 };
 

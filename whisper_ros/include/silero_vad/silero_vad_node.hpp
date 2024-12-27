@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef SILERO_VAD_SILERO_VAD_NODE_HPP
-#define SILERO_VAD_SILERO_VAD_NODE_HPP
+#ifndef SILERO_VAD__SILERO_VAD_NODE_HPP
+#define SILERO_VAD__SILERO_VAD_NODE_HPP
 
 #include <atomic>
 #include <memory>
@@ -36,50 +36,95 @@
 
 namespace silero_vad {
 
+/// @class SileroVadNode
+/// @brief A ROS 2 lifecycle node for performing voice activity detection.
 class SileroVadNode : public rclcpp_lifecycle::LifecycleNode {
 
 public:
+  /// @brief Constructs a new SileroVadNode object.
   SileroVadNode();
 
+  /// @brief Callback for configuring the lifecycle node.
+  /// @param state The current state of the node.
+  /// @return Success or failure of configuration.
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_configure(const rclcpp_lifecycle::State &);
+  on_configure(const rclcpp_lifecycle::State &state);
+
+  /// @brief Callback for activating the lifecycle node.
+  /// @param state The current state of the node.
+  /// @return Success or failure of activation.
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_activate(const rclcpp_lifecycle::State &);
+  on_activate(const rclcpp_lifecycle::State &state);
+
+  /// @brief Callback for deactivating the lifecycle node.
+  /// @param state The current state of the node.
+  /// @return Success or failure of deactivation.
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_deactivate(const rclcpp_lifecycle::State &);
+  on_deactivate(const rclcpp_lifecycle::State &state);
+
+  /// @brief Callback for cleaning up the lifecycle node.
+  /// @param state The current state of the node.
+  /// @return Success or failure of cleanup.
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_cleanup(const rclcpp_lifecycle::State &);
+  on_cleanup(const rclcpp_lifecycle::State &state);
+
+  /// @brief Callback for shutting down the lifecycle node.
+  /// @param state The current state of the node.
+  /// @return Success or failure of shutdown.
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
-  on_shutdown(const rclcpp_lifecycle::State &);
+  on_shutdown(const rclcpp_lifecycle::State &state);
 
 protected:
+  /// Indicates if VAD is enabled.
   std::atomic<bool> enabled;
+  /// Indicates if VAD is in listening mode.
   std::atomic<bool> listening;
+  /// Indicates if audio data should be published.
   std::atomic<bool> publish;
+  /// Buffer for storing audio data.
   std::vector<float> data;
+  /// Pointer to the VAD iterator.
   std::unique_ptr<VadIterator> vad_iterator;
 
 private:
+  /// Buffer for storing previous audio data.
   std::vector<float> prev_data;
+  /// Path to the VAD model.
   std::string model_path_;
+  /// Sampling rate of the audio data.
   int sample_rate_;
+  /// Frame size in milliseconds.
   int frame_size_ms_;
+  /// Threshold for VAD decision-making.
   float threshold_;
+  /// Minimum silence duration in milliseconds.
   int min_silence_ms_;
+  /// Padding duration for detected speech in milliseconds.
   int speech_pad_ms_;
 
+  /// Publisher for VAD output.
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher_;
+  /// Subscription for audio input.
   rclcpp::Subscription<audio_common_msgs::msg::AudioStamped>::SharedPtr
       subscription_;
-
+  /// Service for enabling/disabling VAD.
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr enable_srv_;
 
+  /// @brief Callback for handling incoming audio data.
+  /// @param msg The audio message containing the audio data.
   void
   audio_callback(const audio_common_msgs::msg::AudioStamped::SharedPtr msg);
 
+  /// @brief Callback for enabling/disabling the VAD.
+  /// @param request The service request containing the desired enable state.
+  /// @param response The service response indicating success or failure.
   void enable_cb(const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
                  std::shared_ptr<std_srvs::srv::SetBool::Response> response);
 
+  /// @brief Converts audio data to a float vector normalized to [-1.0, 1.0].
+  /// @tparam T The input audio data type.
+  /// @param input The input audio data.
+  /// @return A vector of normalized float audio data.
   template <typename T>
   std::vector<float> convert_to_float(const std::vector<T> &input) {
     static_assert(std::is_integral<T>::value,
