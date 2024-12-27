@@ -9,6 +9,7 @@ COPY . /root/ros2_ws/src
 # Install dependencies
 RUN apt-get update
 RUN rosdep update --include-eol-distros && rosdep install --from-paths src --ignore-src -r -y
+RUN pip3 install -r requirements.txt
 
 WORKDIR /root/ros2_ws/src
 RUN git clone https://github.com/mgonzs13/audio_common.git
