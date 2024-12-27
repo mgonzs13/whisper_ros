@@ -7,11 +7,8 @@ SHELL ["/bin/bash", "-c"]
 COPY . /root/ros2_ws/src
 
 # Install dependencies
-RUN apt-get update \
-    && apt-get -y --quiet --no-install-recommends install \
-    gcc \
-    git \
-    curl
+RUN apt-get update
+RUN rosdep update --include-eol-distros && rosdep install --from-paths src --ignore-src -r -y
 
 WORKDIR /root/ros2_ws/src
 RUN git clone https://github.com/mgonzs13/audio_common.git
