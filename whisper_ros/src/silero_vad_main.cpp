@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2023  Miguel Ángel González Santamarta
+// Copyright (c) 2024  Miguel Ángel González Santamarta
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "whisper_ros/whisper_node.hpp"
+#include "silero_vad/silero_vad_node.hpp"
 
-using namespace whisper_ros;
+using namespace silero_vad;
 
 int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
 
-  auto node = std::make_shared<WhisperNode>();
+  auto node = std::make_shared<SileroVadNode>();
   node->configure();
   node->activate();
 

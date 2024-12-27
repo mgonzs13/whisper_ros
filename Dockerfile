@@ -11,16 +11,12 @@ RUN apt-get update \
     && apt-get -y --quiet --no-install-recommends install \
     gcc \
     git \
-    wget \
-    portaudio19-dev \
-    python3 \
-    python3-pip
+    curl
 
 WORKDIR /root/ros2_ws/src
 RUN git clone https://github.com/mgonzs13/audio_common.git
-WORKDIR /root/ros2_ws
 
-RUN pip3 install -r src/requirements.txt
+WORKDIR /root/ros2_ws
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Install CUDA nvcc

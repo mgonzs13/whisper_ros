@@ -1,4 +1,0 @@
-onnxruntime==1.18.1
-huggingface-hub==0.23.4
-silero-vad==5.1
-pyaudio==0.2.14

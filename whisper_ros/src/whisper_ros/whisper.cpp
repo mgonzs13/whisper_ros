@@ -1,17 +1,17 @@
 // MIT License
-
+//
 // Copyright (c) 2023  Miguel Ángel González Santamarta
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@
 
 #include "grammar-parser.h"
 #include "whisper_ros/whisper.hpp"
+#include "whisper_utils/logs.hpp"
 
 using namespace whisper_ros;
 
@@ -42,7 +43,7 @@ Whisper::Whisper(const std::string &model,
   this->ctx = whisper_init_from_file_with_params(model.c_str(), cparams);
 
   if (this->ctx == nullptr) {
-    WHISPER_LOG_ERROR("failed to initialize whisper context\n");
+    WHISPER_LOG_ERROR("Failed to initialize whisper context\n");
   }
 
   if (!whisper_is_multilingual(this->ctx)) {
@@ -72,11 +73,13 @@ Whisper::Whisper(const std::string &model,
 
 Whisper::~Whisper() { whisper_free(this->ctx); }
 
-struct transcription_output
+struct TranscriptionOutput
 Whisper::transcribe(const std::vector<float> &pcmf32) {
 
+  WHISPER_LOG_DEBUG("Starting transcription");
+
   int prob_n = 0;
-  struct transcription_output result;
+  struct TranscriptionOutput result;
   result.text = "";
   result.prob = 0.0f;
 
@@ -137,9 +140,11 @@ std::string Whisper::timestamp_to_str(int64_t t, bool comma) {
 bool Whisper::set_grammar(const std::string grammar,
                           const std::string start_rule, float grammar_penalty) {
 
+  WHISPER_LOG_DEBUG("Setting new grammar");
   this->grammar_parsed = grammar_parser::parse(grammar.c_str());
 
   if (this->grammar_parsed.rules.empty()) {
+    WHISPER_LOG_ERROR("Error setting the grammar");
     return false;
   }
 
@@ -155,6 +160,7 @@ bool Whisper::set_grammar(const std::string grammar,
 }
 
 void Whisper::reset_grammar() {
+  WHISPER_LOG_DEBUG("Resetting grammar");
   this->wparams.grammar_rules = nullptr;
   this->wparams.n_grammar_rules = 0;
   this->wparams.i_start_rule = 0;
@@ -162,7 +168,11 @@ void Whisper::reset_grammar() {
 }
 
 void Whisper::set_init_prompt(const std::string prompt) {
+  WHISPER_LOG_DEBUG("Resetting initial prompt");
   this->wparams.initial_prompt = prompt.c_str();
 }
 
-void Whisper::reset_init_prompt() { this->wparams.initial_prompt = ""; }
+void Whisper::reset_init_prompt() {
+  WHISPER_LOG_DEBUG("Resetting initial prompt");
+  this->wparams.initial_prompt = "";
+}
