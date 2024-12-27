@@ -13,9 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "whisper_ros/logs.hpp"
+#include "whisper_utils/logs.hpp"
 
-namespace whisper_ros {
+namespace whisper_utils {
 
 /**
  * @brief Default error logging function.
@@ -115,4 +115,4 @@ LogFunction log_warn = default_log_warn;
 LogFunction log_info = default_log_info;
 LogFunction log_debug = default_log_debug;
 
-} // namespace whisper_ros
+} // namespace whisper_utils

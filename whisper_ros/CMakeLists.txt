@@ -29,7 +29,7 @@ add_executable(whisper_node
   src/whisper_ros/whisper_node.cpp
   src/whisper_ros/whisper_base_node.cpp
   src/whisper_ros/whisper.cpp
-  src/whisper_ros/logs.cpp
+  src/whisper_utils/logs.cpp
 )
 target_link_libraries(whisper_node 
   whisper_cpp_vendor::grammar
@@ -50,7 +50,7 @@ add_executable(whisper_server_node
   src/whisper_ros/whisper_server_node.cpp
   src/whisper_ros/whisper_base_node.cpp
   src/whisper_ros/whisper.cpp
-  src/whisper_ros/logs.cpp
+  src/whisper_utils/logs.cpp
 )
 target_link_libraries(whisper_server_node
   whisper_cpp_vendor::grammar

@@ -13,14 +13,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef WHISPER_ROS__LOGS_HPP
-#define WHISPER_ROS__LOGS_HPP
+#ifndef WHISPER_UTILS__LOGS_HPP
+#define WHISPER_UTILS__LOGS_HPP
 
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
 
-namespace whisper_ros {
+namespace whisper_utils {
 
 /**
  * @brief Type definition for a logging function.
@@ -63,18 +63,18 @@ inline const char *extract_filename(const char *path) {
 
 // Macros for logging with automatic file and function information
 #define WHISPER_LOG_ERROR(text, ...)                                           \
-  whisper_ros::log_error(extract_filename(__FILE__), __FUNCTION__, __LINE__,   \
-                         text, ##__VA_ARGS__)
+  whisper_utils::log_error(whisper_utils::extract_filename(__FILE__),          \
+                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 #define WHISPER_LOG_WARN(text, ...)                                            \
-  whisper_ros::log_warn(extract_filename(__FILE__), __FUNCTION__, __LINE__,    \
-                        text, ##__VA_ARGS__)
+  whisper_utils::log_warn(whisper_utils::extract_filename(__FILE__),           \
+                          __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 #define WHISPER_LOG_INFO(text, ...)                                            \
-  whisper_ros::log_info(extract_filename(__FILE__), __FUNCTION__, __LINE__,    \
-                        text, ##__VA_ARGS__)
+  whisper_utils::log_info(whisper_utils::extract_filename(__FILE__),           \
+                          __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 #define WHISPER_LOG_DEBUG(text, ...)                                           \
-  whisper_ros::log_debug(extract_filename(__FILE__), __FUNCTION__, __LINE__,   \
-                         text, ##__VA_ARGS__)
+  whisper_utils::log_debug(whisper_utils::extract_filename(__FILE__),          \
+                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
-} // namespace whisper_ros
+} // namespace whisper_utils
 
-#endif // WHISPER_ROS__LOGS_HPP
+#endif // WHISPER_UTILS__LOGS_HPP

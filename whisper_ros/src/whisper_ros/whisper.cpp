@@ -24,8 +24,8 @@
 #include <thread>
 
 #include "grammar-parser.h"
-#include "whisper_ros/logs.hpp"
 #include "whisper_ros/whisper.hpp"
+#include "whisper_utils/logs.hpp"
 
 using namespace whisper_ros;
 
