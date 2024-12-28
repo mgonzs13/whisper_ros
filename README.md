@@ -1,6 +1,6 @@
 # whisper_ros
 
-This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common) [4.0.2](https://github.com/mgonzs13/audio_common/releases/tag/4.0.2). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
+This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common) [4.0.3](https://github.com/mgonzs13/audio_common/releases/tag/4.0.3). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
 
 [![License: MIT](https://img.shields.io/badge/GitHub-MIT-informational)](https://opensource.org/license/mit) [![GitHub release](https://img.shields.io/github/release/mgonzs13/whisper_ros.svg)](https://github.com/mgonzs13/whisper_ros/releases) [![Code Size](https://img.shields.io/github/languages/code-size/mgonzs13/whisper_ros.svg?branch=main)](https://github.com/mgonzs13/whisper_ros?branch=main) [![Last Commit](https://img.shields.io/github/last-commit/mgonzs13/whisper_ros.svg)](https://github.com/mgonzs13/whisper_ros/commits/main) [![GitHub issues](https://img.shields.io/github/issues/mgonzs13/whisper_ros)](https://github.com/mgonzs13/whisper_ros/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/mgonzs13/whisper_ros)](https://github.com/mgonzs13/whisper_ros/pulls) [![Contributors](https://img.shields.io/github/contributors/mgonzs13/whisper_ros.svg)](https://github.com/mgonzs13/whisper_ros/graphs/contributors) [![Python Formatter Check](https://github.com/mgonzs13/whisper_ros/actions/workflows/python-formatter.yml/badge.svg?branch=main)](https://github.com/mgonzs13/whisper_ros/actions/workflows/python-formatter.yml?branch=main) [![C++ Formatter Check](https://github.com/mgonzs13/whisper_ros/actions/workflows/cpp-formatter.yml/badge.svg?branch=main)](https://github.com/mgonzs13/whisper_ros/actions/workflows/cpp-formatter.yml?branch=main)
 
@@ -17,12 +17,11 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 
 ## Table of Contents
 
-1. [Table of Contents](#table-of-contents)
-2. [Related Projects](#related-projects)
-3. [Installation](#installation)
-4. [Docker](#docker)
-5. [Usage](#usage)
-6. [Demos](#demos)
+1. [Related Projects](#related-projects)
+2. [Installation](#installation)
+3. [Docker](#docker)
+4. [Usage](#usage)
+5. [Demos](#demos)
 
 ## Related Projects
 
