@@ -17,7 +17,6 @@
   <depend>rclcpp_lifecycle</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
-  <depend>audio_common</depend>
   <depend>audio_common_msgs</depend>
   <depend>whisper_msgs</depend>
   <depend>whisper_cpp_vendor</depend>
