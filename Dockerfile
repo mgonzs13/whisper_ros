@@ -9,7 +9,6 @@ COPY . /root/ros2_ws/src
 # Install dependencies
 RUN apt-get update
 RUN apt-get -y --quiet --no-install-recommends install python3-pip
-RUN rosdep update --include-eol-distros && rosdep install --from-paths src --ignore-src -r -y
 RUN if [ "$ROS_DISTRO" = "jazzy" ] || [ "$ROS_DISTRO" = "rolling" ]; then \
     pip3 install -r src/requirements.txt --break-system-packages; \
     else \
@@ -20,6 +19,8 @@ WORKDIR /root/ros2_ws/src
 RUN git clone https://github.com/mgonzs13/audio_common.git
 
 WORKDIR /root/ros2_ws
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash
+RUN rosdep update --include-eol-distros && rosdep install --from-paths src --ignore-src -r -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Install CUDA nvcc
@@ -35,7 +36,7 @@ RUN if [ "$USE_CUDA" = "1" ]; then \
     echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" >> ~/.bashrc; \
     fi
 
-# Colcon the ws
+# Build the ws with colcon
 FROM deps AS builder
 ARG CMAKE_BUILD_TYPE=Release
 
