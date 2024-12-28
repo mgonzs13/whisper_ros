@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(onnxruntime_vendor)
+project(whisper_onnxruntime_vendor)
 
 # Set variables for the package
 set(ONNXRUNTIME_VERSION "1.18.1")  # Specify the desired ONNX Runtime version

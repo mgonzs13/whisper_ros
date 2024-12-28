@@ -15,7 +15,7 @@ find_package(std_srvs REQUIRED)
 find_package(audio_common_msgs REQUIRED)
 find_package(whisper_msgs REQUIRED)
 find_package(whisper_cpp_vendor REQUIRED)
-find_package(onnxruntime_vendor REQUIRED)
+find_package(whisper_onnxruntime_vendor REQUIRED)
 find_library(PORTAUDIO_LIB portaudio REQUIRED)
 
 include_directories(
@@ -81,12 +81,12 @@ ament_target_dependencies(silero_vad_node
   std_msgs
   std_srvs
   audio_common_msgs
-  onnxruntime_vendor
+  whisper_onnxruntime_vendor
 )
 
 # Export dependencies
 ament_export_dependencies(whisper_cpp_vendor)
-ament_export_dependencies(onnxruntime_vendor)
+ament_export_dependencies(whisper_onnxruntime_vendor)
 
 # Install
 install(TARGETS

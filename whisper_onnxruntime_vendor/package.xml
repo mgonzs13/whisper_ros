@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>onnxruntime_vendor</name>
+  <name>whisper_onnxruntime_vendor</name>
   <version>3.0.0</version>
   <description>Vendor package for onnxruntime</description>
   <maintainer email="mgons@unileon.es">Miguel Ángel González Santamarta</maintainer>
