@@ -38,7 +38,7 @@ VadIterator::VadIterator(const std::string &model_path, int sample_rate,
       sample_rate(sample_rate), sr_per_ms(sample_rate / 1000),
       window_size_samples(frame_size_ms * sr_per_ms),
       speech_pad_samples(sr_per_ms * speech_pad_ms),
-     Min_silence_samples(sr_per_ms * min_silence_ms),
+      min_silence_samples(sr_per_ms * min_silence_ms),
       context_size(sample_rate == 16000 ? 64 : 32), context(context_size, 0.0f),
       state(2 * 1 * 128, 0.0f), sr(1, sample_rate) {
 
