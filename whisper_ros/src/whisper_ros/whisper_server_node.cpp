@@ -117,9 +117,11 @@ void WhisperServerNode::execute(
   this->goal_handle_ = goal_handle;
   auto goal = goal_handle->get_goal();
 
-  this->whisper->set_grammar(goal->grammar_config.grammar,
-                             goal->grammar_config.start_rule,
-                             goal->grammar_config.grammar_penalty);
+  if (!goal->grammar_config.grammar.empty()) {
+    this->whisper->set_grammar(goal->grammar_config.grammar,
+                               goal->grammar_config.start_rule,
+                               goal->grammar_config.grammar_penalty);
+  }
   this->whisper->set_init_prompt(goal->prompt);
 
   auto result = std::make_shared<STT::Result>();
