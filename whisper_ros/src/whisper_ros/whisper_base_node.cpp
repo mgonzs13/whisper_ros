@@ -74,7 +74,7 @@ WhisperBaseNode::WhisperBaseNode()
                                          {"speed_up", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
-                                         {"suppress_non_speech_tokens", false},
+                                         {"suppress_nst", false},
                                          {"use_gpu", true},
                                          {"flash_attn", false},
                                          {"dtw_token_timestamps", false},
@@ -126,8 +126,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("detect_language", this->wparams.detect_language);
 
   this->get_parameter("suppress_blank", this->wparams.suppress_blank);
-  this->get_parameter("suppress_non_speech_tokens",
-                      this->wparams.suppress_non_speech_tokens);
+  this->get_parameter("suppress_nst", this->wparams.suppress_nst);
 
   this->get_parameter("temperature", this->wparams.temperature);
   this->get_parameter("max_initial_ts", this->wparams.max_initial_ts);

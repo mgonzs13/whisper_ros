@@ -70,9 +70,7 @@ def generate_launch_description():
             "language": LaunchConfiguration("language", default="en"),
             "detect_language": LaunchConfiguration("detect_language", default=False),
             "suppress_blank": LaunchConfiguration("suppress_blank", default=True),
-            "suppress_non_speech_tokens": LaunchConfiguration(
-                "suppress_non_speech_tokens", default=False
-            ),
+            "suppress_nst": LaunchConfiguration("suppress_nst", default=False),
             "temperature": LaunchConfiguration("temperature", default=0.00),
             "max_initial_ts": LaunchConfiguration("max_initial_ts", default=1.00),
             "length_penalty": LaunchConfiguration("length_penalty", default=-1.00),
