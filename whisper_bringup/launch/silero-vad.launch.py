@@ -79,7 +79,9 @@ def generate_launch_description():
 
     model_path = LaunchConfiguration("model_path")
     model_path_cmd = DeclareLaunchArgument(
-        "model_path", default_value="", description="Local path to the model file"
+        "model_path",
+        default_value="",
+        description="Local path to the model file",
     )
 
     return LaunchDescription(
@@ -88,7 +90,8 @@ def generate_launch_description():
             model_filename_cmd,
             model_path_cmd,
             OpaqueFunction(
-                function=run_silero_vad, args=[model_repo, model_filename, model_path]
+                function=run_silero_vad,
+                args=[model_repo, model_filename, model_path],
             ),
         ]
     )
