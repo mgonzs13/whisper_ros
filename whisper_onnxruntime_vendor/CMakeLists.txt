@@ -1,15 +1,24 @@
 cmake_minimum_required(VERSION 3.8)
 project(whisper_onnxruntime_vendor)
 
+# Determine the architecture
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(ARCHITECTURE "x64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(ARCHITECTURE "aarch64")
+else()
+    message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
 # Set variables for the package
 set(ONNXRUNTIME_VERSION "1.18.1")  # Specify the desired ONNX Runtime version
-set(ONNXRUNTIME_URL "https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz")
+set(ONNXRUNTIME_URL "https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-${ARCHITECTURE}-${ONNXRUNTIME_VERSION}.tgz")
 
 # ROS 2 package configuration
 find_package(ament_cmake REQUIRED)
 
 # Define a vendor package installation directory
-set(ONNXRUNTIME_INSTALL_DIR "${CMAKE_BINARY_DIR}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}")
+set(ONNXRUNTIME_INSTALL_DIR "${CMAKE_BINARY_DIR}/onnxruntime-linux-${ARCHITECTURE}-${ONNXRUNTIME_VERSION}")
 
 # Add a custom target to download and extract the prebuilt ONNX Runtime
 find_program(CURL_EXECUTABLE curl REQUIRED)
