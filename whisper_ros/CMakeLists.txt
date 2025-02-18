@@ -104,4 +104,10 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# TEST
+if(BUILD_TESTING)
+  find_package(ament_cmake_clang_format REQUIRED)
+  ament_clang_format(CONFIG_FILE .clang-format)
+endif()
+
 ament_package()
