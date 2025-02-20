@@ -66,7 +66,7 @@ class SileroVadNode(Node):
         if not self.enabled:
             return
 
-        audio = msg_to_array(msg.audio.audio_data, msg.audio.info.format)
+        audio = msg_to_array(msg.audio)
         if audio is None:
             self.get_logger().error(f"Format {msg.audio.info.format} unknown")
             return
