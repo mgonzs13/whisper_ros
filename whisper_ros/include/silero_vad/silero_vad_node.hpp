@@ -101,6 +101,8 @@ private:
   int min_silence_ms_;
   /// Padding duration for detected speech in milliseconds.
   int speech_pad_ms_;
+  /// Indicates if the CUDA provider should be used.
+  bool use_cuda_;
 
   /// Publisher for VAD output.
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher_;

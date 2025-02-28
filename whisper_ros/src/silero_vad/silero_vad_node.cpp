@@ -45,6 +45,7 @@ SileroVadNode::SileroVadNode()
   this->declare_parameter<float>("threshold", 0.5f);
   this->declare_parameter<int>("min_silence_ms", 100);
   this->declare_parameter<int>("speech_pad_ms", 30);
+  this->declare_parameter<bool>("use_cuda", true);
 }
 
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -63,6 +64,7 @@ SileroVadNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("threshold", this->threshold_);
   this->get_parameter("min_silence_ms", this->min_silence_ms_);
   this->get_parameter("speech_pad_ms", this->speech_pad_ms_);
+  this->get_parameter("use_cuda", this->use_cuda_);
 
   RCLCPP_INFO(get_logger(), "[%s] Configured", this->get_name());
 
@@ -78,7 +80,8 @@ SileroVadNode::on_activate(const rclcpp_lifecycle::State &) {
   // create silero-vad
   this->vad_iterator = std::make_unique<VadIterator>(
       this->model_path_, this->sample_rate_, this->frame_size_ms_,
-      this->threshold_, this->min_silence_ms_, this->speech_pad_ms_);
+      this->threshold_, this->min_silence_ms_, this->speech_pad_ms_,
+      this->use_cuda_);
 
   this->publisher_ =
       this->create_publisher<std_msgs::msg::Float32MultiArray>("vad", 10);

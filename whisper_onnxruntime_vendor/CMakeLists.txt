@@ -18,7 +18,7 @@ else()
 endif()
 
 # Set variables for the package
-set(ONNXRUNTIME_VERSION "1.18.1")  # Specify the desired ONNX Runtime version
+set(ONNXRUNTIME_VERSION "1.20.0")  # Specify the desired ONNX Runtime version
 set(ONNXRUNTIME_URL "https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-${ARCHITECTURE}${GPU}-${ONNXRUNTIME_VERSION}.tgz")
 
 # ROS 2 package configuration
