@@ -23,6 +23,7 @@
   <depend>whisper_msgs</depend>
   <depend>whisper_cpp_vendor</depend>
   <depend>whisper_onnxruntime_vendor</depend>
+  <depend>whisper_hfhub_vendor</depend>
   <depend>portaudio19-dev</depend>
 
   <export>

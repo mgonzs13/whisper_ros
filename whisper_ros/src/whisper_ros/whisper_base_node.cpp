@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "whisper_ros/whisper_base_node.hpp"
 #include "whisper.h"
+
+#include "whisper_ros/whisper_base_node.hpp"
+#include "whisper_utils/model_download.hpp"
 
 using namespace whisper_ros;
 using std::placeholders::_1;
@@ -47,6 +49,8 @@ WhisperBaseNode::WhisperBaseNode()
   this->declare_parameters<std::string>(
       "", {
               {"sampling_strategy", "beam_search"},
+              {"model_repo", ""},
+              {"model_filename", ""},
               {"model", ""},
               {"language", "en"},
               {"openvino_encode_device", "CPU"},
@@ -84,7 +88,7 @@ WhisperBaseNode::WhisperBaseNode()
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
-  RCLCPP_INFO(get_logger(), "[%s] Configuring...", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Configuring...", this->get_name());
 
   // get sampling method and create default params
   std::string dtw_aheads;
@@ -99,6 +103,11 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   }
 
   // get params
+  std::string model_repo;
+  std::string model_filename;
+
+  this->get_parameter("model_repo", model_repo);
+  this->get_parameter("model_filename", model_filename);
   this->get_parameter("model", this->model);
   this->get_parameter("openvino_encode_device", this->openvino_encode_device);
 
@@ -152,6 +161,11 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
                       this->cparams.dtw_token_timestamps);
   this->get_parameter("dtw_aheads", dtw_aheads);
 
+  // download model
+  if (this->model.empty()) {
+    this->model = whisper_utils::download_model(model_repo, model_filename);
+  }
+
   // check threads number
   if (this->wparams.n_threads < 0) {
     this->wparams.n_threads = std::thread::hardware_concurrency();
@@ -198,7 +212,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
     this->cparams.dtw_aheads_preset = WHISPER_AHEADS_NONE;
   }
 
-  RCLCPP_INFO(get_logger(), "[%s] Configured", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Configured", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -207,7 +221,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_activate(const rclcpp_lifecycle::State &) {
 
-  RCLCPP_INFO(get_logger(), "[%s] Activating...", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Activating...", this->get_name());
 
   // create whisper
   this->whisper = std::make_shared<Whisper>(
@@ -216,7 +230,7 @@ WhisperBaseNode::on_activate(const rclcpp_lifecycle::State &) {
 
   this->activate_ros_interfaces();
 
-  RCLCPP_INFO(get_logger(), "[%s] Activated", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Activated", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -225,14 +239,14 @@ WhisperBaseNode::on_activate(const rclcpp_lifecycle::State &) {
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_deactivate(const rclcpp_lifecycle::State &) {
 
-  RCLCPP_INFO(get_logger(), "[%s] Deactivating...", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Deactivating...", this->get_name());
 
   this->whisper.reset();
   this->whisper = nullptr;
 
   this->deactivate_ros_interfaces();
 
-  RCLCPP_INFO(get_logger(), "[%s] Deactivated", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Deactivated", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -241,8 +255,8 @@ WhisperBaseNode::on_deactivate(const rclcpp_lifecycle::State &) {
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_cleanup(const rclcpp_lifecycle::State &) {
 
-  RCLCPP_INFO(get_logger(), "[%s] Cleaning up...", this->get_name());
-  RCLCPP_INFO(get_logger(), "[%s] Cleaned up", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Cleaning up...", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Cleaned up", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -251,8 +265,8 @@ WhisperBaseNode::on_cleanup(const rclcpp_lifecycle::State &) {
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_shutdown(const rclcpp_lifecycle::State &) {
 
-  RCLCPP_INFO(get_logger(), "[%s] Shutting down...", this->get_name());
-  RCLCPP_INFO(get_logger(), "[%s] Shutted down", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Shutting down...", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Shutted down", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;

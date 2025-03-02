@@ -16,6 +16,7 @@ find_package(audio_common_msgs REQUIRED)
 find_package(whisper_msgs REQUIRED)
 find_package(whisper_cpp_vendor REQUIRED)
 find_package(whisper_onnxruntime_vendor REQUIRED)
+find_package(whisper_hfhub_vendor REQUIRED)
 find_library(PORTAUDIO_LIB portaudio REQUIRED)
 
 include_directories(
@@ -30,6 +31,7 @@ add_executable(whisper_node
   src/whisper_ros/whisper_base_node.cpp
   src/whisper_ros/whisper.cpp
   src/whisper_utils/logs.cpp
+  src/whisper_utils/download_model.cpp
 )
 target_link_libraries(whisper_node 
   whisper_cpp_vendor::grammar
@@ -42,6 +44,7 @@ ament_target_dependencies(whisper_node
   std_srvs
   whisper_msgs
   whisper_cpp_vendor
+  whisper_hfhub_vendor
 )
 
 # whisper_server_node
@@ -51,6 +54,7 @@ add_executable(whisper_server_node
   src/whisper_ros/whisper_base_node.cpp
   src/whisper_ros/whisper.cpp
   src/whisper_utils/logs.cpp
+  src/whisper_utils/download_model.cpp
 )
 target_link_libraries(whisper_server_node
   whisper_cpp_vendor::grammar
@@ -64,6 +68,7 @@ ament_target_dependencies(whisper_server_node
   std_srvs
   whisper_msgs
   whisper_cpp_vendor
+  whisper_hfhub_vendor
 )
 
 # silero_vad_node
@@ -73,6 +78,7 @@ add_executable(silero_vad_node
   src/silero_vad/vad_iterator.cpp
   src/silero_vad/timestamp.cpp
   src/whisper_utils/logs.cpp
+  src/whisper_utils/download_model.cpp
 )
 target_link_libraries(silero_vad_node ${PORTAUDIO_LIB})
 ament_target_dependencies(silero_vad_node
@@ -82,6 +88,7 @@ ament_target_dependencies(silero_vad_node
   std_srvs
   audio_common_msgs
   whisper_onnxruntime_vendor
+  whisper_hfhub_vendor
 )
 
 # Export dependencies

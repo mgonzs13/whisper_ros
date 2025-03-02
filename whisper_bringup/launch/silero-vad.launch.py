@@ -22,25 +22,14 @@
 
 
 from launch_ros.actions import Node
-from launch import LaunchDescription, LaunchContext
+from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import OpaqueFunction, DeclareLaunchArgument
-from huggingface_hub import hf_hub_download
 
 
 def generate_launch_description():
 
-    def run_silero_vad(context: LaunchContext, repo, file, model_path):
-        repo = str(context.perform_substitution(repo))
-        file = str(context.perform_substitution(file))
-        model_path = str(context.perform_substitution(model_path))
-
-        if not model_path:
-            model_path = hf_hub_download(
-                repo_id=repo, filename=file, force_download=False
-            )
-
-        return (
+    return LaunchDescription(
+        [
             Node(
                 package="whisper_ros",
                 executable="silero_vad_node",
@@ -49,7 +38,13 @@ def generate_launch_description():
                 parameters=[
                     {
                         "enabled": LaunchConfiguration("enabled", default=True),
-                        "model_path": model_path,
+                        "model_repo": LaunchConfiguration(
+                            "model_repo", default="mgonzs13/silero-vad-onnx"
+                        ),
+                        "model_filename": LaunchConfiguration(
+                            "model_filename", default="silero_vad.onnx"
+                        ),
+                        "model_path": LaunchConfiguration("model_path", default=""),
                         "sample_rate": LaunchConfiguration("sample_rate", default=16000),
                         "frame_size_ms": LaunchConfiguration("frame_size_ms", default=32),
                         "threshold": LaunchConfiguration("threshold", default=0.5),
@@ -60,38 +55,6 @@ def generate_launch_description():
                     }
                 ],
                 remappings=[("audio", "/audio/in")],
-            ),
-        )
-
-    model_repo = LaunchConfiguration("model_repo")
-    model_repo_cmd = DeclareLaunchArgument(
-        "model_repo",
-        default_value="mgonzs13/silero-vad-onnx",
-        description="Hugging Face model repo",
-    )
-
-    model_filename = LaunchConfiguration("model_filename")
-    model_filename_cmd = DeclareLaunchArgument(
-        "model_filename",
-        default_value="silero_vad.onnx",
-        description="Hugging Face model filename",
-    )
-
-    model_path = LaunchConfiguration("model_path")
-    model_path_cmd = DeclareLaunchArgument(
-        "model_path",
-        default_value="",
-        description="Local path to the model file",
-    )
-
-    return LaunchDescription(
-        [
-            model_repo_cmd,
-            model_filename_cmd,
-            model_path_cmd,
-            OpaqueFunction(
-                function=run_silero_vad,
-                args=[model_repo, model_filename, model_path],
             ),
         ]
     )
