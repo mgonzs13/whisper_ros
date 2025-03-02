@@ -8,5 +8,7 @@ var searchData=
   ['default_5flog_5finfo_5',['default_log_info',['../namespacewhisper__utils.html#a3b7234c4f1e7e6346bd13d833d85032d',1,'whisper_utils']]],
   ['default_5flog_5fwarn_6',['default_log_warn',['../namespacewhisper__utils.html#a7fe38b3e028b9e897418740e61fbbb33',1,'whisper_utils']]],
   ['demos_7',['Demos',['../index.html#autotoc_md6',1,'']]],
-  ['docker_8',['Docker',['../index.html#autotoc_md4',1,'']]]
+  ['docker_8',['Docker',['../index.html#autotoc_md4',1,'']]],
+  ['download_5fmodel_9',['download_model',['../namespacewhisper__utils.html#ae1e3018202f6872be8cc641883c42110',1,'whisper_utils']]],
+  ['download_5fmodel_2ecpp_10',['download_model.cpp',['../download__model_8cpp.html',1,'']]]
 ];

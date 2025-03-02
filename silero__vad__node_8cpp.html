@@ -98,50 +98,65 @@ $(function(){ initResizable(false); });
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;portaudio.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="silero__vad__node_8hpp_source.html">silero_vad/silero_vad_node.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="model__download_8hpp_source.html">whisper_utils/model_download.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for silero_vad_node.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="silero__vad__node_8cpp__incl.png" border="0" usemap="#awhisper__ros_2src_2silero__vad_2silero__vad__node_8cpp" alt=""/></div>
 <map name="awhisper__ros_2src_2silero__vad_2silero__vad__node_8cpp" id="awhisper__ros_2src_2silero__vad_2silero__vad__node_8cpp">
-<area shape="rect" title=" " alt="" coords="766,5,937,46"/>
-<area shape="rect" title=" " alt="" coords="5,271,58,297"/>
-<area shape="poly" title=" " alt="" coords="766,32,629,39,468,51,316,70,255,82,210,96,182,111,155,130,109,174,73,220,48,259,43,257,68,217,105,171,152,126,179,107,208,92,254,77,316,65,467,46,628,34,765,27"/>
-<area shape="rect" title=" " alt="" coords="695,271,762,297"/>
-<area shape="poly" title=" " alt="" coords="938,38,1053,60,1181,92,1241,111,1294,132,1336,156,1364,181,1373,203,1371,214,1364,225,1352,233,1332,241,1275,253,1109,270,924,280,778,285,778,279,924,275,1109,265,1274,248,1331,235,1350,229,1360,221,1366,212,1368,204,1360,184,1333,160,1292,137,1239,116,1179,97,1052,65,937,43"/>
-<area shape="rect" title=" " alt="" coords="678,102,756,127"/>
-<area shape="poly" title=" " alt="" coords="822,49,750,95,747,91,820,44"/>
-<area shape="rect" title=" " alt="" coords="448,345,501,371"/>
-<area shape="poly" title=" " alt="" coords="938,27,1084,35,1250,47,1393,66,1442,78,1469,92,1476,103,1477,113,1470,136,1455,168,1439,190,1417,208,1386,226,1310,254,1207,279,1084,300,952,318,697,344,517,357,516,351,697,338,952,313,1083,295,1206,274,1309,249,1384,221,1414,204,1435,187,1451,165,1465,134,1472,113,1471,105,1466,96,1440,83,1392,71,1250,53,1083,40,937,33"/>
-<area shape="rect" title=" " alt="" coords="82,271,139,297"/>
-<area shape="poly" title=" " alt="" coords="765,36,605,53,415,82,323,102,241,126,174,153,149,168,129,184,119,200,113,219,110,256,105,256,107,218,114,198,126,181,146,164,172,148,239,121,322,97,414,77,605,48,765,31"/>
-<area shape="rect" title=" " alt="" coords="1371,102,1455,127"/>
-<area shape="poly" title=" " alt="" coords="938,31,1129,53,1241,70,1352,91,1363,94,1362,99,1351,97,1240,75,1128,58,937,37"/>
-<area shape="rect" href="silero__vad__node_8hpp.html" title=" " alt="" coords="780,94,923,135"/>
-<area shape="poly" title=" " alt="" coords="854,47,854,78,849,78,849,47"/>
-<area shape="poly" title=" " alt="" coords="812,137,782,158,756,184,740,220,733,257,728,256,735,219,752,181,778,154,809,133"/>
-<area shape="rect" title=" " alt="" coords="961,190,1022,216"/>
-<area shape="poly" title=" " alt="" coords="885,133,961,180,958,184,882,137"/>
-<area shape="rect" title=" " alt="" coords="1045,190,1164,216"/>
-<area shape="poly" title=" " alt="" coords="910,133,1056,182,1054,187,908,138"/>
-<area shape="rect" title=" " alt="" coords="1188,183,1350,223"/>
-<area shape="poly" title=" " alt="" coords="924,128,1173,179,1172,184,923,133"/>
-<area shape="rect" title=" " alt="" coords="340,183,518,223"/>
-<area shape="poly" title=" " alt="" coords="780,135,768,137,533,184,532,179,767,132,779,129"/>
-<area shape="rect" title=" " alt="" coords="542,183,692,223"/>
-<area shape="poly" title=" " alt="" coords="799,138,685,179,683,174,797,133"/>
-<area shape="rect" title=" " alt="" coords="766,190,937,216"/>
-<area shape="poly" title=" " alt="" coords="854,135,854,175,849,175,849,135"/>
-<area shape="rect" href="vad__iterator_8hpp.html" title=" " alt="" coords="139,190,316,216"/>
-<area shape="poly" title=" " alt="" coords="780,135,768,137,645,154,549,163,452,170,329,185,303,190,302,184,328,180,452,165,548,157,644,149,767,132,779,130"/>
-<area shape="poly" title=" " alt="" coords="198,219,73,269,71,264,196,214"/>
-<area shape="poly" title=" " alt="" coords="291,214,329,221,680,273,679,279,328,226,290,219"/>
-<area shape="poly" title=" " alt="" coords="248,214,443,334,440,339,245,219"/>
-<area shape="poly" title=" " alt="" coords="211,218,142,265,139,260,208,214"/>
-<area shape="rect" title=" " alt="" coords="162,271,314,297"/>
-<area shape="poly" title=" " alt="" coords="232,216,237,256,232,256,226,217"/>
-<area shape="rect" href="timestamp_8hpp.html" title=" " alt="" coords="390,271,559,297"/>
-<area shape="poly" title=" " alt="" coords="266,214,423,264,421,269,265,219"/>
-<area shape="poly" title=" " alt="" coords="477,297,477,329,472,329,472,297"/>
+<area shape="rect" title=" " alt="" coords="1213,5,1385,46"/>
+<area shape="rect" title=" " alt="" coords="329,271,381,297"/>
+<area shape="poly" title=" " alt="" coords="1213,34,931,51,567,82,391,103,238,127,125,154,88,169,66,185,57,198,53,211,55,221,62,231,88,247,127,260,224,274,314,280,313,285,224,280,126,265,86,252,58,234,50,223,48,210,52,196,62,181,85,164,123,149,237,122,390,98,566,77,931,46,1213,29"/>
+<area shape="rect" title=" " alt="" coords="5,271,73,297"/>
+<area shape="poly" title=" " alt="" coords="1213,29,984,31,687,40,536,49,396,60,277,76,188,97,141,111,105,125,76,147,48,184,41,201,37,220,37,256,32,256,32,219,36,200,43,181,72,143,103,121,140,106,186,91,276,71,396,55,535,43,686,35,984,26,1213,24"/>
+<area shape="rect" title=" " alt="" coords="1362,102,1439,127"/>
+<area shape="poly" title=" " alt="" coords="1324,44,1377,90,1373,94,1320,49"/>
+<area shape="rect" title=" " alt="" coords="907,345,960,371"/>
+<area shape="poly" title=" " alt="" coords="1306,46,1312,83,1313,130,1305,180,1295,204,1281,225,1248,257,1210,284,1169,305,1126,322,1043,345,976,356,975,350,1042,340,1124,317,1166,301,1207,279,1245,253,1277,222,1290,201,1300,179,1308,130,1306,83,1301,47"/>
+<area shape="rect" title=" " alt="" coords="1058,271,1116,297"/>
+<area shape="poly" title=" " alt="" coords="1302,47,1301,84,1294,131,1278,181,1266,204,1250,225,1224,247,1193,263,1132,280,1130,275,1191,258,1221,243,1246,222,1261,201,1273,179,1289,130,1295,83,1297,46"/>
+<area shape="rect" title=" " alt="" coords="1464,102,1548,127"/>
+<area shape="poly" title=" " alt="" coords="1347,44,1464,93,1462,98,1345,49"/>
+<area shape="rect" href="silero__vad__node_8hpp.html" title=" " alt="" coords="663,94,807,135"/>
+<area shape="poly" title=" " alt="" coords="1213,43,822,102,822,97,1212,38"/>
+<area shape="rect" href="model__download_8hpp.html" title=" " alt="" coords="1572,94,1708,135"/>
+<area shape="poly" title=" " alt="" coords="1378,44,1558,90,1557,95,1376,49"/>
+<area shape="poly" title=" " alt="" coords="663,121,507,128,319,141,154,160,97,172,66,185,54,200,46,218,41,256,35,255,41,216,49,197,63,181,95,167,153,155,319,136,506,123,663,116"/>
+<area shape="rect" title=" " alt="" coords="848,190,908,216"/>
+<area shape="poly" title=" " alt="" coords="769,133,846,180,844,184,766,137"/>
+<area shape="rect" title=" " alt="" coords="931,190,1051,216"/>
+<area shape="poly" title=" " alt="" coords="794,133,942,182,940,187,792,138"/>
+<area shape="rect" title=" " alt="" coords="1074,183,1236,223"/>
+<area shape="poly" title=" " alt="" coords="808,128,1060,179,1059,185,807,133"/>
+<area shape="rect" title=" " alt="" coords="77,183,254,223"/>
+<area shape="poly" title=" " alt="" coords="663,128,270,185,269,180,662,122"/>
+<area shape="rect" title=" " alt="" coords="279,183,428,223"/>
+<area shape="poly" title=" " alt="" coords="663,135,444,184,443,179,662,129"/>
+<area shape="rect" title=" " alt="" coords="452,190,623,216"/>
+<area shape="poly" title=" " alt="" coords="691,138,580,186,578,181,689,133"/>
+<area shape="rect" href="vad__iterator_8hpp.html" title=" " alt="" coords="647,190,823,216"/>
+<area shape="poly" title=" " alt="" coords="738,135,738,175,732,175,732,135"/>
+<area shape="poly" title=" " alt="" coords="677,219,397,277,396,272,676,214"/>
+<area shape="poly" title=" " alt="" coords="676,219,635,226,479,246,324,262,88,282,88,277,324,257,478,241,635,221,675,214"/>
+<area shape="poly" title=" " alt="" coords="807,214,861,234,888,250,910,270,927,298,934,329,929,330,922,300,906,273,884,254,859,239,805,219"/>
+<area shape="poly" title=" " alt="" coords="790,214,1044,270,1043,276,789,219"/>
+<area shape="rect" title=" " alt="" coords="745,271,896,297"/>
+<area shape="poly" title=" " alt="" coords="750,214,798,259,794,263,746,218"/>
+<area shape="rect" href="timestamp_8hpp.html" title=" " alt="" coords="552,271,721,297"/>
+<area shape="poly" title=" " alt="" coords="722,218,665,264,661,259,718,214"/>
+<area shape="poly" title=" " alt="" coords="688,295,893,344,891,349,686,300"/>
+<area shape="rect" title=" " alt="" coords="1500,190,1552,216"/>
+<area shape="poly" title=" " alt="" coords="1616,137,1555,183,1552,179,1613,133"/>
+<area shape="rect" title=" " alt="" coords="1576,190,1705,216"/>
+<area shape="poly" title=" " alt="" coords="1643,135,1643,175,1638,175,1638,135"/>
+<area shape="rect" href="logs_8hpp.html" title=" " alt="" coords="1730,190,1879,216"/>
+<area shape="poly" title=" " alt="" coords="1679,133,1769,180,1767,185,1676,138"/>
+<area shape="rect" title=" " alt="" coords="1688,271,1752,297"/>
+<area shape="poly" title=" " alt="" coords="1793,218,1746,263,1742,259,1790,214"/>
+<area shape="rect" title=" " alt="" coords="1776,271,1832,297"/>
+<area shape="poly" title=" " alt="" coords="1807,216,1807,255,1802,255,1802,216"/>
+<area shape="rect" title=" " alt="" coords="1857,271,1917,297"/>
+<area shape="poly" title=" " alt="" coords="1819,214,1865,258,1861,262,1815,218"/>
 </map>
 </div>
 </div></div><!-- contents -->

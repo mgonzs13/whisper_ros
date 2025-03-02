@@ -1,0 +1,15 @@
+<map id="whisper_ros/include/whisper_utils/model_download.hpp" name="whisper_ros/include/whisper_utils/model_download.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,216,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,109,58,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,63,61,102,58,97,109,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="82,109,211,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,61,149,93,144,93,144,61"/>
+<area shape="rect" id="Node000004" href="$logs_8hpp.html" title=" " alt="" coords="236,109,385,135"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,59,275,99,273,104,196,64"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="194,183,258,208"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="298,137,254,174,250,170,294,133"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="282,183,338,208"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="313,135,313,167,308,167,308,135"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="363,183,423,208"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="326,133,369,170,366,174,322,137"/>
+</map>

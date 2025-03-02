@@ -91,35 +91,50 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">whisper_base_node.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="whisper__base__node_8hpp_source.html">whisper_ros/whisper_base_node.hpp</a>&quot;</code><br />
-<code>#include &quot;whisper.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;whisper.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="whisper__base__node_8hpp_source.html">whisper_ros/whisper_base_node.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="model__download_8hpp_source.html">whisper_utils/model_download.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for whisper_base_node.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="whisper__base__node_8cpp__incl.png" border="0" usemap="#awhisper__ros_2src_2whisper__ros_2whisper__base__node_8cpp" alt=""/></div>
 <map name="awhisper__ros_2src_2whisper__ros_2whisper__base__node_8cpp" id="awhisper__ros_2src_2whisper__ros_2whisper__base__node_8cpp">
-<area shape="rect" title=" " alt="" coords="510,5,699,46"/>
-<area shape="rect" href="whisper__base__node_8hpp.html" title=" " alt="" coords="361,94,501,135"/>
-<area shape="poly" title=" " alt="" coords="566,49,485,89,483,84,564,44"/>
-<area shape="rect" title=" " alt="" coords="850,271,926,297"/>
-<area shape="poly" title=" " alt="" coords="660,44,708,66,763,96,816,134,861,181,880,218,888,255,883,257,875,220,857,184,812,138,760,100,706,71,658,49"/>
-<area shape="rect" title=" " alt="" coords="5,190,73,216"/>
-<area shape="poly" title=" " alt="" coords="361,128,231,150,158,166,85,185,80,187,78,182,84,180,156,161,230,144,360,122"/>
-<area shape="rect" title=" " alt="" coords="97,190,216,216"/>
-<area shape="poly" title=" " alt="" coords="369,138,210,188,209,182,368,133"/>
-<area shape="rect" title=" " alt="" coords="240,183,401,223"/>
-<area shape="poly" title=" " alt="" coords="408,137,359,175,355,171,404,133"/>
-<area shape="rect" title=" " alt="" coords="425,190,658,216"/>
-<area shape="poly" title=" " alt="" coords="458,133,516,179,513,183,454,137"/>
-<area shape="rect" href="whisper_8hpp.html" title=" " alt="" coords="682,190,846,216"/>
-<area shape="poly" title=" " alt="" coords="502,131,703,183,702,188,501,136"/>
-<area shape="rect" title=" " alt="" coords="544,271,598,297"/>
-<area shape="poly" title=" " alt="" coords="736,219,613,269,611,264,734,214"/>
-<area shape="rect" title=" " alt="" coords="622,271,680,297"/>
-<area shape="poly" title=" " alt="" coords="749,218,682,265,679,260,746,214"/>
-<area shape="rect" title=" " alt="" coords="703,271,826,297"/>
-<area shape="poly" title=" " alt="" coords="767,216,767,255,762,255,762,216"/>
-<area shape="poly" title=" " alt="" coords="785,214,858,261,855,265,782,219"/>
+<area shape="rect" title=" " alt="" coords="247,5,436,46"/>
+<area shape="rect" title=" " alt="" coords="265,271,341,297"/>
+<area shape="poly" title=" " alt="" coords="247,46,186,65,122,93,92,111,63,132,38,156,17,184,10,199,8,212,11,223,17,233,41,250,76,262,119,271,164,277,250,281,250,286,164,282,118,276,75,268,38,255,13,237,6,225,3,212,5,197,13,181,34,153,60,128,89,106,120,88,184,60,246,41"/>
+<area shape="rect" href="whisper__base__node_8hpp.html" title=" " alt="" coords="272,94,412,135"/>
+<area shape="poly" title=" " alt="" coords="344,47,344,78,339,78,339,47"/>
+<area shape="rect" href="model__download_8hpp.html" title=" " alt="" coords="907,94,1043,135"/>
+<area shape="poly" title=" " alt="" coords="437,37,892,99,891,104,436,43"/>
+<area shape="rect" title=" " alt="" coords="27,190,94,216"/>
+<area shape="poly" title=" " alt="" coords="272,136,192,158,107,185,103,187,101,182,105,180,191,153,271,131"/>
+<area shape="rect" title=" " alt="" coords="118,190,237,216"/>
+<area shape="poly" title=" " alt="" coords="306,138,215,185,213,180,303,133"/>
+<area shape="rect" title=" " alt="" coords="261,183,422,223"/>
+<area shape="poly" title=" " alt="" coords="344,135,344,167,339,167,339,135"/>
+<area shape="rect" title=" " alt="" coords="446,190,680,216"/>
+<area shape="poly" title=" " alt="" coords="393,133,519,182,517,187,391,138"/>
+<area shape="rect" href="whisper_8hpp.html" title=" " alt="" coords="704,190,868,216"/>
+<area shape="poly" title=" " alt="" coords="413,126,693,180,713,184,712,189,692,185,412,132"/>
+<area shape="poly" title=" " alt="" coords="729,219,693,226,508,256,357,278,356,273,508,251,692,221,728,214"/>
+<area shape="rect" title=" " alt="" coords="679,271,732,297"/>
+<area shape="poly" title=" " alt="" coords="775,218,731,262,727,258,772,214"/>
+<area shape="rect" title=" " alt="" coords="757,271,814,297"/>
+<area shape="poly" title=" " alt="" coords="788,216,788,255,783,255,783,216"/>
+<area shape="rect" title=" " alt="" coords="838,271,960,297"/>
+<area shape="poly" title=" " alt="" coords="804,214,871,260,868,265,801,218"/>
+<area shape="rect" title=" " alt="" coords="892,190,944,216"/>
+<area shape="poly" title=" " alt="" coords="964,137,936,179,932,176,960,134"/>
+<area shape="rect" title=" " alt="" coords="968,190,1097,216"/>
+<area shape="poly" title=" " alt="" coords="990,134,1018,176,1014,179,986,137"/>
+<area shape="rect" href="logs_8hpp.html" title=" " alt="" coords="1122,190,1271,216"/>
+<area shape="poly" title=" " alt="" coords="1026,133,1152,182,1150,187,1024,138"/>
+<area shape="rect" title=" " alt="" coords="1080,271,1145,297"/>
+<area shape="poly" title=" " alt="" coords="1185,218,1138,263,1134,259,1182,214"/>
+<area shape="rect" title=" " alt="" coords="1168,271,1225,297"/>
+<area shape="poly" title=" " alt="" coords="1199,216,1199,255,1194,255,1194,216"/>
+<area shape="rect" title=" " alt="" coords="1249,271,1309,297"/>
+<area shape="poly" title=" " alt="" coords="1211,214,1257,258,1253,262,1207,218"/>
 </map>
 </div>
 </div></div><!-- contents -->
