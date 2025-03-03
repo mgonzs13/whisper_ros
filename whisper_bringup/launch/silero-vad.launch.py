@@ -30,7 +30,7 @@ from huggingface_hub import hf_hub_download
 
 def generate_launch_description():
 
-    def run_silero_vad(context: LaunchContext, repo, file, model_path):
+    def run_silero_vad(context: LaunchContext, repo, file, model_path, use_cuda):
         repo = str(context.perform_substitution(repo))
         file = str(context.perform_substitution(file))
         model_path = str(context.perform_substitution(model_path))
@@ -57,6 +57,7 @@ def generate_launch_description():
                             "min_silence_ms", default=128
                         ),
                         "speech_pad_ms": LaunchConfiguration("speech_pad_ms", default=32),
+                        "use_cuda": use_cuda,
                     }
                 ],
                 remappings=[("audio", "/audio/in")],
@@ -83,15 +84,24 @@ def generate_launch_description():
         default_value="",
         description="Local path to the model file",
     )
+    
+    use_cuda = LaunchConfiguration("use_cuda")
+    use_cuda_cmd = DeclareLaunchArgument(
+        "use_cuda",
+        default_value="False",
+        description="Use CUDA for inference",
+    )
+    
 
     return LaunchDescription(
         [
             model_repo_cmd,
             model_filename_cmd,
             model_path_cmd,
+            use_cuda_cmd,
             OpaqueFunction(
                 function=run_silero_vad,
-                args=[model_repo, model_filename, model_path],
+                args=[model_repo, model_filename, model_path, use_cuda],
             ),
         ]
     )

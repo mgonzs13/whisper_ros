@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.8)
 project(whisper_onnxruntime_vendor)
 
-option(USE_GPU "Use GPU for inference" OFF)
+option(ONNX_GPU "Use GPU for inference" OFF)
 
 set(GPU "")
 
 # Determine the architecture
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(ARCHITECTURE "x64")
-    if(USE_GPU)
+    if(ONNX_GPU)
         set(GPU "-gpu")
     endif()
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")

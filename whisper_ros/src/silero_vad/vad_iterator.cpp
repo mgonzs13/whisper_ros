@@ -78,7 +78,7 @@ void VadIterator::init_onnx_model(const std::string &model_path) {
     WHISPER_LOG_INFO("Using CUDA provider");
     this->session_options.AppendExecutionProvider_CUDA(cudaOption);
   } else if (this->use_cuda && !cuda_available) {
-    throw std::runtime_error("CUDA provider not available");
+    WHISPER_LOG_WARN("CUDA provider not available, using CPU provider");
   } else {
     WHISPER_LOG_INFO("Using CPU provider");
   }

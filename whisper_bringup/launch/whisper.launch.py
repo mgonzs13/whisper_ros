@@ -164,6 +164,13 @@ def generate_launch_description():
         default_value="",
         description="Local path to the model file for SileroVAD",
     )
+    
+    silero_vad_use_cuda = LaunchConfiguration("silero_vad_use_cuda")
+    silero_vad_use_cuda_cmd = DeclareLaunchArgument(
+        "silero_vad_use_cuda",
+        default_value="False",
+        description="Whether to use CUDA for Silero-VAD",
+    )
 
     return LaunchDescription(
         [
@@ -174,6 +181,7 @@ def generate_launch_description():
             silero_vad_model_repo_cmd,
             silero_vad_model_filename_cmd,
             silero_vad_model_path_cmd,
+            silero_vad_use_cuda_cmd,
             OpaqueFunction(
                 function=run_whisper,
                 args=[model_repo, model_filename, model_path],
@@ -194,6 +202,7 @@ def generate_launch_description():
                     "model_repo": silero_vad_model_repo,
                     "model_filename": silero_vad_model_filename,
                     "model_path": silero_vad_model_path,
+                    "use_cuda": silero_vad_use_cuda,
                 }.items(),
             ),
             Node(

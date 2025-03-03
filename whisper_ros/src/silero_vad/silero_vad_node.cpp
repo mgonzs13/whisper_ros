@@ -45,7 +45,7 @@ SileroVadNode::SileroVadNode()
   this->declare_parameter<float>("threshold", 0.5f);
   this->declare_parameter<int>("min_silence_ms", 100);
   this->declare_parameter<int>("speech_pad_ms", 30);
-  this->declare_parameter<bool>("use_cuda", true);
+  this->declare_parameter<bool>("use_cuda", false);
 }
 
 rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
