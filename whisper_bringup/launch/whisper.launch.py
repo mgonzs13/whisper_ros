@@ -113,7 +113,7 @@ def generate_launch_description():
         default_value="",
         description="Local path to the model file for SileroVAD",
     )
-    
+
     silero_vad_use_cuda = LaunchConfiguration("silero_vad_use_cuda")
     silero_vad_use_cuda_cmd = DeclareLaunchArgument(
         "silero_vad_use_cuda",
