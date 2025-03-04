@@ -114,12 +114,20 @@ def generate_launch_description():
         description="Local path to the model file for SileroVAD",
     )
 
+    silero_vad_use_cuda = LaunchConfiguration("silero_vad_use_cuda")
+    silero_vad_use_cuda_cmd = DeclareLaunchArgument(
+        "silero_vad_use_cuda",
+        default_value="False",
+        description="Whether to use CUDA for Silero-VAD",
+    )
+
     return LaunchDescription(
         [
             stream_cmd,
             silero_vad_model_repo_cmd,
             silero_vad_model_filename_cmd,
             silero_vad_model_path_cmd,
+            silero_vad_use_cuda_cmd,
             Node(
                 package="whisper_ros",
                 executable="whisper_server_node",
@@ -154,6 +162,7 @@ def generate_launch_description():
                     "model_repo": silero_vad_model_repo,
                     "model_filename": silero_vad_model_filename,
                     "model_path": silero_vad_model_path,
+                    "use_cuda": silero_vad_use_cuda,
                 }.items(),
             ),
             Node(

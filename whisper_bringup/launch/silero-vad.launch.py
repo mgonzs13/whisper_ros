@@ -52,6 +52,7 @@ def generate_launch_description():
                             "min_silence_ms", default=128
                         ),
                         "speech_pad_ms": LaunchConfiguration("speech_pad_ms", default=32),
+                        "use_cuda": LaunchConfiguration("use_cuda", default=False),
                     }
                 ],
                 remappings=[("audio", "/audio/in")],

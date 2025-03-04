@@ -37,7 +37,7 @@ git clone https://github.com/mgonzs13/audio_common.git
 git clone https://github.com/mgonzs13/whisper_ros.git
 cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
-colcon build --cmake-args -DGGML_CUDA=ON # add this for CUDA
+colcon build --cmake-args -DGGML_CUDA=ON -DSILERO_CUDA=ON # To use CUDA on Whisper and on Silero, respectively
 ```
 
 ## Docker
@@ -61,6 +61,8 @@ Run Silero for VAD and Whisper for STT:
 ```shell
 ros2 launch whisper_bringup whisper.launch.py
 ```
+
+Add the parameter `silero_vad_use_cuda:=True` to use Silero with CUDA.
 
 ## Demos
 

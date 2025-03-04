@@ -33,9 +33,10 @@ using namespace silero_vad;
 
 VadIterator::VadIterator(const std::string &model_path, int sample_rate,
                          int frame_size_ms, float threshold, int min_silence_ms,
-                         int speech_pad_ms)
-    : env(ORT_LOGGING_LEVEL_WARNING, "VadIterator"), threshold(threshold),
-      sample_rate(sample_rate), sr_per_ms(sample_rate / 1000),
+                         int speech_pad_ms, bool use_cuda)
+    : env(ORT_LOGGING_LEVEL_WARNING, "VadIterator"), use_cuda(use_cuda),
+      threshold(threshold), sample_rate(sample_rate),
+      sr_per_ms(sample_rate / 1000),
       window_size_samples(frame_size_ms * sr_per_ms),
       speech_pad_samples(sr_per_ms * speech_pad_ms),
       min_silence_samples(sr_per_ms * min_silence_ms),
@@ -61,6 +62,26 @@ void VadIterator::init_onnx_model(const std::string &model_path) {
   this->session_options.SetInterOpNumThreads(1);
   this->session_options.SetGraphOptimizationLevel(
       GraphOptimizationLevel::ORT_ENABLE_ALL);
+
+  std::vector<std::string> providers = Ort::GetAvailableProviders();
+  bool cuda_available = false;
+
+  for (const auto &provider : providers) {
+    if (provider == "CUDAExecutionProvider") {
+      cuda_available = true;
+      break;
+    }
+  }
+
+  if (this->use_cuda && cuda_available) {
+    OrtCUDAProviderOptions cudaOption;
+    WHISPER_LOG_INFO("Using CUDA provider");
+    this->session_options.AppendExecutionProvider_CUDA(cudaOption);
+  } else if (this->use_cuda && !cuda_available) {
+    WHISPER_LOG_WARN("CUDA provider not available, using CPU provider");
+  } else {
+    WHISPER_LOG_INFO("Using CPU provider");
+  }
 
   try {
     this->session = std::make_shared<Ort::Session>(
