@@ -16,25 +16,10 @@
 #ifndef WHISPER_UTILS__MODEL_DOWNLOAD_HPP
 #define WHISPER_UTILS__MODEL_DOWNLOAD_HPP
 
-#include <regex>
-
 #include "huggingface_hub.h"
 #include "whisper_utils/logs.hpp"
 
 namespace whisper_utils {
-
-/**
- * @brief Download a file from HF Hub.
- *
- * This function takes a repo and a file to download and return the path of the
- * downloaded file.
- *
- * @param repo_id The repo name from HF.
- * @param filename The filename from the repo.
- * @return The path of the donwloaded file.
- */
-std::string hf_hub_download(const std::string &repo_id,
-                            const std::string &filename);
 
 /**
  * @brief Download a model and its shards from HF Hub.

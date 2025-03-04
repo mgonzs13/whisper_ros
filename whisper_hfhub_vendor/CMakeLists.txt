@@ -9,7 +9,7 @@ find_package(CURL REQUIRED)  # Add CURL as a required package
 FetchContent_Declare(
   hfhub
   GIT_REPOSITORY https://github.com/agonzc34/huggingface-hub-cpp
-  GIT_TAG        1.0.0
+  GIT_TAG        1.1.0
   GIT_SHALLOW    TRUE
 )
 
@@ -27,5 +27,4 @@ install(
 ament_export_include_directories(include)
 ament_export_dependencies(CURL)
 ament_export_targets(export_hfhub HAS_LIBRARY_TARGET)
-
 ament_package()

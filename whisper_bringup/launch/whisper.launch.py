@@ -118,7 +118,7 @@ def generate_launch_description():
     silero_vad_use_cuda_cmd = DeclareLaunchArgument(
         "silero_vad_use_cuda",
         default_value="False",
-        description="Whether to use CUDA for Silero-VAD",
+        description="Whether to use CUDA for SileroVAD",
     )
 
     return LaunchDescription(

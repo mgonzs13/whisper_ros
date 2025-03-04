@@ -48,6 +48,4 @@ install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/include DESTINATION .)
 # Export the onnxruntime library for downstream packages
 ament_export_include_directories(include)
 ament_export_libraries(onnxruntime)
-
-# Export the package
 ament_package()
