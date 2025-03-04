@@ -122,9 +122,9 @@ Collaboration diagram for silero_vad::VadIterator:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afb8bbcf1b7e48817e173daab1bbabc22" id="r_afb8bbcf1b7e48817e173daab1bbabc22"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb8bbcf1b7e48817e173daab1bbabc22">VadIterator</a> (const std::string &amp;model_path, int <a class="el" href="#afb97814fd257e6017560739c6fa48579">sample_rate</a>=16000, int frame_size_ms=32, float <a class="el" href="#a7d461d4932a860776dfd7b43514c95a9">threshold</a>=0.5f, int min_silence_ms=100, int speech_pad_ms=30)</td></tr>
-<tr class="memdesc:afb8bbcf1b7e48817e173daab1bbabc22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classsilero__vad_1_1VadIterator.html" title="Implements a Voice Activity Detection (VAD) iterator using an ONNX model.">VadIterator</a> object.  <br /></td></tr>
-<tr class="separator:afb8bbcf1b7e48817e173daab1bbabc22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca981138c190533d30924beb0bb191dc" id="r_aca981138c190533d30924beb0bb191dc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca981138c190533d30924beb0bb191dc">VadIterator</a> (const std::string &amp;model_path, int <a class="el" href="#afb97814fd257e6017560739c6fa48579">sample_rate</a>=16000, int frame_size_ms=32, float <a class="el" href="#a7d461d4932a860776dfd7b43514c95a9">threshold</a>=0.5f, int min_silence_ms=100, int speech_pad_ms=30, bool <a class="el" href="#a0d5a32244b22d29a82735003e7561f2c">use_cuda</a>=false)</td></tr>
+<tr class="memdesc:aca981138c190533d30924beb0bb191dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classsilero__vad_1_1VadIterator.html" title="Implements a Voice Activity Detection (VAD) iterator using an ONNX model.">VadIterator</a> object.  <br /></td></tr>
+<tr class="separator:aca981138c190533d30924beb0bb191dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd947354bf135281716eb61fe0c192b8" id="r_afd947354bf135281716eb61fe0c192b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd947354bf135281716eb61fe0c192b8">reset_states</a> ()</td></tr>
 <tr class="memdesc:afd947354bf135281716eb61fe0c192b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the internal state of the model.  <br /></td></tr>
 <tr class="separator:afd947354bf135281716eb61fe0c192b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,6 +155,8 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a3b666ba52c049a62a9fa98d5416b14ff" id="r_a3b666ba52c049a62a9fa98d5416b14ff"><td class="memItemLeft" align="right" valign="top">Ort::MemoryInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b666ba52c049a62a9fa98d5416b14ff">memory_info</a></td></tr>
 <tr class="memdesc:a3b666ba52c049a62a9fa98d5416b14ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory info for tensor allocation.  <br /></td></tr>
 <tr class="separator:a3b666ba52c049a62a9fa98d5416b14ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d5a32244b22d29a82735003e7561f2c" id="r_a0d5a32244b22d29a82735003e7561f2c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d5a32244b22d29a82735003e7561f2c">use_cuda</a></td></tr>
+<tr class="separator:a0d5a32244b22d29a82735003e7561f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d461d4932a860776dfd7b43514c95a9" id="r_a7d461d4932a860776dfd7b43514c95a9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d461d4932a860776dfd7b43514c95a9">threshold</a></td></tr>
 <tr class="memdesc:a7d461d4932a860776dfd7b43514c95a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detection threshold for speech probability.  <br /></td></tr>
 <tr class="separator:a7d461d4932a860776dfd7b43514c95a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,8 +231,8 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Implements a Voice Activity Detection (VAD) iterator using an ONNX model. </p>
 <p>This class provides methods to load a pre-trained ONNX VAD model, process audio data, and predict the presence of speech. It manages the model state and handles input/output tensors for inference. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="afb8bbcf1b7e48817e173daab1bbabc22" name="afb8bbcf1b7e48817e173daab1bbabc22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb8bbcf1b7e48817e173daab1bbabc22">&#9670;&#160;</a></span>VadIterator()</h2>
+<a id="aca981138c190533d30924beb0bb191dc" name="aca981138c190533d30924beb0bb191dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca981138c190533d30924beb0bb191dc">&#9670;&#160;</a></span>VadIterator()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +265,12 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>speech_pad_ms</em></span><span class="paramdefsep"> = </span><span class="paramdefval">30</span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>speech_pad_ms</em></span><span class="paramdefsep"> = </span><span class="paramdefval">30</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>use_cuda</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1017,6 +1024,28 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Indicates whether speech has been detected. </p>
+
+</div>
+</div>
+<a id="a0d5a32244b22d29a82735003e7561f2c" name="a0d5a32244b22d29a82735003e7561f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d5a32244b22d29a82735003e7561f2c">&#9670;&#160;</a></span>use_cuda</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool silero_vad::VadIterator::use_cuda</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

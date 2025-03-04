@@ -219,6 +219,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a19d53487123f192c7c9614d6cacc401a" id="r_a19d53487123f192c7c9614d6cacc401a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19d53487123f192c7c9614d6cacc401a">speech_pad_ms_</a></td></tr>
 <tr class="memdesc:a19d53487123f192c7c9614d6cacc401a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Padding duration for detected speech in milliseconds.  <br /></td></tr>
 <tr class="separator:a19d53487123f192c7c9614d6cacc401a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a093f12b7b4bc99fc2aecafdcdedd620e" id="r_a093f12b7b4bc99fc2aecafdcdedd620e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a093f12b7b4bc99fc2aecafdcdedd620e">use_cuda_</a></td></tr>
+<tr class="memdesc:a093f12b7b4bc99fc2aecafdcdedd620e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the CUDA provider should be used.  <br /></td></tr>
+<tr class="separator:a093f12b7b4bc99fc2aecafdcdedd620e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a749c4e51d540d3b22663aa31f6001d8c" id="r_a749c4e51d540d3b22663aa31f6001d8c"><td class="memItemLeft" align="right" valign="top">rclcpp::Publisher&lt; std_msgs::msg::Float32MultiArray &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a749c4e51d540d3b22663aa31f6001d8c">publisher_</a></td></tr>
 <tr class="memdesc:a749c4e51d540d3b22663aa31f6001d8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publisher for VAD output.  <br /></td></tr>
 <tr class="separator:a749c4e51d540d3b22663aa31f6001d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -829,6 +832,30 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p>Threshold for VAD decision-making. </p>
+
+</div>
+</div>
+<a id="a093f12b7b4bc99fc2aecafdcdedd620e" name="a093f12b7b4bc99fc2aecafdcdedd620e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a093f12b7b4bc99fc2aecafdcdedd620e">&#9670;&#160;</a></span>use_cuda_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool silero_vad::SileroVadNode::use_cuda_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Indicates if the CUDA provider should be used. </p>
 
 </div>
 </div>

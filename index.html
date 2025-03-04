@@ -124,7 +124,7 @@ Installation</h1>
 <div class="line">git clone https://github.com/mgonzs13/whisper_ros.git</div>
 <div class="line">cd ~/ros2_ws</div>
 <div class="line">rosdep install --from-paths src --ignore-src -r -y</div>
-<div class="line">colcon build --cmake-args -DGGML_CUDA=ON # add this for CUDA</div>
+<div class="line">colcon build --cmake-args -DGGML_CUDA=ON -DSILERO_CUDA=ON # To use CUDA on Whisper and on Silero, respectively</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Docker</h1>
 <p>Build the <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> docker. Additionally, you can choose to build <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA (<code>USE_CUDA</code>) and choose the CUDA version (<code>CUDA_VERSION</code>). Remember that you have to use <code>DOCKER_BUILDKIT=0</code> to compile <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA when building the image.</p>
@@ -135,7 +135,8 @@ Docker</h1>
 Usage</h1>
 <p>Run Silero for VAD and Whisper for STT:</p>
 <div class="fragment"><div class="line">ros2 launch whisper_bringup whisper.launch.py</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><p>Add the parameter <code>silero_vad_use_cuda:=True</code> to use Silero with CUDA.</p>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Demos</h1>
 <p>Send a goal action to listen:</p>
 <div class="fragment"><div class="line">ros2 action send_goal /whisper/listen whisper_msgs/action/STT &quot;{}&quot;</div>
