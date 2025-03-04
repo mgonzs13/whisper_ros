@@ -117,9 +117,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5fc141a4c36679aa3c9864f92194a061" id="r_a5fc141a4c36679aa3c9864f92194a061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fc141a4c36679aa3c9864f92194a061">set_log_level</a> (<a class="el" href="#a34807386d529b6e9d82b7f0897e90437">LogLevel</a> <a class="el" href="#affc3e4b06f2ec153f61bc1d16aadda88">log_level</a>)</td></tr>
 <tr class="memdesc:a5fc141a4c36679aa3c9864f92194a061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the log level for the logs.  <br /></td></tr>
 <tr class="separator:a5fc141a4c36679aa3c9864f92194a061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad33e12dac05c3d7e21aa2e9c1e4261d1" id="r_ad33e12dac05c3d7e21aa2e9c1e4261d1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad33e12dac05c3d7e21aa2e9c1e4261d1">hf_hub_download</a> (const std::string &amp;repo_id, const std::string &amp;filename)</td></tr>
-<tr class="memdesc:ad33e12dac05c3d7e21aa2e9c1e4261d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Download a file from HF Hub.  <br /></td></tr>
-<tr class="separator:ad33e12dac05c3d7e21aa2e9c1e4261d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1e3018202f6872be8cc641883c42110" id="r_ae1e3018202f6872be8cc641883c42110"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1e3018202f6872be8cc641883c42110">download_model</a> (const std::string &amp;repo_id, const std::string &amp;filename)</td></tr>
 <tr class="memdesc:ae1e3018202f6872be8cc641883c42110"><td class="mdescLeft">&#160;</td><td class="mdescRight">Download a model and its shards from HF Hub.  <br /></td></tr>
 <tr class="separator:ae1e3018202f6872be8cc641883c42110"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -471,38 +468,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to the extracted filename. </dd></dl>
-
-</div>
-</div>
-<a id="ad33e12dac05c3d7e21aa2e9c1e4261d1" name="ad33e12dac05c3d7e21aa2e9c1e4261d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad33e12dac05c3d7e21aa2e9c1e4261d1">&#9670;&#160;</a></span>hf_hub_download()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string whisper_utils::hf_hub_download </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>repo_id</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Download a file from HF Hub. </p>
-<p>This function takes a repo and a file to download and return the path of the downloaded file.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">repo_id</td><td>The repo name from HF. </td></tr>
-    <tr><td class="paramname">filename</td><td>The filename from the repo. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The path of the donwloaded file. </dd></dl>
 
 </div>
 </div>

@@ -109,26 +109,20 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifndef WHISPER_UTILS__MODEL_DOWNLOAD_HPP</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#define WHISPER_UTILS__MODEL_DOWNLOAD_HPP</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;regex&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;huggingface_hub.h&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="logs_8hpp.html">whisper_utils/logs.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacewhisper__utils.html">whisper_utils</a> {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>std::string <a class="code hl_function" href="namespacewhisper__utils.html#ad33e12dac05c3d7e21aa2e9c1e4261d1">hf_hub_download</a>(<span class="keyword">const</span> std::string &amp;repo_id,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                            <span class="keyword">const</span> std::string &amp;filename);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>std::string <a class="code hl_function" href="namespacewhisper__utils.html#ae1e3018202f6872be8cc641883c42110">download_model</a>(<span class="keyword">const</span> std::string &amp;repo_id,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                           <span class="keyword">const</span> std::string &amp;filename);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace whisper_utils</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif </span><span class="comment">// WHISPER_UTILS__MODEL_DOWNLOAD_HPP</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;huggingface_hub.h&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="logs_8hpp.html">whisper_utils/logs.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacewhisper__utils.html">whisper_utils</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>std::string <a class="code hl_function" href="namespacewhisper__utils.html#ae1e3018202f6872be8cc641883c42110">download_model</a>(<span class="keyword">const</span> std::string &amp;repo_id,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                           <span class="keyword">const</span> std::string &amp;filename);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>} <span class="comment">// namespace whisper_utils</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif </span><span class="comment">// WHISPER_UTILS__MODEL_DOWNLOAD_HPP</span></div>
 <div class="ttc" id="alogs_8hpp_html"><div class="ttname"><a href="logs_8hpp.html">logs.hpp</a></div></div>
 <div class="ttc" id="anamespacewhisper__utils_html"><div class="ttname"><a href="namespacewhisper__utils.html">whisper_utils</a></div><div class="ttdef"><b>Definition</b> logs.hpp:23</div></div>
-<div class="ttc" id="anamespacewhisper__utils_html_ad33e12dac05c3d7e21aa2e9c1e4261d1"><div class="ttname"><a href="namespacewhisper__utils.html#ad33e12dac05c3d7e21aa2e9c1e4261d1">whisper_utils::hf_hub_download</a></div><div class="ttdeci">std::string hf_hub_download(const std::string &amp;repo_id, const std::string &amp;filename)</div><div class="ttdoc">Download a file from HF Hub.</div><div class="ttdef"><b>Definition</b> download_model.cpp:20</div></div>
-<div class="ttc" id="anamespacewhisper__utils_html_ae1e3018202f6872be8cc641883c42110"><div class="ttname"><a href="namespacewhisper__utils.html#ae1e3018202f6872be8cc641883c42110">whisper_utils::download_model</a></div><div class="ttdeci">std::string download_model(const std::string &amp;repo_id, const std::string &amp;filename)</div><div class="ttdoc">Download a model and its shards from HF Hub.</div><div class="ttdef"><b>Definition</b> download_model.cpp:34</div></div>
+<div class="ttc" id="anamespacewhisper__utils_html_ae1e3018202f6872be8cc641883c42110"><div class="ttname"><a href="namespacewhisper__utils.html#ae1e3018202f6872be8cc641883c42110">whisper_utils::download_model</a></div><div class="ttdeci">std::string download_model(const std::string &amp;repo_id, const std::string &amp;filename)</div><div class="ttdoc">Download a model and its shards from HF Hub.</div><div class="ttdef"><b>Definition</b> download_model.cpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
