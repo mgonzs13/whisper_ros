@@ -29,7 +29,7 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 
 ## Installation
 
-To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit).
+To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). To run SileroVAD with ONNX and CUDA, you must install the [cuDNN](https://developer.nvidia.com/cudnn-downloads).
 
 ```shell
 cd ~/ros2_ws/src
@@ -37,7 +37,7 @@ git clone https://github.com/mgonzs13/audio_common.git
 git clone https://github.com/mgonzs13/whisper_ros.git
 cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
-colcon build --cmake-args -DGGML_CUDA=ON -DSILERO_CUDA=ON # To use CUDA on Whisper and on Silero, respectively
+colcon build --cmake-args -DGGML_CUDA=ON -DONNX_GPU=ON # To use CUDA on Whisper and on Silero, respectively
 ```
 
 ## Docker
