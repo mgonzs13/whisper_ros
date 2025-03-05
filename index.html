@@ -118,13 +118,13 @@ Related Projects</h1>
 </ul>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Installation</h1>
-<p>To run <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA, first, you must install the <a href="https://developer.nvidia.com/cuda-toolkit">CUDA Toolkit</a>.</p>
+<p>To run <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA, first, you must install the <a href="https://developer.nvidia.com/cuda-toolkit">CUDA Toolkit</a>. To run SileroVAD with ONNX and CUDA, you must install the <a href="https://developer.nvidia.com/cudnn-downloads">cuDNN</a>.</p>
 <div class="fragment"><div class="line">cd ~/ros2_ws/src</div>
 <div class="line">git clone https://github.com/mgonzs13/audio_common.git</div>
 <div class="line">git clone https://github.com/mgonzs13/whisper_ros.git</div>
 <div class="line">cd ~/ros2_ws</div>
 <div class="line">rosdep install --from-paths src --ignore-src -r -y</div>
-<div class="line">colcon build --cmake-args -DGGML_CUDA=ON -DSILERO_CUDA=ON # To use CUDA on Whisper and on Silero, respectively</div>
+<div class="line">colcon build --cmake-args -DGGML_CUDA=ON -DONNX_GPU=ON # To use CUDA on Whisper and on Silero, respectively</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Docker</h1>
 <p>Build the <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> docker. Additionally, you can choose to build <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA (<code>USE_CUDA</code>) and choose the CUDA version (<code>CUDA_VERSION</code>). Remember that you have to use <code>DOCKER_BUILDKIT=0</code> to compile <a class="el" href="namespacewhisper__ros.html">whisper_ros</a> with CUDA when building the image.</p>
