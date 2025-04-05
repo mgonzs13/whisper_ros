@@ -30,6 +30,7 @@ namespace silero_vad {
 /// @class Timestamp
 /// @brief Represents a time interval with speech probability.
 class Timestamp {
+
 public:
   /// The start time of the interval, in milliseconds.
   int start;

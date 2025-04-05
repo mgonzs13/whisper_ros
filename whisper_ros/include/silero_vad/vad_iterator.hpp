@@ -41,6 +41,7 @@ namespace silero_vad {
 /// audio data, and predict the presence of speech. It manages the model state
 /// and handles input/output tensors for inference.
 class VadIterator {
+
 public:
   /// @brief Constructs a VadIterator object.
   ///

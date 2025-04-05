@@ -32,6 +32,11 @@
 
 namespace whisper_ros {
 
+/**
+ * @brief Alias for the CallbackReturn type from the LifecycleNodeInterface.
+ *
+ * This alias is used to simplify the code and improve readability.
+ */
 using CallbackReturn =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
