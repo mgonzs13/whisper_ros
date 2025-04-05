@@ -92,21 +92,73 @@ inline const char *extract_filename(const char *path) {
   return filename ? filename + 1 : path;
 }
 
+/**
+ * @brief Logs an error message.
+ *
+ * This function logs an error message with the specified file, function,
+ * line number, and format string.
+ *
+ * @param file The name of the source file where the log function is called.
+ * @param function The name of the function where the log function is called.
+ * @param line The line number in the source file where the log function is
+ * called.
+ * @param text The format string for the log message, similar to printf.
+ * @param ... Additional arguments for the format string.
+ */
 #define WHISPER_LOG_ERROR(text, ...)                                           \
   if (whisper_utils::log_level >= whisper_utils::ERROR)                        \
   whisper_utils::log_error(whisper_utils::extract_filename(__FILE__),          \
                            __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
+/**
+ * @brief Logs an warning message.
+ *
+ * This function logs an warning message with the specified file, function,
+ * line number, and format string.
+ *
+ * @param file The name of the source file where the log function is called.
+ * @param function The name of the function where the log function is called.
+ * @param line The line number in the source file where the log function is
+ * called.
+ * @param text The format string for the log message, similar to printf.
+ * @param ... Additional arguments for the format string.
+ */
 #define WHISPER_LOG_WARN(text, ...)                                            \
   if (whisper_utils::log_level >= whisper_utils::WARN)                         \
   whisper_utils::log_warn(whisper_utils::extract_filename(__FILE__),           \
                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
+/**
+ * @brief Logs an info message.
+ *
+ * This function logs an info message with the specified file, function,
+ * line number, and format string.
+ *
+ * @param file The name of the source file where the log function is called.
+ * @param function The name of the function where the log function is called.
+ * @param line The line number in the source file where the log function is
+ * called.
+ * @param text The format string for the log message, similar to printf.
+ * @param ... Additional arguments for the format string.
+ */
 #define WHISPER_LOG_INFO(text, ...)                                            \
   if (whisper_utils::log_level >= whisper_utils::INFO)                         \
   whisper_utils::log_info(whisper_utils::extract_filename(__FILE__),           \
                           __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
+/**
+ * @brief Logs a debug message.
+ *
+ * This function logs a debug message with the specified file, function,
+ * line number, and format string.
+ *
+ * @param file The name of the source file where the log function is called.
+ * @param function The name of the function where the log function is called.
+ * @param line The line number in the source file where the log function is
+ * called.
+ * @param text The format string for the log message, similar to printf.
+ * @param ... Additional arguments for the format string.
+ */
 #define WHISPER_LOG_DEBUG(text, ...)                                           \
   if (whisper_utils::log_level >= whisper_utils::DEBUG)                        \
   whisper_utils::log_debug(whisper_utils::extract_filename(__FILE__),          \
