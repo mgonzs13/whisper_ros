@@ -20,6 +20,10 @@ namespace whisper_utils {
 std::string download_model(const std::string &repo_id,
                            const std::string &filename) {
 
+  if (repo_id.empty() || filename.empty()) {
+    return "";
+  }
+
   auto result = huggingface_hub::hf_hub_download_with_shards(repo_id, filename);
 
   if (result.success) {
