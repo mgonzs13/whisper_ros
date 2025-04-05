@@ -51,7 +51,7 @@ WhisperBaseNode::WhisperBaseNode()
               {"sampling_strategy", "beam_search"},
               {"model_repo", ""},
               {"model_filename", ""},
-              {"model", ""},
+              {"model_path", ""},
               {"language", "en"},
               {"openvino_encode_device", "CPU"},
               {"dtw_aheads", "none"},
@@ -79,6 +79,7 @@ WhisperBaseNode::WhisperBaseNode()
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_nst", false},
+                                         {"flash_attn", false},
                                          {"use_gpu", true},
                                          {"flash_attn", false},
                                          {"dtw_token_timestamps", false},
@@ -108,7 +109,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   this->get_parameter("model_repo", model_repo);
   this->get_parameter("model_filename", model_filename);
-  this->get_parameter("model", this->model);
+  this->get_parameter("model_path", this->model);
   this->get_parameter("openvino_encode_device", this->openvino_encode_device);
 
   this->get_parameter("n_threads", this->wparams.n_threads);
@@ -153,6 +154,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
                       this->wparams.beam_search.patience);
 
   this->get_parameter("n_processors", this->n_processors);
+  this->get_parameter("flash_attn", this->cparams.flash_attn);
   this->get_parameter("use_gpu", this->cparams.use_gpu);
   this->get_parameter("gpu_device", this->cparams.gpu_device);
   this->get_parameter("flash_attn", this->cparams.flash_attn);

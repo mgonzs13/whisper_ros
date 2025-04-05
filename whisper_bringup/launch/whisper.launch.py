@@ -47,7 +47,7 @@ def generate_launch_description():
         "model_filename": LaunchConfiguration(
             "model_filename", default="ggml-large-v3-turbo-q5_0.bin"
         ),
-        "model": LaunchConfiguration("model", default=""),
+        "model_path": LaunchConfiguration("model_path", default=""),
         "openvino_encode_device": LaunchConfiguration(
             "openvino_encode_device", default="CPU"
         ),
@@ -83,6 +83,7 @@ def generate_launch_description():
             "beam_search_patience", default=-1.00
         ),
         "n_processors": LaunchConfiguration("n_processors", default=1),
+        "flash_attn": LaunchConfiguration("flash_attn", default=False),
         "use_gpu": LaunchConfiguration("use_gpu", default=True),
         "gpu_device": LaunchConfiguration("gpu_device", default=0),
         "flash_attn": LaunchConfiguration("flash_attn", default=False),
