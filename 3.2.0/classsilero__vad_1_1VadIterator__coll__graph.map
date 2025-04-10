@@ -1,0 +1,13 @@
+<map id="silero_vad::VadIterator" name="silero_vad::VadIterator">
+<area shape="rect" id="Node000001" title="Implements a Voice Activity Detection (VAD) iterator using an ONNX model." alt="" coords="331,136,481,161"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="18,5,153,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,26,238,36,274,46,308,59,335,76,360,96,396,133,392,137,356,100,332,80,305,64,272,51,237,41,169,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,74,166,100"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,93,307,114,369,132,368,137,306,119,181,98"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="23,128,148,169"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,146,330,146,330,151,163,151"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="22,212,149,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="165,219,234,212,306,196,348,179,383,159,385,164,350,184,307,201,235,217,165,225"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="14,261,157,286"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="172,269,239,259,273,250,305,237,333,220,357,199,393,160,396,164,361,203,336,224,308,242,275,255,240,264,173,275"/>
+</map>
