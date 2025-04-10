@@ -27,4 +27,4 @@ jobs:
         with:
           build-args: ROS_DISTRO=humble
           push: true
-          tags: mgons/llama_ros:humble-${{ github.event.release.tag_name }}
+          tags: mgons/whisper_ros:humble-${{ github.event.release.tag_name }}

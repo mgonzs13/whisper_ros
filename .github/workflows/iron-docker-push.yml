@@ -32,4 +32,4 @@ jobs:
         with:
           build-args: ROS_DISTRO=iron
           push: true
-          tags: mgons/llama_ros:iron-${{ github.event.release.tag_name }}
+          tags: mgons/whisper_ros:iron-${{ github.event.release.tag_name }}
