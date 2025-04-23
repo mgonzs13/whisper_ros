@@ -1,0 +1,26 @@
+<map id="silero_vad::SileroVadNode" name="silero_vad::SileroVadNode">
+<area shape="rect" id="Node000001" title="A ROS 2 lifecycle node for performing voice activity detection." alt="" coords="910,117,1084,143"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="586,5,785,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="801,24,845,34,887,48,916,63,943,81,984,115,980,119,940,85,914,67,885,53,844,39,800,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="620,67,751,92"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="767,90,914,114,913,119,766,95"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="22,144,149,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="164,148,190,146,593,133,910,128,910,133,593,138,190,151,165,153"/>
+<area shape="rect" id="Node000006" href="$classsilero__vad_1_1VadIterator.html" title="Implements a Voice Activity Detection (VAD) iterator using an ONNX model." alt="" coords="331,228,481,254"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="136,173,190,191,332,225,331,230,189,196,134,178"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="612,180,759,221"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="774,184,886,161,955,141,957,146,887,166,775,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="496,225,611,209,612,214,497,231"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="18,220,153,261"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="169,238,330,238,330,244,169,244"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,289,166,315"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="181,294,243,286,306,274,330,264,363,252,365,257,332,269,307,279,244,292,182,299"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="23,343,148,384"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="163,368,199,366,237,360,273,348,305,329,315,315,317,299,318,282,329,264,346,252,349,256,333,268,324,283,322,300,320,317,308,333,275,353,238,365,200,372,163,373"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="14,408,157,434"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="172,428,207,427,243,421,276,409,305,389,316,375,320,360,317,330,314,298,318,281,329,264,344,252,347,256,333,268,323,283,320,298,323,330,325,361,320,377,309,392,278,413,244,426,208,432,172,434"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="647,272,724,298"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="738,264,809,235,885,199,935,169,976,141,979,146,938,174,888,204,811,240,740,268"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="344,278,468,318"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="483,292,647,284,647,289,483,297"/>
+</map>

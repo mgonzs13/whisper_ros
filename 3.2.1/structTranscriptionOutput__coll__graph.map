@@ -1,0 +1,7 @@
+<map id="TranscriptionOutput" name="TranscriptionOutput">
+<area shape="rect" id="Node000001" title="Represents the result of a transcription operation." alt="" coords="5,184,141,210"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="34,95,112,121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,137,76,184,70,184,70,137"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,5,135,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="76,61,76,95,70,95,70,61"/>
+</map>
