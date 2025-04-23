@@ -2,17 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>whisper_ros</name>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <description>whisper.cpp for ROS 2</description>
   <maintainer email="mgons@unileon.es">Miguel Ángel González Santamarta</maintainer>
   <license>MIT</license>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_clang_format</test_depend>
   <test_depend>ament_cmake_clang_format</test_depend>
-
   <depend>rclcpp</depend>
   <depend>rclcpp_action</depend>
   <depend>rclcpp_lifecycle</depend>
@@ -24,7 +21,6 @@
   <depend>whisper_onnxruntime_vendor</depend>
   <depend>whisper_hfhub_vendor</depend>
   <depend>portaudio19-dev</depend>
-
   <export>
     <build_type>ament_cmake</build_type>
   </export>

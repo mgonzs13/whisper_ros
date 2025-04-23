@@ -2,16 +2,13 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>whisper_bringup</name>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <description>Bringup package for whisper_ros</description>
   <maintainer email="mgons@unileon.es">Miguel Ángel González Santamarta</maintainer>
   <license>MIT</license>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <depend>audio_common</depend>
   <depend>whisper_ros</depend>
-
   <export>
     <build_type>ament_cmake</build_type>
   </export>
