@@ -33,18 +33,15 @@ add_executable(whisper_node
   src/whisper_utils/logs.cpp
   src/whisper_utils/download_model.cpp
 )
-target_link_libraries(whisper_node 
+target_link_libraries(whisper_node
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
   whisper_cpp_vendor::grammar
   whisper_cpp_vendor::whisper
-)
-ament_target_dependencies(whisper_node
-  rclcpp
-  rclcpp_lifecycle
-  std_msgs
-  std_srvs
-  whisper_msgs
-  whisper_cpp_vendor
-  whisper_hfhub_vendor
+  whisper_hfhub_vendor::hfhub
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  ${whisper_msgs_TARGETS}
 )
 
 # whisper_server_node
@@ -57,18 +54,15 @@ add_executable(whisper_server_node
   src/whisper_utils/download_model.cpp
 )
 target_link_libraries(whisper_server_node
+  rclcpp::rclcpp
+  rclcpp_action::rclcpp_action
+  rclcpp_lifecycle::rclcpp_lifecycle
   whisper_cpp_vendor::grammar
   whisper_cpp_vendor::whisper
-)
-ament_target_dependencies(whisper_server_node
-  rclcpp
-  rclcpp_action
-  rclcpp_lifecycle
-  std_msgs
-  std_srvs
-  whisper_msgs
-  whisper_cpp_vendor
-  whisper_hfhub_vendor
+  whisper_hfhub_vendor::hfhub
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  ${whisper_msgs_TARGETS}
 )
 
 # silero_vad_node
@@ -80,15 +74,15 @@ add_executable(silero_vad_node
   src/whisper_utils/logs.cpp
   src/whisper_utils/download_model.cpp
 )
-target_link_libraries(silero_vad_node ${PORTAUDIO_LIB})
-ament_target_dependencies(silero_vad_node
-  rclcpp
-  rclcpp_lifecycle
-  std_msgs
-  std_srvs
-  audio_common_msgs
-  whisper_onnxruntime_vendor
-  whisper_hfhub_vendor
+target_link_libraries(silero_vad_node
+  ${PORTAUDIO_LIB}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  whisper_onnxruntime_vendor::whisper_onnxruntime  # Use the exported interface target
+  whisper_hfhub_vendor::hfhub
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  ${audio_common_msgs_TARGETS}
 )
 
 # Export dependencies

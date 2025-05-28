@@ -16,6 +16,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(hfhub)
 
 # Export targets and include directories
+file(GLOB COMMON_HEADERS 
+  ${hfhub_SOURCE_DIR}/include/*.h
+)
+install(
+  FILES ${COMMON_HEADERS}
+  DESTINATION include
+)
+
 install(
   TARGETS hfhub
   EXPORT export_hfhub

@@ -34,18 +34,63 @@ if(NOT CURL_EXECUTABLE)
     message(FATAL_ERROR "curl is required to download ONNX Runtime but was not found.")
 endif()
 
-# Add custom command to download and extract the ONNX Runtime
-add_custom_target(download_onnxruntime ALL
+# First, create a custom command that produces the .so file as output
+add_custom_command(
+    OUTPUT ${ONNXRUNTIME_INSTALL_DIR}/lib/libonnxruntime.so
     COMMENT "Downloading and extracting ONNX Runtime ${ONNXRUNTIME_VERSION}"
-    COMMAND ${CURL_EXECUTABLE} -L -o onnxruntime.tgz ${ONNXRUNTIME_URL} >/dev/null 2>&1
-    COMMAND ${CMAKE_COMMAND} -E tar xzf onnxruntime.tgz
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}
+    COMMAND ${CURL_EXECUTABLE} -L -o ${CMAKE_BINARY_DIR}/onnxruntime.tgz ${ONNXRUNTIME_URL}
+    COMMAND ${CMAKE_COMMAND} -E tar xzf ${CMAKE_BINARY_DIR}/onnxruntime.tgz
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    VERBATIM
 )
 
-# Install the ONNX Runtime library and include files
-install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/lib DESTINATION .)
-install(DIRECTORY ${ONNXRUNTIME_INSTALL_DIR}/include DESTINATION .)
+# Then create a target that depends on that output
+add_custom_target(download_onnxruntime ALL
+    DEPENDS ${ONNXRUNTIME_INSTALL_DIR}/lib/libonnxruntime.so
+)
 
-# Export the onnxruntime library for downstream packages
+# Import the library and link it to the download target
+add_library(onnxruntime SHARED IMPORTED GLOBAL)
+add_dependencies(onnxruntime download_onnxruntime)
+set_property(TARGET onnxruntime APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(onnxruntime PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES ${ONNXRUNTIME_INSTALL_DIR}/include
+    IMPORTED_LOCATION_RELEASE ${ONNXRUNTIME_INSTALL_DIR}/lib/libonnxruntime.so
+    IMPORTED_LOCATION ${ONNXRUNTIME_INSTALL_DIR}/lib/libonnxruntime.so
+)
+
+# Create an interface library that can be exported
+add_library(whisper_onnxruntime INTERFACE)
+
+# Specify the full path to the library instead of just the library name
+target_link_libraries(whisper_onnxruntime INTERFACE 
+    ${ONNXRUNTIME_INSTALL_DIR}/lib/libonnxruntime.so  # Use full path instead of "onnxruntime"
+)
+
+target_include_directories(whisper_onnxruntime INTERFACE 
+    $<BUILD_INTERFACE:${ONNXRUNTIME_INSTALL_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+# Create a library directory in the install space
+install(DIRECTORY
+    ${ONNXRUNTIME_INSTALL_DIR}/lib/
+    DESTINATION lib
+    FILES_MATCHING PATTERN "*.so*"
+)
+
+# Install includes
+install(DIRECTORY
+    ${ONNXRUNTIME_INSTALL_DIR}/include/
+    DESTINATION include
+)
+
+# Install and export the interface target
+install(TARGETS whisper_onnxruntime
+        EXPORT export_whisper_onnxruntime_vendor)
+
+# Export the targets
+ament_export_targets(export_whisper_onnxruntime_vendor HAS_LIBRARY_TARGET)
 ament_export_include_directories(include)
-ament_export_libraries(onnxruntime)
 ament_package()
