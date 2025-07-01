@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['sample_5frate_0',['sample_rate',['../classsilero__vad_1_1VadIterator.html#afb97814fd257e6017560739c6fa48579',1,'silero_vad::VadIterator']]],
+  ['sample_5frate_5f_1',['sample_rate_',['../classsilero__vad_1_1SileroVadNode.html#adf049ce75b0fc7403cfd6e02d731a61e',1,'silero_vad::SileroVadNode']]],
+  ['session_2',['session',['../classsilero__vad_1_1VadIterator.html#af81df93a456c00f9b30508fc0c3c41ce',1,'silero_vad::VadIterator']]],
+  ['session_5foptions_3',['session_options',['../classsilero__vad_1_1VadIterator.html#ad80548df881ca2e3844945fa986ac4ff',1,'silero_vad::VadIterator']]],
+  ['set_5fgrammar_5fservice_5f_4',['set_grammar_service_',['../classwhisper__ros_1_1WhisperNode.html#a44f1961c9f5435a6a8964fd1e02f18ac',1,'whisper_ros::WhisperNode']]],
+  ['set_5finit_5fprompt_5fservice_5f_5',['set_init_prompt_service_',['../classwhisper__ros_1_1WhisperNode.html#a292f45861b8d00b943f812554d7552a7',1,'whisper_ros::WhisperNode']]],
+  ['speech_5fpad_5fms_5f_6',['speech_pad_ms_',['../classsilero__vad_1_1SileroVadNode.html#a19d53487123f192c7c9614d6cacc401a',1,'silero_vad::SileroVadNode']]],
+  ['speech_5fpad_5fsamples_7',['speech_pad_samples',['../classsilero__vad_1_1VadIterator.html#ad50ba651b1cd3b3c75e03b6dc0eb891e',1,'silero_vad::VadIterator']]],
+  ['speech_5fprob_8',['speech_prob',['../classsilero__vad_1_1Timestamp.html#a45db85e2c5e98e033d2555d7c3ca2ad7',1,'silero_vad::Timestamp']]],
+  ['sr_9',['sr',['../classsilero__vad_1_1VadIterator.html#ae43bda80eb5d68be2e6d15fb29ba3153',1,'silero_vad::VadIterator']]],
+  ['sr_5fnode_5fdims_10',['sr_node_dims',['../classsilero__vad_1_1VadIterator.html#ab0867d9ea620021fdb94637e7f693b23',1,'silero_vad::VadIterator']]],
+  ['sr_5fper_5fms_11',['sr_per_ms',['../classsilero__vad_1_1VadIterator.html#a59f536c25651d940f3b67ab8a1f5a667',1,'silero_vad::VadIterator']]],
+  ['start_12',['start',['../classsilero__vad_1_1Timestamp.html#ad879f0146d7e4a76ff7493f3645af800',1,'silero_vad::Timestamp']]],
+  ['state_13',['state',['../classsilero__vad_1_1VadIterator.html#a292370fb5effac5d6bec6003a9d22898',1,'silero_vad::VadIterator']]],
+  ['state_5fnode_5fdims_14',['state_node_dims',['../classsilero__vad_1_1VadIterator.html#a4bb1317043f61d426d78a0d96aa04400',1,'silero_vad::VadIterator']]],
+  ['subscription_5f_15',['subscription_',['../classsilero__vad_1_1SileroVadNode.html#a1f03286e7614742b1fffde701db458da',1,'silero_vad::SileroVadNode::subscription_'],['../classwhisper__ros_1_1WhisperNode.html#a7cf11b2f0e6c03dd609db6b2c727745f',1,'whisper_ros::WhisperNode::subscription_'],['../classwhisper__ros_1_1WhisperServerNode.html#aefa0b1826ff7547c4d03216b7fc24edf',1,'whisper_ros::WhisperServerNode::subscription_']]]
+];

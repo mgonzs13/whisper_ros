@@ -1,0 +1,5 @@
+<map id="whisper_ros::Whisper" name="whisper_ros::Whisper">
+<area shape="rect" id="Node000001" title="Class for performing speech&#45;to&#45;text transcription using the Whisper model." alt="" coords="33,109,177,135"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,205,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,61,108,109,102,109,102,61"/>
+</map>

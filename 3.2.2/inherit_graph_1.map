@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,205,56"/>
+<area shape="rect" id="Node000001" href="$classsilero__vad_1_1SileroVadNode.html" title="A ROS 2 lifecycle node for performing voice activity detection." alt="" coords="269,5,442,31"/>
+<area shape="poly" id="edge2_Node000000_Node000001" title=" " alt="" coords="220,29,268,24,269,30,220,35"/>
+<area shape="rect" id="Node000002" href="$classwhisper__ros_1_1WhisperBaseNode.html" title="A ROS 2 Lifecycle Node for interfacing with the Whisper speech&#45;to&#45;text system." alt="" coords="253,55,458,80"/>
+<area shape="poly" id="edge3_Node000000_Node000002" title=" " alt="" coords="221,52,253,55,252,60,220,57"/>
+<area shape="rect" id="Node000003" href="$classwhisper__ros_1_1WhisperNode.html" title="A ROS 2 node that extends WhisperBaseNode to handle transcription&#45;related functionality." alt="" coords="525,29,700,55"/>
+<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="473,53,524,48,525,53,474,59"/>
+<area shape="rect" id="Node000004" href="$classwhisper__ros_1_1WhisperServerNode.html" title="A node providing speech&#45;to&#45;text (STT) functionality using Whisper and Silero VAD." alt="" coords="506,79,719,104"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="474,76,506,79,505,84,473,81"/>
+</map>
