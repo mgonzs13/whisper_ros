@@ -33,15 +33,15 @@ WhisperBaseNode::WhisperBaseNode()
     : rclcpp_lifecycle::LifecycleNode("whisper_node") {
 
   this->declare_parameters<int32_t>("", {
-                                            {"n_threads", 8},
+                                            {"n_threads", 4},
                                             {"n_max_text_ctx", 16384},
                                             {"offset_ms", 0},
                                             {"duration_ms", 0},
                                             {"max_len", 0},
                                             {"max_tokens", 0},
                                             {"audio_ctx", 0},
-                                            {"greedy_best_of", 5},
-                                            {"beam_search_beam_size", 5},
+                                            {"greedy_best_of", -1},
+                                            {"beam_search_beam_size", -1},
                                             {"n_processors", 1},
                                             {"gpu_device", 0},
                                             {"dtw_n_top", -1},
@@ -63,7 +63,7 @@ WhisperBaseNode::WhisperBaseNode()
                                           {"temperature", 0.00f},
                                           {"max_initial_ts", 1.00f},
                                           {"length_penalty", -1.00f},
-                                          {"temperature_inc", 0.40f},
+                                          {"temperature_inc", 0.20f},
                                           {"entropy_thold", 2.40f},
                                           {"logprob_thold", -1.00f},
                                           {"no_speech_thold", 0.60f},
@@ -72,16 +72,15 @@ WhisperBaseNode::WhisperBaseNode()
   this->declare_parameters<bool>("", {
                                          {"translate", false},
                                          {"no_context", true},
-                                         {"single_segment", true},
+                                         {"single_segment", false},
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
                                          {"speed_up", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_nst", false},
-                                         {"flash_attn", false},
+                                         {"flash_attn", true},
                                          {"use_gpu", true},
-                                         {"flash_attn", false},
                                          {"dtw_token_timestamps", false},
                                      });
 }
@@ -157,7 +156,6 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("flash_attn", this->cparams.flash_attn);
   this->get_parameter("use_gpu", this->cparams.use_gpu);
   this->get_parameter("gpu_device", this->cparams.gpu_device);
-  this->get_parameter("flash_attn", this->cparams.flash_attn);
   this->get_parameter("dtw_n_top", this->cparams.dtw_n_top);
   this->get_parameter("dtw_token_timestamps",
                       this->cparams.dtw_token_timestamps);

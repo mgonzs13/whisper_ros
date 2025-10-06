@@ -57,7 +57,7 @@ def generate_launch_description():
         "duration_ms": LaunchConfiguration("duration_ms", default=0),
         "translate": LaunchConfiguration("translate", default=False),
         "no_context": LaunchConfiguration("no_context", default=True),
-        "single_segment": LaunchConfiguration("single_segment", default=True),
+        "single_segment": LaunchConfiguration("single_segment", default=False),
         "token_timestamps": LaunchConfiguration("token_timestamps", default=False),
         "thold_pt": LaunchConfiguration("thold_pt", default=0.01),
         "thold_ptsum": LaunchConfiguration("thold_ptsum", default=0.01),
@@ -73,7 +73,7 @@ def generate_launch_description():
         "temperature": LaunchConfiguration("temperature", default=0.00),
         "max_initial_ts": LaunchConfiguration("max_initial_ts", default=1.00),
         "length_penalty": LaunchConfiguration("length_penalty", default=-1.00),
-        "temperature_inc": LaunchConfiguration("temperature_inc", default=0.40),
+        "temperature_inc": LaunchConfiguration("temperature_inc", default=0.20),
         "entropy_thold": LaunchConfiguration("entropy_thold", default=2.40),
         "logprob_thold": LaunchConfiguration("logprob_thold", default=-1.00),
         "no_speech_thold": LaunchConfiguration("no_speech_thold", default=0.60),
@@ -83,10 +83,9 @@ def generate_launch_description():
             "beam_search_patience", default=-1.00
         ),
         "n_processors": LaunchConfiguration("n_processors", default=1),
-        "flash_attn": LaunchConfiguration("flash_attn", default=False),
+        "flash_attn": LaunchConfiguration("flash_attn", default=True),
         "use_gpu": LaunchConfiguration("use_gpu", default=True),
         "gpu_device": LaunchConfiguration("gpu_device", default=0),
-        "flash_attn": LaunchConfiguration("flash_attn", default=False),
         "dtw_n_top": LaunchConfiguration("dtw_n_top", default=-1),
         "dtw_token_timestamps": LaunchConfiguration(
             "dtw_token_timestamps", default=False
