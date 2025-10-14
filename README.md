@@ -1,6 +1,6 @@
 # whisper_ros
 
-This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common) [4.0.6](https://github.com/mgonzs13/audio_common/releases/tag/4.0.6). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
+This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common) [4.0.7](https://github.com/mgonzs13/audio_common/releases/tag/4.0.7). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
 
 <div align="center">
 
