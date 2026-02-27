@@ -1,59 +1,71 @@
 # Whisper node parameters
 /whisper/whisper_node:
   ros__parameters:
-    # Model
-    sampling_strategy: "beam_search"
-    model_repo: "ggerganov/whisper.cpp"
-    model_filename: "ggml-large-v3-turbo-q5_0.bin"
-    model_path: ""
-    openvino_encode_device: "CPU"
+    # Model parameters
+    model:
+      repo: "ggerganov/whisper.cpp"
+      filename: "ggml-large-v3-turbo-q5_0.bin"
+      path: ""
+      openvino_encode_device: "CPU"
 
-    # Inference
-    n_threads: 4
-    n_max_text_ctx: 16384
-    offset_ms: 0
-    duration_ms: 0
-    translate: false
-    no_context: true
-    single_segment: false
+    # Sampling parameters
+    sampling:
+      strategy: "beam_search"
+      greedy_best_of: 5
+      beam_search_beam_size: 5
+      beam_search_patience: -1.0
 
-    # Token timestamps
-    token_timestamps: false
-    thold_pt: 0.01
-    thold_ptsum: 0.01
-    max_len: 0
-    split_on_word: false
-    max_tokens: 0
-    audio_ctx: 0
-    suppress_regex: ""
+    # Transcription parameters
+    transcription:
+      n_threads: 4
+      n_max_text_ctx: 16384
+      n_processors: 1
+      offset_ms: 0
+      duration_ms: 0
+      audio_ctx: 0
+      language: "en"
+      detect_language: false
+      translate: false
+      no_context: true
+      no_timestamps: false
+      single_segment: false
+      initial_prompt: ""
+      carry_initial_prompt: false
+      suppress_regex: ""
+      suppress_blank: true
+      suppress_nst: false
 
-    # Language
-    language: "en"
-    detect_language: false
+    # Token timestamps parameters
+    token_timestamps:
+      enabled: false
+      thold_pt: 0.01
+      thold_ptsum: 0.01
+      max_len: 0
+      split_on_word: false
+      max_tokens: 0
 
-    # Decoding
-    suppress_blank: true
-    suppress_nst: false
-    temperature: 0.0
-    max_initial_ts: 1.0
-    length_penalty: -1.0
-    temperature_inc: 0.2
-    entropy_thold: 2.4
-    logprob_thold: -1.0
-    no_speech_thold: 0.6
+    # Decoding / fallback parameters
+    decoding:
+      temperature: 0.0
+      max_initial_ts: 1.0
+      length_penalty: -1.0
+      temperature_inc: 0.2
+      entropy_thold: 2.4
+      logprob_thold: -1.0
+      no_speech_thold: 0.6
 
-    # Sampling strategies
-    greedy_best_of: 5
-    beam_search_beam_size: 5
-    beam_search_patience: -1.0
+    # Speaker diarization parameters
+    diarization:
+      tdrz_enable: false
 
-    # Processing
-    n_processors: 1
-    flash_attn: true
-    use_gpu: true
-    gpu_device: 0
+    # GPU / backend parameters
+    gpu:
+      enabled: true
+      flash_attn: true
+      device: 0
 
-    # DTW
-    dtw_n_top: -1
-    dtw_token_timestamps: false
-    dtw_aheads: "none"
+    # DTW token timestamps parameters
+    dtw:
+      token_timestamps: false
+      n_top: -1
+      aheads: "none"
