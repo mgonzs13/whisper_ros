@@ -56,6 +56,7 @@ WhisperBaseNode::WhisperBaseNode()
               {"openvino_encode_device", "CPU"},
               {"dtw_aheads", "none"},
               {"suppress_regex", ""},
+              {"initial_prompt", ""},
           });
   this->declare_parameters<float>("", {
                                           {"thold_pt", 0.01f},
@@ -72,13 +73,15 @@ WhisperBaseNode::WhisperBaseNode()
   this->declare_parameters<bool>("", {
                                          {"translate", false},
                                          {"no_context", true},
+                                         {"no_timestamps", false},
                                          {"single_segment", false},
                                          {"token_timestamps", false},
                                          {"split_on_word", false},
-                                         {"speed_up", false},
                                          {"detect_language", false},
                                          {"suppress_blank", true},
                                          {"suppress_nst", false},
+                                         {"tdrz_enable", false},
+                                         {"carry_initial_prompt", false},
                                          {"flash_attn", true},
                                          {"use_gpu", true},
                                          {"dtw_token_timestamps", false},
@@ -92,7 +95,6 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   // get sampling method and create default params
   std::string dtw_aheads;
-  std::string suppress_regex;
   std::string sampling_strategy;
   this->get_parameter("sampling_strategy", sampling_strategy);
 
@@ -118,6 +120,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   this->get_parameter("translate", this->wparams.translate);
   this->get_parameter("no_context", this->wparams.no_context);
+  this->get_parameter("no_timestamps", this->wparams.no_timestamps);
   this->get_parameter("single_segment", this->wparams.single_segment);
 
   this->get_parameter("token_timestamps", this->wparams.token_timestamps);
@@ -128,7 +131,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("max_tokens", this->wparams.max_tokens);
 
   this->get_parameter("audio_ctx", this->wparams.audio_ctx);
-  this->get_parameter("suppress_regex", suppress_regex);
+  this->get_parameter("suppress_regex", this->suppress_regex);
 
   this->get_parameter("language", this->language);
   this->wparams.language = this->language.c_str();
@@ -136,6 +139,12 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   this->get_parameter("suppress_blank", this->wparams.suppress_blank);
   this->get_parameter("suppress_nst", this->wparams.suppress_nst);
+
+  this->get_parameter("tdrz_enable", this->wparams.tdrz_enable);
+
+  this->get_parameter("initial_prompt", this->initial_prompt);
+  this->get_parameter("carry_initial_prompt",
+                      this->wparams.carry_initial_prompt);
 
   this->get_parameter("temperature", this->wparams.temperature);
   this->get_parameter("max_initial_ts", this->wparams.max_initial_ts);
@@ -172,7 +181,14 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   }
 
   // suppress_regex
-  this->wparams.suppress_regex = suppress_regex.c_str();
+  if (!this->suppress_regex.empty()) {
+    this->wparams.suppress_regex = this->suppress_regex.c_str();
+  }
+
+  // initial_prompt
+  if (!this->initial_prompt.empty()) {
+    this->wparams.initial_prompt = this->initial_prompt.c_str();
+  }
 
   // parse dtw_aheads
   if (dtw_aheads == "tiny") {
@@ -207,6 +223,9 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
 
   } else if (dtw_aheads == "large.v3") {
     this->cparams.dtw_aheads_preset = WHISPER_AHEADS_LARGE_V3;
+
+  } else if (dtw_aheads == "large.v3.turbo") {
+    this->cparams.dtw_aheads_preset = WHISPER_AHEADS_LARGE_V3_TURBO;
 
   } else {
     this->cparams.dtw_aheads_preset = WHISPER_AHEADS_NONE;

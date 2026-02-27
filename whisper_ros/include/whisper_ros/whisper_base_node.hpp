@@ -102,17 +102,23 @@ public:
    * @brief Activates ROS 2 interfaces specific to this node. To be implemented
    * in derived classes.
    */
-  virtual void activate_ros_interfaces(){};
+  virtual void activate_ros_interfaces() {};
 
   /**
    * @brief Deactivates ROS 2 interfaces specific to this node. To be
    * implemented in derived classes.
    */
-  virtual void deactivate_ros_interfaces(){};
+  virtual void deactivate_ros_interfaces() {};
 
 protected:
   /// @brief The language for transcription (e.g., "en").
   std::string language;
+
+  /// @brief A regular expression that matches tokens to suppress.
+  std::string suppress_regex;
+
+  /// @brief Initial prompt to provide to the decoder.
+  std::string initial_prompt;
 
   /// @brief Shared pointer to the Whisper speech-to-text processor.
   std::shared_ptr<Whisper> whisper;
