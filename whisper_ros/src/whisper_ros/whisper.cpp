@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <regex>
+#include <stdexcept>
 #include <thread>
 
 #include "grammar-parser.h"
@@ -83,9 +84,21 @@ Whisper::transcribe(const std::vector<float> &pcmf32) {
   result.text = "";
   result.prob = 0.0f;
 
-  if (whisper_full_parallel(this->ctx, this->wparams, pcmf32.data(),
-                            pcmf32.size(), this->n_processors) != 0) {
-    WHISPER_LOG_ERROR("Error in whisper_full_parallel");
+  // Validate minimum audio length (at least 100ms at 16kHz = 1600 samples)
+  if (pcmf32.size() < 1600) {
+    WHISPER_LOG_WARN("Audio too short (%zu samples), skipping transcription",
+                     pcmf32.size());
+    return result;
+  }
+
+  try {
+    if (whisper_full_parallel(this->ctx, this->wparams, pcmf32.data(),
+                              pcmf32.size(), this->n_processors) != 0) {
+      WHISPER_LOG_ERROR("Error in whisper_full_parallel");
+      return result;
+    }
+  } catch (const std::exception &e) {
+    WHISPER_LOG_ERROR("Exception during transcription: %s", e.what());
     return result;
   }
 
