@@ -1,0 +1,6 @@
+# Whisper Spanish stream parameters (overrides whisper.yaml defaults)
+/whisper/whisper_node:
+  ros__parameters:
+    language: "es"
+    model_repo: "ggerganov/whisper.cpp"
+    model_filename: "ggml-large-v3-turbo-q5_0.bin"

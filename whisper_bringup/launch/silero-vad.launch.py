@@ -21,12 +21,21 @@
 # SOFTWARE.
 
 
+import os
 from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+
+    config_dir = os.path.join(get_package_share_directory("whisper_bringup"), "config")
+
+    silero_vad_params_file = LaunchConfiguration(
+        "silero_vad_params_file",
+        default=os.path.join(config_dir, "silero_vad.yaml"),
+    )
 
     return LaunchDescription(
         [
@@ -35,26 +44,7 @@ def generate_launch_description():
                 executable="silero_vad_node",
                 name="silero_vad_node",
                 namespace="whisper",
-                parameters=[
-                    {
-                        "enabled": LaunchConfiguration("enabled", default=True),
-                        "model_repo": LaunchConfiguration(
-                            "model_repo", default="mgonzs13/silero-vad-onnx"
-                        ),
-                        "model_filename": LaunchConfiguration(
-                            "model_filename", default="silero_vad.onnx"
-                        ),
-                        "model_path": LaunchConfiguration("model_path", default=""),
-                        "sample_rate": LaunchConfiguration("sample_rate", default=16000),
-                        "frame_size_ms": LaunchConfiguration("frame_size_ms", default=32),
-                        "threshold": LaunchConfiguration("threshold", default=0.5),
-                        "min_silence_ms": LaunchConfiguration(
-                            "min_silence_ms", default=128
-                        ),
-                        "speech_pad_ms": LaunchConfiguration("speech_pad_ms", default=32),
-                        "use_cuda": LaunchConfiguration("use_cuda", default=False),
-                    }
-                ],
+                parameters=[silero_vad_params_file],
                 remappings=[("audio", "/audio/in")],
             ),
         ]

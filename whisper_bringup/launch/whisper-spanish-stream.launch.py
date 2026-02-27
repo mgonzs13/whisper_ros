@@ -30,6 +30,8 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
+    config_dir = os.path.join(get_package_share_directory("whisper_bringup"), "config")
+
     return LaunchDescription(
         [
             IncludeLaunchDescription(
@@ -42,9 +44,9 @@ def generate_launch_description():
                 ),
                 launch_arguments={
                     "stream": "True",
-                    "language": "es",
-                    "model_repo": "ggerganov/whisper.cpp",
-                    "model_filename": "ggml-large-v3-turbo-q5_0.bin",
+                    "whisper_params_file": os.path.join(
+                        config_dir, "whisper_spanish_stream.yaml"
+                    ),
                 }.items(),
             )
         ]
