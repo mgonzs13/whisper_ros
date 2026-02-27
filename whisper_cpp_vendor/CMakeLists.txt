@@ -67,7 +67,7 @@ target_include_directories(grammar
 
 # export
 file(GLOB COMMON_HEADERS 
-  ${whisper_SOURCE_DIR}/ggml/include/*.
+  ${whisper_SOURCE_DIR}/ggml/include/*.h
   ${whisper_SOURCE_DIR}/include/*.h
   ${whisper_SOURCE_DIR}/examples/*.h
 )

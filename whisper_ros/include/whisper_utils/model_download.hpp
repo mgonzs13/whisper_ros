@@ -29,7 +29,7 @@ namespace whisper_utils {
  *
  * @param repo_id The repo name from HF.
  * @param filename The filename from the repo.
- * @return The path of the donwloaded file.
+ * @return The path of the downloaded file.
  */
 std::string download_model(const std::string &repo_id,
                            const std::string &filename);

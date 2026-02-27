@@ -285,7 +285,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 WhisperBaseNode::on_shutdown(const rclcpp_lifecycle::State &) {
 
   RCLCPP_INFO(this->get_logger(), "[%s] Shutting down...", this->get_name());
-  RCLCPP_INFO(this->get_logger(), "[%s] Shutted down", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Shut down", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -303,7 +303,7 @@ WhisperBaseNode::transcribe(const std::vector<float> &audio) {
   RCLCPP_INFO(this->get_logger(), "Text heard: %s", text.c_str());
   whisper_msgs::msg::Transcription msg;
   msg.text = text;
-  msg.audio_time = audio.size() / WHISPER_SAMPLE_RATE;
+  msg.audio_time = static_cast<float>(audio.size()) / WHISPER_SAMPLE_RATE;
   msg.transcription_time = (end_time - start_time).seconds();
 
   return msg;

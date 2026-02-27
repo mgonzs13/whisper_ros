@@ -150,7 +150,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
 SileroVadNode::on_shutdown(const rclcpp_lifecycle::State &) {
 
   RCLCPP_INFO(this->get_logger(), "[%s] Shutting down...", this->get_name());
-  RCLCPP_INFO(this->get_logger(), "[%s] Shutted down", this->get_name());
+  RCLCPP_INFO(this->get_logger(), "[%s] Shut down", this->get_name());
 
   return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
       CallbackReturn::SUCCESS;
@@ -223,7 +223,7 @@ void SileroVadNode::audio_callback(
     auto vad_msg = std_msgs::msg::Float32MultiArray();
     vad_msg.data.assign(this->data.begin(), this->data.end());
 
-    if (vad_msg.data.size() / msg->audio.info.rate < 1.0) {
+    if (static_cast<float>(vad_msg.data.size()) / msg->audio.info.rate < 1.0f) {
       int pad_size =
           msg->audio.info.chunk + msg->audio.info.rate - this->data.size();
       vad_msg.data.insert(vad_msg.data.end(), pad_size, 0.0f);
@@ -275,5 +275,5 @@ void SileroVadNode::enable_cb(
     response->message = "SileroVAD already disabled";
   }
 
-  RCLCPP_INFO(this->get_logger(), response->message.c_str());
+  RCLCPP_INFO(this->get_logger(), "%s", response->message.c_str());
 }

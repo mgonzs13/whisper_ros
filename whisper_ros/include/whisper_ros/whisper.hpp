@@ -80,7 +80,7 @@ public:
   /// @param start_rule The starting rule for the grammar.
   /// @param grammar_penalty A penalty factor for grammar violations.
   /// @return True if the grammar is set successfully; false otherwise.
-  bool set_grammar(const std::string grammar, const std::string start_rule,
+  bool set_grammar(const std::string &grammar, const std::string &start_rule,
                    float grammar_penalty);
 
   /// Resets the grammar to its default state.
@@ -88,7 +88,7 @@ public:
 
   /// Sets an initial prompt for transcription.
   /// @param prompt The initial prompt text.
-  void set_init_prompt(const std::string prompt);
+  void set_init_prompt(const std::string &prompt);
 
   /// Resets the initial prompt to its default state.
   void reset_init_prompt();
@@ -108,6 +108,9 @@ protected:
 
   /// Grammar rules derived from the parsed grammar.
   std::vector<const whisper_grammar_element *> grammar_rules;
+
+  /// Stored initial prompt string to avoid dangling pointer.
+  std::string initial_prompt_str;
 };
 
 } // namespace whisper_ros

@@ -137,8 +137,9 @@ std::string Whisper::timestamp_to_str(int64_t t, bool comma) {
   return std::string(buf);
 }
 
-bool Whisper::set_grammar(const std::string grammar,
-                          const std::string start_rule, float grammar_penalty) {
+bool Whisper::set_grammar(const std::string &grammar,
+                          const std::string &start_rule,
+                          float grammar_penalty) {
 
   WHISPER_LOG_DEBUG("Setting new grammar");
   this->grammar_parsed = grammar_parser::parse(grammar.c_str());
@@ -167,12 +168,14 @@ void Whisper::reset_grammar() {
   this->wparams.grammar_penalty = 100.0f;
 }
 
-void Whisper::set_init_prompt(const std::string prompt) {
-  WHISPER_LOG_DEBUG("Resetting initial prompt");
-  this->wparams.initial_prompt = prompt.c_str();
+void Whisper::set_init_prompt(const std::string &prompt) {
+  WHISPER_LOG_DEBUG("Setting initial prompt");
+  this->initial_prompt_str = prompt;
+  this->wparams.initial_prompt = this->initial_prompt_str.c_str();
 }
 
 void Whisper::reset_init_prompt() {
   WHISPER_LOG_DEBUG("Resetting initial prompt");
+  this->initial_prompt_str.clear();
   this->wparams.initial_prompt = "";
 }

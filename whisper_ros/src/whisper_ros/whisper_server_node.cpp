@@ -74,7 +74,12 @@ void WhisperServerNode::vad_callback(
 
   this->enable_silero(false);
 
-  this->transcription_msg = this->transcribe(msg->data);
+  auto transcription = this->transcribe(msg->data);
+
+  {
+    std::lock_guard<std::mutex> lock(this->transcription_mutex);
+    this->transcription_msg = transcription;
+  }
 
   this->transcription_cond.notify_all();
 }
@@ -130,9 +135,12 @@ void WhisperServerNode::execute(
   this->enable_silero(true);
 
   // wait for text
-  while (this->transcription_msg.text.empty() && !goal_handle->is_canceling()) {
+  {
     std::unique_lock<std::mutex> lock(this->transcription_mutex);
-    this->transcription_cond.wait(lock);
+    while (this->transcription_msg.text.empty() &&
+           !goal_handle->is_canceling()) {
+      this->transcription_cond.wait(lock);
+    }
   }
 
   // reset

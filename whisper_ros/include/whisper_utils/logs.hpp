@@ -111,9 +111,9 @@ inline const char *extract_filename(const char *path) {
                            __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
 /**
- * @brief Logs an warning message.
+ * @brief Logs a warning message.
  *
- * This function logs an warning message with the specified file, function,
+ * This function logs a warning message with the specified file, function,
  * line number, and format string.
  *
  * @param file The name of the source file where the log function is called.
@@ -172,7 +172,7 @@ inline const char *extract_filename(const char *path) {
  *
  * @param log_level Log level.
  */
-void set_log_level(LogLevel log_level);
+void set_log_level(LogLevel level);
 
 } // namespace whisper_utils
 

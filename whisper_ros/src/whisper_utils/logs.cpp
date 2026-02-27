@@ -118,6 +118,6 @@ LogFunction log_debug = default_log_debug;
 // Initialize the log level to INFO
 LogLevel log_level = INFO;
 
-void set_log_level(LogLevel log_level) { log_level = log_level; }
+void set_log_level(LogLevel level) { whisper_utils::log_level = level; }
 
 } // namespace whisper_utils
