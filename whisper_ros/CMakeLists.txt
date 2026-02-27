@@ -17,6 +17,7 @@ find_package(whisper_msgs REQUIRED)
 find_package(whisper_cpp_vendor REQUIRED)
 find_package(whisper_onnxruntime_vendor REQUIRED)
 find_package(whisper_hfhub_vendor REQUIRED)
+find_package(Threads REQUIRED)
 find_library(PORTAUDIO_LIB portaudio REQUIRED)
 
 include_directories(
