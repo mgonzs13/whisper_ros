@@ -1,6 +1,6 @@
 # whisper_ros
 
-This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common) [4.0.7](https://github.com/mgonzs13/audio_common/releases/tag/4.0.7). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
+This repository provides a set of ROS 2 packages to integrate [whisper.cpp](https://github.com/ggerganov/whisper.cpp) into ROS 2 using [audio_common](https://github.com/mgonzs13/audio_common). Besides, [silero-vad](https://github.com/snakers4/silero-vad) is used to perform VAD (Voice Activity Detection).
 
 <div align="center">
 
@@ -35,9 +35,9 @@ To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https:/
 
 ```shell
 cd ~/ros2_ws/src
-git clone https://github.com/mgonzs13/audio_common.git
 git clone https://github.com/mgonzs13/whisper_ros.git
 cd ~/ros2_ws
+vcs import src < src/whisper_ros/dependencies.repos
 rosdep install --from-paths src --ignore-src -r -y
 colcon build --cmake-args -DGGML_CUDA=ON -DONNX_GPU=ON # To use CUDA on Whisper and on Silero, respectively
 ```
