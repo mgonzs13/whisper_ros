@@ -141,7 +141,7 @@ Add the parameter `silero_vad_use_cuda:=True` to use Silero with CUDA.
 
 | Param            | Type    | Default | Description               |
 | ---------------- | ------- | ------- | ------------------------- |
-| `gpu.enabled`    | `bool`  | `true`  | Enable GPU inference.     |
+| `gpu.enabled`    | `bool`  | `false` | Enable GPU inference.     |
 | `gpu.flash_attn` | `bool`  | `true`  | Enable flash attention.   |
 | `gpu.device`     | `int32` | `0`     | CUDA device index to use. |
 

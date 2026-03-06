@@ -39,7 +39,7 @@ SileroVadNode::SileroVadNode()
     : rclcpp_lifecycle::LifecycleNode("silero_vad_node"), listening(false),
       publish(false) {
 
-  this->declare_parameter<bool>("enabled", true);
+  this->declare_parameter<bool>("enabled", false);
   this->declare_parameter<std::string>("model_repo", "");
   this->declare_parameter<std::string>("model_filename", "");
   this->declare_parameter<std::string>("model_path", "");

@@ -1,7 +1,7 @@
 # Silero VAD node parameters
 /whisper/silero_vad_node:
   ros__parameters:
-    enabled: true
+    enabled: false
     model_repo: "mgonzs13/silero-vad-onnx"
     model_filename: "silero_vad.onnx"
     model_path: ""
