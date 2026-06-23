@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ros:rolling
+      options: --pull=always
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
