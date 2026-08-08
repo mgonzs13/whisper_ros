@@ -1,0 +1,7 @@
+<map id="whisper_ros::WhisperServerNode" name="whisper_ros::WhisperServerNode">
+<area shape="rect" id="Node000001" title="A node providing speech&#45;to&#45;text (STT) functionality using Whisper and Silero VAD." alt="" coords="5,153,219,178"/>
+<area shape="rect" id="Node000002" href="$classwhisper__ros_1_1WhisperBaseNode.html" title="A ROS 2 Lifecycle Node for interfacing with the Whisper speech&#45;to&#45;text system." alt="" coords="9,79,215,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,120,115,152,109,152,109,120"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,5,212,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,46,115,79,109,79,109,46"/>
+</map>
