@@ -11,8 +11,10 @@ find_package(ament_cmake REQUIRED)
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        v1.9.2
+  GIT_TAG        v1.9.4
 )
+
+set(WHISPER_BUILD_IS_DEV OFF CACHE BOOL "whisper: dev build" FORCE)
 
 FetchContent_MakeAvailable(whisper)
 
