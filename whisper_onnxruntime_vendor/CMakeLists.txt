@@ -76,7 +76,7 @@ target_include_directories(whisper_onnxruntime INTERFACE
 # Create a library directory in the install space
 install(DIRECTORY
     ${ONNXRUNTIME_INSTALL_DIR}/lib/
-    DESTINATION lib
+    DESTINATION lib/${PROJECT_NAME}
     FILES_MATCHING PATTERN "*.so*"
 )
 

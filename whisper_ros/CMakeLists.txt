@@ -86,6 +86,11 @@ target_link_libraries(silero_vad_node
   ${audio_common_msgs_TARGETS}
 )
 
+set_target_properties(silero_vad_node PROPERTIES
+  INSTALL_RPATH "$ORIGIN/../whisper_onnxruntime_vendor:$ORIGIN/../../../whisper_onnxruntime_vendor/lib/whisper_onnxruntime_vendor"
+  LINK_FLAGS "-Wl,--disable-new-dtags"
+)
+
 # Export dependencies
 ament_export_dependencies(whisper_cpp_vendor)
 ament_export_dependencies(whisper_onnxruntime_vendor)
