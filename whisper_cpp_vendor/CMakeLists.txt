@@ -58,6 +58,24 @@ if(GGML_BLAS)
   )
 endif()
 
+if(GGML_OPENCL)
+  set_target_properties(
+    ggml-opencl PROPERTIES
+    OUTPUT_NAME "whisper_ggml_opencl"
+    INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+    CXX_STANDARD 17
+  )
+endif()
+
+if(GGML_HEXAGON)
+  set_target_properties(
+    ggml-hexagon PROPERTIES
+    OUTPUT_NAME "whisper_ggml_hexagon"
+    INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+    CXX_STANDARD 17
+  )
+endif()
+
 # whisper
 set_target_properties(
   whisper PROPERTIES
@@ -101,6 +119,14 @@ endif()
 
 if(GGML_BLAS)
   list(APPEND INSTALL_TARGETS ggml-blas)
+endif()
+
+if(GGML_OPENCL)
+  list(APPEND INSTALL_TARGETS ggml-opencl)
+endif()
+
+if(GGML_HEXAGON)
+  list(APPEND INSTALL_TARGETS ggml-hexagon)
 endif()
 
 install(
