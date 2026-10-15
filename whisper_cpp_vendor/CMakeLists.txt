@@ -49,6 +49,15 @@ if(GGML_CUDA)
   )
 endif()
 
+if(GGML_BLAS)
+  set_target_properties(
+    ggml-blas PROPERTIES
+    OUTPUT_NAME "whisper_ggml_blas"
+    INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${whisper_SOURCE_DIR}/ggml/include>"
+    CXX_STANDARD 17
+  )
+endif()
+
 # whisper
 set_target_properties(
   whisper PROPERTIES
@@ -88,6 +97,10 @@ set(INSTALL_TARGETS
 
 if(GGML_CUDA)
   list(APPEND INSTALL_TARGETS ggml-cuda)
+endif()
+
+if(GGML_BLAS)
+  list(APPEND INSTALL_TARGETS ggml-blas)
 endif()
 
 install(
