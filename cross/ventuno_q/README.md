@@ -72,7 +72,7 @@ way.
 From the repo root:
 
 ```bash
-docker build -f cross/ventuno_q/Dockerfile -t ventune_cross .
+docker build -f cross/ventuno_q/Dockerfile -t ventuno_cross .
 ```
 
 ## 3. Build whisper_ros
@@ -88,7 +88,7 @@ vcs import . < dependencies.repos
 From the repo root:
 
 ```bash
-docker run --rm -it -v ~/sysroot:/sysroot -v $PWD:/workspace ventune_cross
+docker run --rm -it -v ~/sysroot:/sysroot -v $PWD:/workspace ventuno_cross
 ```
 
 Inside the container:
