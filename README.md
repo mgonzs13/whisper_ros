@@ -43,6 +43,12 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build --cmake-args -DGGML_CUDA=ON -DONNX_GPU=ON # To use CUDA on Whisper and on Silero, respectively
 ```
 
+To accelerate CPU-only inference, whisper_ros can be compiled with BLAS support using [OpenBLAS](https://www.openblas.net/) (install it first, e.g., `sudo apt install libopenblas-dev`):
+
+```shell
+colcon build --cmake-args -DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS
+```
+
 ## Docker
 
 Build the whisper_ros docker. Additionally, you can choose to build whisper_ros with CUDA (`USE_CUDA`) and choose the CUDA version (`CUDA_VERSION`). Remember that you have to use `DOCKER_BUILDKIT=0` to compile whisper_ros with CUDA when building the image.
