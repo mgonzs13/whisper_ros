@@ -43,6 +43,11 @@ def generate_launch_description():
         default="False",
     )
 
+    silero_vad_use_cuda = LaunchConfiguration(
+        "silero_vad_use_cuda",
+        default="False",
+    )
+
     return LaunchDescription(
         [
             Node(
@@ -52,7 +57,10 @@ def generate_launch_description():
                 namespace="whisper",
                 parameters=[
                     silero_vad_params_file,
-                    {"enabled": ParameterValue(silero_vad_enabled, value_type=bool)},
+                    {
+                        "enabled": ParameterValue(silero_vad_enabled, value_type=bool),
+                        "use_cuda": ParameterValue(silero_vad_use_cuda, value_type=bool),
+                    },
                 ],
                 remappings=[("audio", "/audio/in")],
             ),

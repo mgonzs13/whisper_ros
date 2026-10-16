@@ -47,6 +47,12 @@ def generate_launch_description():
         description="Whether to enable SileroVAD on startup (defaults to 'stream')",
     )
 
+    silero_vad_use_cuda_cmd = DeclareLaunchArgument(
+        "silero_vad_use_cuda",
+        default_value="False",
+        description="Whether to use CUDA for SileroVAD",
+    )
+
     whisper_params_file = LaunchConfiguration(
         "whisper_params_file",
         default=os.path.join(config_dir, "whisper.yaml"),
@@ -59,6 +65,8 @@ def generate_launch_description():
 
     silero_vad_enabled = LaunchConfiguration("silero_vad_enabled")
 
+    silero_vad_use_cuda = LaunchConfiguration("silero_vad_use_cuda")
+
     audio_capturer_params_file = LaunchConfiguration(
         "audio_capturer_params_file",
         default=os.path.join(config_dir, "audio_capturer.yaml"),
@@ -68,6 +76,7 @@ def generate_launch_description():
         [
             stream_cmd,
             silero_vad_enabled_cmd,
+            silero_vad_use_cuda_cmd,
             Node(
                 package="whisper_ros",
                 executable="whisper_server_node",
@@ -96,6 +105,7 @@ def generate_launch_description():
                 ),
                 launch_arguments={
                     "silero_vad_params_file": silero_vad_params_file,
+                    "silero_vad_use_cuda": silero_vad_use_cuda,
                     "silero_vad_enabled": silero_vad_enabled,
                 }.items(),
             ),
