@@ -25,6 +25,7 @@ import os
 from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
+from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 
@@ -37,6 +38,11 @@ def generate_launch_description():
         default=os.path.join(config_dir, "silero_vad.yaml"),
     )
 
+    silero_vad_enabled = LaunchConfiguration(
+        "silero_vad_enabled",
+        default="False",
+    )
+
     return LaunchDescription(
         [
             Node(
@@ -44,7 +50,10 @@ def generate_launch_description():
                 executable="silero_vad_node",
                 name="silero_vad_node",
                 namespace="whisper",
-                parameters=[silero_vad_params_file],
+                parameters=[
+                    silero_vad_params_file,
+                    {"enabled": ParameterValue(silero_vad_enabled, value_type=bool)},
+                ],
                 remappings=[("audio", "/audio/in")],
             ),
         ]

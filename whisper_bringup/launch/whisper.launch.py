@@ -41,6 +41,12 @@ def generate_launch_description():
         description="Whether to launch stream or server node",
     )
 
+    silero_vad_enabled_cmd = DeclareLaunchArgument(
+        "silero_vad_enabled",
+        default_value=PythonExpression([LaunchConfiguration("stream")]),
+        description="Whether to enable SileroVAD on startup (defaults to 'stream')",
+    )
+
     whisper_params_file = LaunchConfiguration(
         "whisper_params_file",
         default=os.path.join(config_dir, "whisper.yaml"),
@@ -51,6 +57,8 @@ def generate_launch_description():
         default=os.path.join(config_dir, "silero_vad.yaml"),
     )
 
+    silero_vad_enabled = LaunchConfiguration("silero_vad_enabled")
+
     audio_capturer_params_file = LaunchConfiguration(
         "audio_capturer_params_file",
         default=os.path.join(config_dir, "audio_capturer.yaml"),
@@ -59,6 +67,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             stream_cmd,
+            silero_vad_enabled_cmd,
             Node(
                 package="whisper_ros",
                 executable="whisper_server_node",
@@ -87,6 +96,7 @@ def generate_launch_description():
                 ),
                 launch_arguments={
                     "silero_vad_params_file": silero_vad_params_file,
+                    "silero_vad_enabled": silero_vad_enabled,
                 }.items(),
             ),
             Node(
