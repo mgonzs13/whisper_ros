@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(whisper_onnxruntime_vendor)
 
 option(ONNX_GPU "Use GPU for inference" OFF)
+set(ONNX_GPU_CUDA_VERSION "13" CACHE STRING "CUDA major version (12 or 13) of the ONNX Runtime GPU build")
 
 set(GPU "")
 
@@ -9,7 +10,11 @@ set(GPU "")
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(ARCHITECTURE "x64")
     if(ONNX_GPU)
-        set(GPU "-gpu")
+        if(ONNX_GPU_CUDA_VERSION STREQUAL "12")
+            set(GPU "-gpu_cuda12")
+        else()
+            set(GPU "-gpu_cuda13")
+        endif()
     endif()
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     set(ARCHITECTURE "aarch64")
@@ -18,7 +23,7 @@ else()
 endif()
 
 # Set variables for the package
-set(ONNXRUNTIME_VERSION "1.20.0")  # Specify the desired ONNX Runtime version
+set(ONNXRUNTIME_VERSION "1.30.0")  # Specify the desired ONNX Runtime version
 set(ONNXRUNTIME_URL "https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-${ARCHITECTURE}${GPU}-${ONNXRUNTIME_VERSION}.tgz")
 
 # ROS 2 package configuration
