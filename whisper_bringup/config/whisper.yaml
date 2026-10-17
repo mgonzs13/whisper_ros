@@ -3,8 +3,8 @@
   ros__parameters:
     # Model parameters
     model:
-      repo: "ggerganov/whisper.cpp"
-      filename: "ggml-large-v3-turbo-q5_0.bin"
+      repo: "unileon-robotics/thewhisper-large-v3-turbo-GGML"
+      filename: "ggml-model-q4_0.bin"
       path: ""
       openvino_encode_device: "CPU"
 
