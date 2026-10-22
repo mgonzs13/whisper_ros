@@ -53,30 +53,15 @@ def generate_launch_description():
         description="Whether to use CUDA for SileroVAD",
     )
 
+    whisper_params_file = LaunchConfiguration(
+        "whisper_params_file",
+        default=os.path.join(config_dir, "whisper.yaml"),
+    )
     whisper_params_file_cmd = DeclareLaunchArgument(
         "whisper_params_file",
         default_value=os.path.join(config_dir, "whisper.yaml"),
         description="Path to the Whisper node parameters file "
         "(e.g. config/whisper_ventuno.yaml for the Arduino VENTUNO Q)",
-    )
-
-    whisper_params_file = LaunchConfiguration(
-        "whisper_params_file",
-        default=os.path.join(config_dir, "whisper.yaml"),
-    )
-
-    silero_vad_params_file = LaunchConfiguration(
-        "silero_vad_params_file",
-        default=os.path.join(config_dir, "silero_vad.yaml"),
-    )
-
-    silero_vad_enabled = LaunchConfiguration("silero_vad_enabled")
-
-    silero_vad_use_cuda = LaunchConfiguration("silero_vad_use_cuda")
-
-    audio_capturer_params_file = LaunchConfiguration(
-        "audio_capturer_params_file",
-        default=os.path.join(config_dir, "audio_capturer.yaml"),
     )
 
     return LaunchDescription(
@@ -112,9 +97,12 @@ def generate_launch_description():
                     )
                 ),
                 launch_arguments={
-                    "silero_vad_params_file": silero_vad_params_file,
-                    "silero_vad_use_cuda": silero_vad_use_cuda,
-                    "silero_vad_enabled": silero_vad_enabled,
+                    "silero_vad_params_file": LaunchConfiguration(
+                        "silero_vad_params_file",
+                        default=os.path.join(config_dir, "silero_vad.yaml"),
+                    ),
+                    "silero_vad_use_cuda": LaunchConfiguration("silero_vad_use_cuda"),
+                    "silero_vad_enabled": LaunchConfiguration("silero_vad_enabled"),
                 }.items(),
             ),
             Node(
@@ -122,7 +110,12 @@ def generate_launch_description():
                 executable="audio_capturer_node",
                 name="capturer_node",
                 namespace="audio",
-                parameters=[audio_capturer_params_file],
+                parameters=[
+                    LaunchConfiguration(
+                        "audio_capturer_params_file",
+                        default=os.path.join(config_dir, "audio_capturer.yaml"),
+                    )
+                ],
                 remappings=[("audio", "in")],
                 condition=IfCondition(
                     PythonExpression(
