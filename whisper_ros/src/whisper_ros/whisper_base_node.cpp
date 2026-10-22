@@ -22,6 +22,8 @@
 
 #include "whisper.h"
 
+#include <cstdlib>
+
 #include "whisper_ros/whisper_base_node.hpp"
 #include "whisper_utils/model_download.hpp"
 
@@ -123,6 +125,7 @@ WhisperBaseNode::WhisperBaseNode()
                                         });
   this->declare_parameters<int32_t>("gpu", {
                                                {"device", 0},
+                                               {"hexagon_mm_select", -1},
                                            });
 
   // DTW token timestamps parameters
@@ -230,6 +233,7 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("gpu.flash_attn", this->cparams.flash_attn);
   this->get_parameter("gpu.enabled", this->cparams.use_gpu);
   this->get_parameter("gpu.device", this->cparams.gpu_device);
+  this->get_parameter("gpu.hexagon_mm_select", this->hexagon_mm_select);
 
   // dtw params
   this->get_parameter("dtw.n_top", this->cparams.dtw_n_top);
@@ -309,10 +313,26 @@ WhisperBaseNode::on_activate(const rclcpp_lifecycle::State &) {
 
   RCLCPP_INFO(this->get_logger(), "[%s] Activating...", this->get_name());
 
+  // The Hexagon backend reads GGML_HEXAGON_MM_SELECT when it is loaded, which
+  // happens while the whisper context is created below. Set it here so the
+  // parameter takes effect without exporting anything in the shell.
+  if (this->hexagon_mm_select >= 0) {
+    std::string mm_select = std::to_string(this->hexagon_mm_select);
+    ::setenv("GGML_HEXAGON_MM_SELECT", mm_select.c_str(), 1);
+    RCLCPP_INFO(this->get_logger(), "GGML_HEXAGON_MM_SELECT=%s",
+                mm_select.c_str());
+  }
+
   // create whisper
-  this->whisper = std::make_shared<Whisper>(
-      this->model, this->openvino_encode_device, this->n_processors,
-      this->cparams, this->wparams);
+  try {
+    this->whisper = std::make_shared<Whisper>(
+        this->model, this->openvino_encode_device, this->n_processors,
+        this->cparams, this->wparams);
+  } catch (const std::exception &e) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to create Whisper: %s", e.what());
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
+        CallbackReturn::FAILURE;
+  }
 
   this->activate_ros_interfaces();
 

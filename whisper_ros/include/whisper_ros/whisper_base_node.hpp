@@ -141,6 +141,9 @@ private:
   /// @brief Number of processors to use.
   int n_processors;
 
+  /// @brief Hexagon matmul selection: -1 keep environment, 0 CPU, 1 HVX, 2 HMX.
+  int hexagon_mm_select = -1;
+
   /// @brief Whisper context parameters.
   struct whisper_context_params cparams = whisper_context_default_params();
 

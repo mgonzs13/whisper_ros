@@ -53,6 +53,13 @@ def generate_launch_description():
         description="Whether to use CUDA for SileroVAD",
     )
 
+    whisper_params_file_cmd = DeclareLaunchArgument(
+        "whisper_params_file",
+        default_value=os.path.join(config_dir, "whisper.yaml"),
+        description="Path to the Whisper node parameters file "
+        "(e.g. config/whisper_ventuno.yaml for the Arduino VENTUNO Q)",
+    )
+
     whisper_params_file = LaunchConfiguration(
         "whisper_params_file",
         default=os.path.join(config_dir, "whisper.yaml"),
@@ -77,6 +84,7 @@ def generate_launch_description():
             stream_cmd,
             silero_vad_enabled_cmd,
             silero_vad_use_cuda_cmd,
+            whisper_params_file_cmd,
             Node(
                 package="whisper_ros",
                 executable="whisper_server_node",

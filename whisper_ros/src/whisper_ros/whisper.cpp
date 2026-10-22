@@ -45,6 +45,7 @@ Whisper::Whisper(const std::string &model,
 
   if (this->ctx == nullptr) {
     WHISPER_LOG_ERROR("Failed to initialize whisper context\n");
+    throw std::runtime_error("Failed to initialize whisper context");
   }
 
   if (!whisper_is_multilingual(this->ctx)) {

@@ -1,0 +1,118 @@
+# Whisper node parameters for the Arduino VENTUNO Q (aarch64).
+#
+# The node is built with both whisper.cpp accelerator backends:
+#   - Adreno GPU via OpenCL
+#   - Hexagon NPU (HTP) via the Qualcomm Hexagon SDK
+#
+# whisper.cpp offloads the model to a single device. Pick it with gpu.device,
+# using the device indexes printed at startup:
+#
+#   whisper_backend_init_gpu: device 0: GPUOpenCL (type: 1)
+#   whisper_backend_init_gpu: device 1: HTP0 (type: 1)
+#
+#   0 -> Adreno GPU (OpenCL)
+#   1 -> Hexagon NPU (HTP0)  [default below]
+#
+# For the NPU, export the FastRPC search paths before launching so the runtime
+# can find libwhisper-htp-vNN.so (see cross/ventuno_q/README.md):
+#
+#   export ADSP_LIBRARY_PATH=<workspace>/install/lib
+#   export CDSP_LIBRARY_PATH=<workspace>/install/lib
+#
+# Model/backend notes:
+#   Default model: F16 (`ggml-model.bin`). F16 is the highest-precision variant
+#   and the NPU's HMX unit runs its matmuls; the 11 s JFK sample transcribes in
+#   ~2.6 s (the HTP session is ~1.62 GB, still below the ~3 GiB mapping limit).
+#
+#   The NPU only runs MUL_MAT for F16/F32 and the "repack" quant types
+#   (Q4_0/Q4_1/Q5_K/Q8_0/...). Q5_0/Q5_1 are not repack types, so their
+#   matmuls fall back to the CPU automatically (correct, but slower: ~40 s).
+#   For the Q4_0/Q8_0 variants of this model the NPU's HMX kernel aborts
+#   (dsp-rsp INTERNAL-ERROR) and the HVX path returns garbage with ggml 0.27,
+#   so those need gpu.hexagon_mm_select: 0 (CPU matmuls, ~36 s).
+#
+#   gpu.hexagon_mm_select maps to GGML_HEXAGON_MM_SELECT (set before the context
+#   is created):
+#     -1 -> leave the environment variable untouched
+#      0 -> CPU matmuls
+#      1 -> HVX only
+#      2 -> HMX -> HVX -> CPU (default; required for F16)
+#
+# OpenCL runs the small models fine. With ggml-large-v3-turbo on this board the
+# Adreno driver kills the process as soon as transcription starts, so use the
+# NPU for the large models.
+#
+# Run it with:
+#   ros2 launch whisper_bringup whisper.launch.py \
+#     whisper_params_file:=$(ros2 pkg prefix whisper_bringup)/share/whisper_bringup/config/whisper_ventuno.yaml
+/whisper/whisper_node:
+  ros__parameters:
+    # Model parameters
+    model:
+      repo: "unileon-robotics/thewhisper-large-v3-turbo-GGML"
+      filename: "ggml-model.bin"
+      path: ""
+      openvino_encode_device: "CPU"
+
+    # Sampling parameters
+    sampling:
+      strategy: "beam_search"
+      greedy_best_of: 5
+      beam_search_beam_size: 5
+      beam_search_patience: -1.0
+
+    # Transcription parameters
+    transcription:
+      n_threads: 8
+      n_max_text_ctx: 16384
+      n_processors: 1
+      offset_ms: 0
+      duration_ms: 0
+      audio_ctx: 0
+      language: "en"
+      detect_language: false
+      translate: false
+      no_context: true
+      no_timestamps: false
+      single_segment: false
+      initial_prompt: ""
+      carry_initial_prompt: false
+      suppress_regex: ""
+      suppress_blank: true
+      suppress_nst: false
+
+    # Token timestamps parameters
+    token_timestamps:
+      enabled: false
+      thold_pt: 0.01
+      thold_ptsum: 0.01
+      max_len: 0
+      split_on_word: false
+      max_tokens: 0
+
+    # Decoding / fallback parameters
+    decoding:
+      temperature: 0.0
+      max_initial_ts: 1.0
+      length_penalty: -1.0
+      temperature_inc: 0.2
+      entropy_thold: 2.4
+      logprob_thold: -1.0
+      no_speech_thold: 0.6
+
+    # Speaker diarization parameters
+    diarization:
+      tdrz_enable: false
+
+    # GPU / backend parameters
+    gpu:
+      enabled: true
+      flash_attn: true
+      device: 1 # 0 = Adreno (OpenCL), 1 = Hexagon NPU (HTP0)
+      hexagon_mm_select: 2 # F16/HMX (see file header)
+
+    # DTW token timestamps parameters
+    dtw:
+      token_timestamps: false
+      n_top: -1
+      aheads: "none"

@@ -11,7 +11,16 @@ find_package(ament_cmake REQUIRED)
 FetchContent_Declare(
   whisper
   GIT_REPOSITORY https://github.com/ggerganov/whisper.cpp.git
-  GIT_TAG        v1.9.5
+  # master (2026-10-19) = whisper.cpp v1.9.5 + ggml 0.27. The Hexagon backend in
+  # ggml 0.26 mis-handles this model's HMX matmuls (wrong logits) and rejects
+  # the flash-attention KV cache copies, so stay on master until a v1.9.6 tag
+  # with ggml 0.27 is released.
+  GIT_TAG        231638a0717b7822784297e5980965ffcec05810
+  # VENTUNO Q (aarch64): unique Hexagon skel names (whisper_ros and llama_ros
+  # share install/lib and ADSP_LIBRARY_PATH) and a lazy OpenCL context init.
+  PATCH_COMMAND  ${CMAKE_COMMAND}
+                 -DWHISPER_SOURCE_DIR=<SOURCE_DIR>
+                 -P ${CMAKE_CURRENT_SOURCE_DIR}/patch-whisper-for-ventuno.cmake
 )
 
 set(WHISPER_BUILD_IS_DEV OFF CACHE BOOL "whisper: dev build" FORCE)

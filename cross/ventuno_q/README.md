@@ -116,12 +116,19 @@ Notes:
 - Drop `-DGGML_OPENCL=ON` if the board has no Adreno OpenCL ICD (check with `clinfo` on the
   board); drop `-DBUILD_TESTING=OFF` to build and cross-run tests through QEMU.
 - The backends land in `install/lib` as `libwhisper_ggml_hexagon.so` and
-  `libwhisper_ggml_opencl.so`, plus the HTP skels (`libggml-htp-v73.so`, `v75`, `v79`, `v81`).
-- Add `-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS` to speed up F16/F32 CPU inference; BLAS is
-  not used for quantized models (the default `ggml-large-v3-turbo-q5_0.bin` included).
+  `libwhisper_ggml_opencl.so`, plus the HTP skels. `whisper_cpp_vendor` renames the skels to
+  `libwhisper-htp-v73.so`, `v75`, `v79`, `v81` and patches the backend to request that name.
+  llama_ros' `libggml-htp-*` skels use a different ggml version and cannot be shared; the unique
+  names let both stacks be deployed into the same `install/lib` and `ADSP_LIBRARY_PATH`.
+- `whisper_cpp_vendor` also patches ggml-opencl (whisper.cpp allocates the model before
+  initializing the backends, which made the OpenCL buffer type dereference a null context).
+- Add `-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS` to speed up F16/F32 CPU inference; with
+  the default F16 model on the NPU the matmuls run on HMX, so BLAS is not used.
 - `dependencies.repos` packages are not fetched by the build; import them on the host as
-  above. whisper.cpp v1.9.5, huggingface-hub-cpp and the aarch64 ONNX Runtime tarball are
-  downloaded by CMake during the build, so the container needs network access.
+  above. whisper.cpp (pinned to the master commit with ggml 0.27 — v1.9.5 ships ggml 0.26,
+  whose Hexagon backend mis-handles this model), huggingface-hub-cpp and the aarch64 ONNX
+  Runtime tarball are downloaded by CMake during the build, so the container needs network
+  access.
 
 To rebuild a single package while iterating:
 
@@ -148,22 +155,26 @@ source ~/ros2_ws/install/setup.bash
 export LD_LIBRARY_PATH=$HOME/ros2_ws/install/lib:$LD_LIBRARY_PATH
 export ADSP_LIBRARY_PATH=$HOME/ros2_ws/install/lib
 export CDSP_LIBRARY_PATH=$HOME/ros2_ws/install/lib
-ros2 launch whisper_bringup whisper.launch.py
+ros2 launch whisper_bringup whisper.launch.py \
+  whisper_params_file:=$(ros2 pkg prefix whisper_bringup)/share/whisper_bringup/config/whisper_ventuno.yaml
 ```
 
-Pass `stream:=True` to run the streaming node instead of the action server. The Whisper model
-(`ggml-large-v3-turbo-q5_0.bin` by default, see `whisper_bringup/config/whisper.yaml`) is
-downloaded from Hugging Face on first run.
+Pass `stream:=True` to run the streaming node instead of the action server. `whisper_ventuno.yaml`
+enables the accelerator and selects the Hexagon NPU; `whisper.yaml` is the generic CPU config.
+The Whisper model (`unileon-robotics/thewhisper-large-v3-turbo-GGML` /
+`ggml-model.bin`, F16, by default) is downloaded from Hugging Face on
+first run.
 
 Expected log lines:
 
 ```
 ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1
-ggml-hex: Hexagon Arch version vXX
-whisper_init_with_params_no_state: use gpu    = 1
-whisper_backend_init_gpu: device 0: <Adreno device> (type: 2)
-whisper_backend_init_gpu: device 1: HTP0 (type: 2)
-whisper_backend_init_gpu: using <selected device> backend
+ggml-hex: Hexagon Arch version v75, DMA64 ...
+whisper_backend_init_gpu: device 0: GPUOpenCL (type: 1)
+whisper_backend_init_gpu: found GPU device 0: GPUOpenCL (type: 1, cnt: 0)
+whisper_backend_init_gpu: device 1: HTP0 (type: 1)
+whisper_backend_init_gpu: found GPU device 1: HTP0 (type: 1, cnt: 1)
+whisper_backend_init_gpu: using HTP0 backend
 ```
 
 ## Selecting the accelerator
@@ -172,7 +183,7 @@ whisper.cpp offloads the whole model to a single accelerator: `gpu.device` (defa
 index of the GPU-type device to use, as enumerated in the `device N:` startup log lines.
 Unsupported operators fall back to the CPU automatically. With both backends built, OpenCL is
 registered before Hexagon, so the Adreno GPU is `device 0` and the NPU (`HTP0`) is `device 1`;
-confirm with the log. Select the NPU in `whisper_bringup/config/whisper.yaml`:
+confirm with the log. `whisper_bringup/config/whisper_ventuno.yaml` selects the NPU:
 
 ```yaml
 /whisper/whisper_node:
@@ -181,11 +192,39 @@ confirm with the log. Select the NPU in `whisper_bringup/config/whisper.yaml`:
       enabled: true
       flash_attn: true
       device: 1 # Hexagon NPU (HTP0); 0 = Adreno (OpenCL)
+      hexagon_mm_select: 2 # -1 = leave env, 0 = CPU, 1 = HVX, 2 = HMX
 ```
 
 `gpu.flash_attn` only applies to the accelerator path. There is no layer split in whisper.cpp:
 the model is placed on the selected device in one piece, so a single HTP session is enough for
 all Whisper models.
+
+## Verified behaviour (VENTUNO Q)
+
+| `gpu.device` | model                                                   | result                                                           |
+| ------------ | ------------------------------------------------------- | ---------------------------------------------------------------- |
+| `1` (HTP0)   | `ggml-model.bin` (F16), `hexagon_mm_select: 2`          | **correct transcript, ~2.6 s** for the 11 s JFK sample           |
+| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 0`           | correct transcript, ~35.6 s                                      |
+| `1` (HTP0)   | `ggml-large-v3-turbo-q5_0.bin`, `hexagon_mm_select: -1` | correct transcript, ~40 s                                        |
+| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 2` (HMX)     | aborts with `dsp-rsp INTERNAL-ERROR`                             |
+| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 1` (HVX)     | runs, but returns garbage text                                   |
+| `1` (HTP0)   | `ggml-tiny-q8_0.bin`, `hexagon_mm_select: 0`            | correct, ~3.5 s                                                  |
+| `0` (OpenCL) | `ggml-tiny-q8_0.bin`                                    | correct, ~15 s                                                   |
+| `0` (OpenCL) | `ggml-large-v3-turbo-q5_0.bin`                          | process SIGKILLed by the Adreno driver when transcription starts |
+
+F16 is both the most precise and the fastest variant because its matmuls are the ones that
+run reliably on **HMX**. The Q4_0/Q8_0 weights are repacked into HTP tiles, but with ggml 0.27
+the HMX tiled kernel aborts on this model's final logits matmul (N = 51865, not 32-aligned)
+and the HVX tiled kernel returns wrong values, so those models must use CPU matmuls. Q5_0/Q5_1
+are not repack types, so the NPU does not claim their matmuls at all and they also run on the
+CPU; the rest of the graph still runs on the NPU.
+
+`gpu.hexagon_mm_select` is exported as `GGML_HEXAGON_MM_SELECT` just before the whisper context
+is created: `-1` leaves the environment untouched, `0` = CPU matmuls, `1` = HVX, `2` = HMX →
+HVX → CPU.
+
+With `whisper_bringup/config/whisper_ventuno.yaml` the node activates in under a minute
+(1.62 GB HTP session) and transcribes the JFK sample correctly.
 
 ## Troubleshooting
 
@@ -206,12 +245,23 @@ all Whisper models.
   `-DPREBUILT_LIB_DIR=linux_aarch64` arguments from step 3.
 - `ggml-hex: ... failed to open session : ... error 0x80000406` (`AEE_EUNABLETOLOAD`): the
   FastRPC stub cannot find the HTP skel. Export `ADSP_LIBRARY_PATH` (and
-  `CDSP_LIBRARY_PATH`) as in step 5 and make sure `libggml-htp-vNN.so` was deployed.
+  `CDSP_LIBRARY_PATH`) as in step 5 and make sure `libwhisper-htp-vNN.so` was deployed.
+- `ggml-hex: ... failed to start session: 0x8000040e`: FastRPC loaded the wrong skel, normally
+  llama_ros' `libggml-htp-vNN.so` because an older whisper build installed it under the shared
+  name. Rebuild `whisper_cpp_vendor` with the current patch and redeploy `install/lib`; only
+  `libwhisper-htp-*` should be installed by whisper_ros.
 - `ggml-hex: ... buffer mapping failed : ... error 0x00000001` / `fastrpc_mmap failed`: the
   model does not fit in a session's mappable address space (~3 GiB). Use a smaller model or
   quantization — whisper.cpp cannot layer-split across sessions.
 - `GGML_ASSERT(M % 4 == 0) failed` while transcribing on OpenCL: ggml-opencl rejects some
   quantized tensor shapes (known upstream issue). Switch `model.filename` to an F16 model
   (e.g. `ggml-medium.bin`) or select the NPU/CPU.
+- `[ros2run]: Killed` right after `Transcribing` with `gpu.device: 0`: the Adreno driver kills
+  the process for the large turbo model. This is not a system OOM (RAM usage stays around
+  2.5 GB). Use the NPU (`gpu.device: 1`) for the large model, or a small model on OpenCL.
+- `dspcall : dsp-rsp INTERNAL-ERROR` in a decoder `MUL_MAT`, or repeated nonsense tokens:
+  a Q8_0/Q4_0 model whose matmuls the HTP backend claims. Set
+  `gpu.hexagon_mm_select: 0` in the parameters file (the node exports
+  `GGML_HEXAGON_MM_SELECT` before the backend is loaded) to run matmuls on the CPU.
 - Only Hexagon architectures v73, v75, v79 and v81 have prebuilt skels. If the runtime reports
   a different architecture, the NPU is not supported by this backend.
