@@ -53,12 +53,15 @@ sudo rsync -aHAX --numeric-ids --info=progress2 --rsync-path="sudo -n rsync" \
   arduino@ventuno:/opt/ros ~/sysroot/opt/
 
 # /etc/alternatives is not copied, so update-alternatives symlinks (libblas.so.3,
-# liblapack.so.3) would dangle and break linking; copy the resolved files instead:
+# liblapack.so.3, libopenblas.so.0) would dangle and break linking; copy the
+# resolved files instead. On a board where BLAS/LAPACK come from OpenBLAS,
+# libblas.so.3/liblapack.so.3 are thin wrappers that need libopenblas.so.0:
 sudo rsync -aLR --numeric-ids --rsync-path="sudo -n rsync" \
   arduino@ventuno:/usr/lib/aarch64-linux-gnu/libblas.so.3 \
   arduino@ventuno:/usr/lib/aarch64-linux-gnu/liblapack.so.3 \
   arduino@ventuno:/usr/lib/aarch64-linux-gnu/libblas.so \
   arduino@ventuno:/usr/lib/aarch64-linux-gnu/liblapack.so \
+  arduino@ventuno:/usr/lib/aarch64-linux-gnu/libopenblas.so.0 \
   ~/sysroot/
 ```
 
