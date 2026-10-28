@@ -32,6 +32,7 @@
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "std_srvs/srv/set_bool.hpp"
 
+#include "silero_vad/frame_buffer.hpp"
 #include "silero_vad/vad_iterator.hpp"
 
 namespace silero_vad {
@@ -85,6 +86,8 @@ protected:
   std::vector<float> data;
   /// Pointer to the VAD iterator.
   std::unique_ptr<VadIterator> vad_iterator;
+  /// Buffer that turns arbitrary input chunks into VAD-sized frames.
+  std::unique_ptr<FrameBuffer> frame_buffer;
 
 private:
   /// Buffer for storing previous audio data.
@@ -116,6 +119,11 @@ private:
   /// @param msg The audio message containing the audio data.
   void
   audio_callback(const audio_common_msgs::msg::AudioStamped::SharedPtr msg);
+
+  /// @brief Runs the VAD state machine for one complete input frame.
+  /// @param frame Frame with exactly frame_size_ms of audio.
+  /// @param rate Sample rate of the frame.
+  void process_frame(const std::vector<float> &frame, int rate);
 
   /// @brief Callback for enabling/disabling the VAD.
   /// @param request The service request containing the desired enable state.

@@ -70,6 +70,7 @@ target_link_libraries(whisper_server_node
 add_executable(silero_vad_node
   src/silero_vad_main.cpp
   src/silero_vad/silero_vad_node.cpp
+  src/silero_vad/frame_buffer.cpp
   src/silero_vad/vad_iterator.cpp
   src/silero_vad/timestamp.cpp
   src/whisper_utils/logs.cpp
@@ -113,6 +114,12 @@ install(TARGETS
 
 # TEST
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_frame_buffer
+    test/test_frame_buffer.cpp
+    src/silero_vad/frame_buffer.cpp)
+  target_include_directories(test_frame_buffer PRIVATE include)
+
   find_package(ament_cmake_clang_format REQUIRED)
   ament_clang_format(CONFIG_FILE .clang-format)
 endif()

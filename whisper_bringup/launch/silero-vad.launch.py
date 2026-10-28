@@ -24,6 +24,7 @@
 import os
 from launch_ros.actions import Node
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
@@ -48,8 +49,18 @@ def generate_launch_description():
         default="False",
     )
 
+    vad_audio_topic = LaunchConfiguration(
+        "vad_audio_topic",
+        default="/audio/in",
+    )
+
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                "vad_audio_topic",
+                default_value="/audio/in",
+                description="Audio topic consumed by Silero VAD",
+            ),
             Node(
                 package="whisper_ros",
                 executable="silero_vad_node",
@@ -62,7 +73,7 @@ def generate_launch_description():
                         "use_cuda": ParameterValue(silero_vad_use_cuda, value_type=bool),
                     },
                 ],
-                remappings=[("audio", "/audio/in")],
+                remappings=[("audio", vad_audio_topic)],
             ),
         ]
     )

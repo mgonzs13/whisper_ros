@@ -57,7 +57,7 @@ SileroVadNode::on_configure(const rclcpp_lifecycle::State &) {
   RCLCPP_INFO(this->get_logger(), "[%s] Configuring...", this->get_name());
 
   // get params
-  bool enabled;
+  bool enabled = false;
   this->get_parameter("enabled", enabled);
   this->enabled.store(enabled);
 
@@ -91,6 +91,25 @@ SileroVadNode::on_activate(const rclcpp_lifecycle::State &) {
 
   RCLCPP_INFO(this->get_logger(), "[%s] Activating...", this->get_name());
 
+  bool enabled = false;
+  this->get_parameter("enabled", enabled);
+  this->enabled.store(enabled);
+
+  const int frame_size_samples =
+      this->sample_rate_ * this->frame_size_ms_ / 1000;
+  if (this->sample_rate_ <= 0 || this->frame_size_ms_ <= 0 ||
+      frame_size_samples <= 0) {
+    RCLCPP_ERROR(this->get_logger(),
+                 "Invalid VAD frame configuration (sample_rate=%d, "
+                 "frame_size_ms=%d)",
+                 this->sample_rate_, this->frame_size_ms_);
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::
+        CallbackReturn::FAILURE;
+  }
+
+  this->frame_buffer = std::make_unique<FrameBuffer>(
+      static_cast<std::size_t>(frame_size_samples));
+
   // create silero-vad
   this->vad_iterator = std::make_unique<VadIterator>(
       this->model_path_, this->sample_rate_, this->frame_size_ms_,
@@ -120,6 +139,12 @@ SileroVadNode::on_deactivate(const rclcpp_lifecycle::State &) {
 
   // reset silero
   this->vad_iterator->reset_states();
+  this->enabled.store(false);
+  this->frame_buffer.reset();
+  this->data.clear();
+  this->prev_data.clear();
+  this->listening.store(false);
+  this->publish.store(false);
 
   this->publisher_.reset();
   this->publisher_ = nullptr;
@@ -163,6 +188,26 @@ void SileroVadNode::audio_callback(
     return;
   }
 
+  if (!this->frame_buffer) {
+    RCLCPP_ERROR_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
+                          "VAD frame buffer is not initialized");
+    return;
+  }
+
+  if (msg->audio.info.rate != this->sample_rate_) {
+    RCLCPP_ERROR_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
+                          "Unsupported sample rate %d (expected %d)",
+                          msg->audio.info.rate, this->sample_rate_);
+    return;
+  }
+
+  if (msg->audio.info.channels != 1) {
+    RCLCPP_ERROR_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
+                          "Unsupported channel count %d (expected 1)",
+                          msg->audio.info.channels);
+    return;
+  }
+
   std::vector<float> data;
 
   try {
@@ -198,8 +243,17 @@ void SileroVadNode::audio_callback(
     return;
   }
 
+  this->frame_buffer->push(data);
+
+  std::vector<float> frame;
+  while (this->frame_buffer->pop(frame)) {
+    this->process_frame(frame, msg->audio.info.rate);
+  }
+}
+
+void SileroVadNode::process_frame(const std::vector<float> &frame, int rate) {
   // Predict if speech starts or ends
-  auto timestamp = this->vad_iterator->predict(data);
+  auto timestamp = this->vad_iterator->predict(frame);
 
   // Check if speech starts
   if (timestamp.start != -1 && timestamp.end == -1 && !this->listening) {
@@ -215,7 +269,7 @@ void SileroVadNode::audio_callback(
 
   // Add audio if listening
   if (this->listening) {
-    this->data.insert(this->data.end(), data.begin(), data.end());
+    this->data.insert(this->data.end(), frame.begin(), frame.end());
   }
 
   // Check if publish
@@ -223,10 +277,8 @@ void SileroVadNode::audio_callback(
     auto vad_msg = std_msgs::msg::Float32MultiArray();
     vad_msg.data.assign(this->data.begin(), this->data.end());
 
-    if (msg->audio.info.rate > 0 &&
-        static_cast<float>(vad_msg.data.size()) / msg->audio.info.rate < 1.0f) {
-      size_t target_size = static_cast<size_t>(msg->audio.info.chunk) +
-                           static_cast<size_t>(msg->audio.info.rate);
+    if (rate > 0 && static_cast<float>(vad_msg.data.size()) / rate < 1.0f) {
+      size_t target_size = static_cast<size_t>(rate) + frame.size();
       if (target_size > this->data.size()) {
         size_t pad_size = target_size - this->data.size();
         vad_msg.data.insert(vad_msg.data.end(), pad_size, 0.0f);
@@ -246,7 +298,7 @@ void SileroVadNode::audio_callback(
     this->publish.store(true);
   }
 
-  this->prev_data = data;
+  this->prev_data = frame;
 }
 
 void SileroVadNode::enable_cb(
@@ -262,6 +314,9 @@ void SileroVadNode::enable_cb(
     this->publish.store(false);
     this->data.clear();
     this->prev_data.clear();
+    if (this->frame_buffer) {
+      this->frame_buffer->clear();
+    }
     this->vad_iterator->reset_states();
 
   } else if (request->data && this->enabled) {
@@ -274,6 +329,9 @@ void SileroVadNode::enable_cb(
     this->publish.store(false);
     this->data.clear();
     this->prev_data.clear();
+    if (this->frame_buffer) {
+      this->frame_buffer->clear();
+    }
 
   } else if (!request->data && !this->enabled) {
     response->message = "SileroVAD already disabled";
