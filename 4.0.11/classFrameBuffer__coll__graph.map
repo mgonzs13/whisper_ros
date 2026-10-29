@@ -1,0 +1,5 @@
+<map id="FrameBuffer" name="FrameBuffer">
+<area shape="rect" id="Node000001" title="Accumulates arbitrary&#45;length audio chunks into fixed&#45;size frames." alt="" coords="22,102,115,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,132,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,46,71,101,66,101,66,46"/>
+</map>

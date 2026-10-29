@@ -1,0 +1,22 @@
+<map id="whisper_ros::WhisperServerNode" name="whisper_ros::WhisperServerNode">
+<area shape="rect" id="Node000001" title="A node providing speech&#45;to&#45;text (STT) functionality using Whisper and Silero VAD." alt="" coords="1508,112,1722,138"/>
+<area shape="rect" id="Node000002" href="$classwhisper__ros_1_1WhisperBaseNode.html" title="A ROS 2 Lifecycle Node for interfacing with the Whisper speech&#45;to&#45;text system." alt="" coords="1134,63,1339,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1355,81,1485,96,1556,109,1555,114,1484,101,1354,86"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="834,5,1033,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1036,32,1111,45,1179,59,1178,65,1109,50,1035,37"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="239,133,316,159"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="332,154,422,170,541,184,675,191,743,189,809,183,902,166,972,146,1042,123,1133,97,1177,86,1178,92,1135,102,1044,128,974,151,903,172,810,188,743,194,675,196,541,189,421,175,331,160"/>
+<area shape="rect" id="Node000007" href="$classwhisper__ros_1_1Whisper.html" title="Class for performing speech&#45;to&#45;text transcription using the Whisper model." alt="" coords="532,41,677,67"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="330,129,508,80,558,65,560,70,509,85,332,135"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,126,129,166"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="144,144,239,144,239,149,144,149"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="852,55,1014,96"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="1030,73,1134,73,1134,78,1030,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="692,49,810,53,852,58,852,63,809,58,692,54"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="178,34,377,74"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="392,52,532,52,532,57,392,57"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1196,112,1277,138"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="1293,122,1508,122,1508,128,1293,128"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1144,162,1329,202"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="1344,169,1484,151,1557,136,1558,141,1485,156,1345,175"/>
+</map>
