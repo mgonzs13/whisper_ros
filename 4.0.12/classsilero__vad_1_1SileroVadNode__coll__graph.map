@@ -1,0 +1,32 @@
+<map id="silero_vad::SileroVadNode" name="silero_vad::SileroVadNode">
+<area shape="rect" id="Node000001" title="A ROS 2 lifecycle node for performing voice activity detection." alt="" coords="938,163,1112,188"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="609,5,808,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="824,15,871,25,916,43,952,69,982,102,1019,161,1015,164,977,106,948,73,913,47,870,30,823,21"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="644,85,774,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="790,104,851,114,915,129,996,160,995,165,914,134,850,120,789,110"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="22,176,149,202"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,170,189,165,393,149,552,148,914,165,938,166,938,171,914,170,551,153,393,155,190,170,157,175"/>
+<area shape="rect" id="Node000006" href="$classsilero__vad_1_1VadIterator.html" title="Implements a Voice Activity Detection (VAD) iterator using an ONNX model." alt="" coords="342,273,492,299"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="131,206,190,229,360,270,359,275,189,234,129,211"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="635,194,782,234"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="798,202,914,188,937,185,938,190,915,193,798,207"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="486,267,634,230,635,235,488,272"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="18,266,153,306"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="169,284,342,284,342,289,169,289"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,348,166,374"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="180,362,248,354,282,345,313,333,325,321,337,308,360,297,362,302,340,312,329,325,316,337,283,350,249,359,181,367"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="23,414,148,454"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="163,445,201,446,241,442,280,431,313,410,322,399,326,388,325,363,324,336,328,322,337,308,351,297,354,302,341,312,332,324,329,336,331,362,331,388,327,402,316,414,282,436,242,447,202,451,163,450"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="14,479,157,504"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="153,505,194,509,236,507,278,497,296,488,313,475,327,457,332,437,331,417,326,396,319,353,323,331,337,308,350,297,353,302,341,312,328,333,325,353,332,395,336,417,337,438,332,459,317,479,299,492,279,502,237,513,193,514,152,510"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="635,275,782,316"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="794,268,913,225,997,187,999,191,915,230,796,273"/>
+<area shape="rect" id="Node000012" href="$classsilero__vad_1_1FrameBuffer.html" title="Accumulates arbitrary&#45;length audio chunks into fixed&#45;size frames." alt="" coords="339,323,496,348"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="511,320,634,303,635,308,512,325"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="22,531,149,556"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="142,558,184,566,230,568,274,560,295,551,313,538,328,518,334,498,332,476,327,454,322,431,319,407,323,383,337,359,352,347,355,351,341,363,328,385,324,407,327,430,333,453,338,476,339,498,333,521,317,542,297,555,276,565,230,573,183,571,141,563"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="670,372,747,398"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="759,363,834,330,913,283,970,232,1011,187,1015,191,974,236,916,287,836,334,761,368"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="356,372,479,413"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="494,388,669,383,670,389,495,393"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="whisper_ros/include/whisper_utils/model_download.hpp" name="whisper_ros/include/whisper_utils/model_download.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="225,5,365,61"/>
+<area shape="rect" id="Node000002" href="$silero__vad__node_8cpp.html" title=" " alt="" coords="5,109,177,150"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,70,135,111,133,106,221,65"/>
+<area shape="rect" id="Node000003" href="$whisper__base__node_8cpp.html" title=" " alt="" coords="200,109,390,150"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="298,77,298,109,292,109,292,77"/>
+<area shape="rect" id="Node000004" href="$download__model_8cpp.html" title=" " alt="" coords="414,109,592,150"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="370,65,461,106,458,111,368,70"/>
+</map>
