@@ -44,11 +44,6 @@ def generate_launch_description():
         default="False",
     )
 
-    silero_vad_use_cuda = LaunchConfiguration(
-        "silero_vad_use_cuda",
-        default="False",
-    )
-
     vad_audio_topic = LaunchConfiguration(
         "vad_audio_topic",
         default="/audio/in",
@@ -70,7 +65,6 @@ def generate_launch_description():
                     silero_vad_params_file,
                     {
                         "enabled": ParameterValue(silero_vad_enabled, value_type=bool),
-                        "use_cuda": ParameterValue(silero_vad_use_cuda, value_type=bool),
                     },
                 ],
                 remappings=[("audio", vad_audio_topic)],

@@ -32,7 +32,7 @@ This repository provides a set of ROS 2 packages to integrate [whisper.cpp](http
 
 ## Installation
 
-To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). To run SileroVAD with ONNX and CUDA, you must install the [cuDNN](https://developer.nvidia.com/cudnn-downloads).
+To run whisper_ros with CUDA, first, you must install the [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit). SileroVAD runs on CPU using the [onnxruntime_vendor](https://github.com/ros-controls/onnxruntime_vendor) package from the ROS distro.
 
 ```shell
 cd ~/ros2_ws/src
@@ -40,7 +40,7 @@ git clone https://github.com/mgonzs13/whisper_ros.git
 cd ~/ros2_ws
 vcs import src < src/whisper_ros/dependencies.repos
 rosdep install --from-paths src --ignore-src -r -y
-colcon build --cmake-args -DGGML_CUDA=ON -DONNX_GPU=ON # To use CUDA on Whisper and on Silero, respectively
+colcon build --cmake-args -DGGML_CUDA=ON # To use CUDA on Whisper
 ```
 
 To accelerate CPU-only inference, whisper_ros can be compiled with BLAS support using [OpenBLAS](https://www.openblas.net/) (install it first, e.g., `sudo apt install libopenblas-dev`):
@@ -70,8 +70,6 @@ Run Silero for VAD and Whisper for STT:
 ```shell
 ros2 launch whisper_bringup whisper.launch.py
 ```
-
-Add the parameter `silero_vad_use_cuda:=True` to use Silero with CUDA.
 
 ## Params
 

@@ -15,7 +15,7 @@ find_package(std_srvs REQUIRED)
 find_package(audio_common_msgs REQUIRED)
 find_package(whisper_msgs REQUIRED)
 find_package(whisper_cpp_vendor REQUIRED)
-find_package(whisper_onnxruntime_vendor REQUIRED)
+find_package(onnxruntime_vendor REQUIRED)
 find_package(whisper_hfhub_vendor REQUIRED)
 find_package(Threads REQUIRED)
 find_library(PORTAUDIO_LIB portaudio REQUIRED)
@@ -80,21 +80,16 @@ target_link_libraries(silero_vad_node
   ${PORTAUDIO_LIB}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
-  whisper_onnxruntime_vendor::whisper_onnxruntime  # Use the exported interface target
+  onnxruntime::onnxruntime
   whisper_hfhub_vendor::hfhub
   ${std_msgs_TARGETS}
   ${std_srvs_TARGETS}
   ${audio_common_msgs_TARGETS}
 )
 
-set_target_properties(silero_vad_node PROPERTIES
-  INSTALL_RPATH "$ORIGIN/../whisper_onnxruntime_vendor:$ORIGIN/../../../whisper_onnxruntime_vendor/lib/whisper_onnxruntime_vendor"
-  LINK_FLAGS "-Wl,--disable-new-dtags"
-)
-
 # Export dependencies
 ament_export_dependencies(whisper_cpp_vendor)
-ament_export_dependencies(whisper_onnxruntime_vendor)
+ament_export_dependencies(onnxruntime_vendor)
 
 # Install
 install(TARGETS

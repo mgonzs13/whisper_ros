@@ -10,4 +10,3 @@
     threshold: 0.5
     min_silence_ms: 128
     speech_pad_ms: 32
-    use_cuda: false

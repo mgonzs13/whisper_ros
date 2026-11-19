@@ -47,12 +47,6 @@ def generate_launch_description():
         description="Whether to enable SileroVAD on startup (defaults to 'stream')",
     )
 
-    silero_vad_use_cuda_cmd = DeclareLaunchArgument(
-        "silero_vad_use_cuda",
-        default_value="False",
-        description="Whether to use CUDA for SileroVAD",
-    )
-
     vad_audio_topic_cmd = DeclareLaunchArgument(
         "vad_audio_topic",
         default_value="/audio/in",
@@ -74,7 +68,6 @@ def generate_launch_description():
         [
             stream_cmd,
             silero_vad_enabled_cmd,
-            silero_vad_use_cuda_cmd,
             vad_audio_topic_cmd,
             whisper_params_file_cmd,
             Node(
@@ -108,7 +101,6 @@ def generate_launch_description():
                         "silero_vad_params_file",
                         default=os.path.join(config_dir, "silero_vad.yaml"),
                     ),
-                    "silero_vad_use_cuda": LaunchConfiguration("silero_vad_use_cuda"),
                     "silero_vad_enabled": LaunchConfiguration("silero_vad_enabled"),
                     "vad_audio_topic": LaunchConfiguration("vad_audio_topic"),
                 }.items(),
