@@ -2,7 +2,7 @@
 
 Builds the full `whisper_ros` workspace on an x86_64 Linux host for an aarch64 target, e.g. the Arduino VENTUNO Q (Qualcomm Dragonwing IQ8 / QCS8275), with whisper.cpp's Hexagon (NPU) and Adreno (OpenCL) backends enabled.
 
-- `Dockerfile` — Ubuntu 24.04 cross-build image with clang for `aarch64-linux-gnu`, `qemu-user-static`, ROS 2 Jazzy host tools and the Hexagon SDK 6.6.0.0 (from `ghcr.io/snapdragon-toolchain/arm64-linux:v0.7`).
+- `Dockerfile` — Ubuntu 24.04 cross-build image with clang for `aarch64-linux-gnu`, `qemu-user-static`, ROS 2 Jazzy host tools and the Hexagon SDK 6.7.0.0 (from `ghcr.io/snapdragon-toolchain/arm64-linux:v0.8`).
 - `toolchain-aarch64.cmake` — compiles against the board snapshot at `/sysroot` and searches `/workspace/install` as an extra prefix, which is why `--merge-install` is mandatory.
 
 ## Prerequisites
@@ -89,8 +89,8 @@ colcon build --merge-install --cmake-args \
   -DBUILD_TESTING=OFF \
   -DGGML_OPENCL=ON \
   -DGGML_HEXAGON=ON \
-  -DHEXAGON_SDK_ROOT=/opt/hexagon/6.6.0.0 \
-  -DHEXAGON_TOOLS_ROOT=/opt/hexagon/6.6.0.0/tools/HEXAGON_Tools/19.0.07 \
+  -DHEXAGON_SDK_ROOT=/opt/hexagon/6.7.0.0 \
+  -DHEXAGON_TOOLS_ROOT=/opt/hexagon/6.7.0.0/tools/HEXAGON_Tools/21.0.04 \
   -DPREBUILT_LIB_DIR=linux_aarch64
 ```
 
@@ -195,4 +195,5 @@ With `whisper_bringup/config/whisper_ventuno.yaml` the node activates in under a
 - `GGML_ASSERT(M % 4 == 0) failed` while transcribing on OpenCL: ggml-opencl rejects some quantized tensor shapes (known upstream issue). Switch `model.filename` to an F16 model (e.g. `ggml-medium.bin`) or select the NPU/CPU.
 - `[ros2run]: Killed` right after `Transcribing` with `gpu.device: 0`: the Adreno driver kills the process for the large turbo model. This is not a system OOM (RAM usage stays around 2.5 GB). Use the NPU (`gpu.device: 1`) for the large model, or a small model on OpenCL.
 - `dspcall : dsp-rsp INTERNAL-ERROR` in a decoder `MUL_MAT`, or repeated nonsense tokens: a Q8_0/Q4_0 model whose matmuls the HTP backend claims. Set `gpu.hexagon_mm_select: 0` in the parameters file (the node exports `GGML_HEXAGON_MM_SELECT` before the backend is loaded) to run matmuls on the CPU.
-- Only Hexagon architectures v73, v75, v79 and v81 have prebuilt skels. If the runtime reports a different architecture, the NPU is not supported by this backend.
+- `The CMAKE_C_COMPILER: /opt/hexagon/6.6.0.0/... is not a full path to an existing compiler tool` after upgrading the image: `build/whisper_cpp_vendor` still contains the HTP sub-build caches from the old SDK. Remove that build directory and rebuild so the skels are regenerated with SDK 6.7.0.0.
+- Only Hexagon architectures v73, v75, v79 and v81 have prebuilt skels in whisper.cpp's vendored ggml. If the runtime reports a different architecture, the NPU is not supported by this backend.
