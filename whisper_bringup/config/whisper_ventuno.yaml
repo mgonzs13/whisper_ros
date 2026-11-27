@@ -28,8 +28,9 @@
 #   (Q4_0/Q4_1/Q5_K/Q8_0/...). Q5_0/Q5_1 are not repack types, so their
 #   matmuls fall back to the CPU automatically (correct, but slower: ~40 s).
 #   For the Q4_0/Q8_0 variants of this model the NPU's HMX kernel aborts
-#   (dsp-rsp INTERNAL-ERROR) and the HVX path returns garbage with ggml 0.27,
-#   so those need gpu.hexagon_mm_select: 0 (CPU matmuls, ~36 s).
+#   (dsp-rsp INTERNAL-ERROR) and the HVX path returned garbage with the
+#   previous ggml 0.27 build, so those need gpu.hexagon_mm_select: 0
+#   (CPU matmuls, ~36 s).
 #
 #   gpu.hexagon_mm_select maps to GGML_HEXAGON_MM_SELECT (set before the context
 #   is created):
@@ -80,6 +81,7 @@
       suppress_regex: ""
       suppress_blank: true
       suppress_nst: false
+      debug_mode: false
 
     # Token timestamps parameters
     token_timestamps:

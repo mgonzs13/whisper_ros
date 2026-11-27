@@ -34,6 +34,7 @@
       suppress_regex: ""
       suppress_blank: true
       suppress_nst: false
+      debug_mode: false
 
     # Token timestamps parameters
     token_timestamps:
@@ -63,6 +64,7 @@
       enabled: true
       flash_attn: true
       device: 0
+      hexagon_mm_select: -1
 
     # DTW token timestamps parameters
     dtw:

@@ -84,6 +84,7 @@ WhisperBaseNode::WhisperBaseNode()
                                      {"suppress_blank", true},
                                      {"suppress_nst", false},
                                      {"carry_initial_prompt", false},
+                                     {"debug_mode", false},
                                  });
 
   // Token timestamps parameters
@@ -195,6 +196,8 @@ WhisperBaseNode::on_configure(const rclcpp_lifecycle::State &) {
   this->get_parameter("transcription.initial_prompt", this->initial_prompt);
   this->get_parameter("transcription.carry_initial_prompt",
                       this->wparams.carry_initial_prompt);
+
+  this->get_parameter("transcription.debug_mode", this->wparams.debug_mode);
 
   // token timestamps params
   this->get_parameter("token_timestamps.enabled",

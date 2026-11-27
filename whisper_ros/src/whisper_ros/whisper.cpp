@@ -64,6 +64,8 @@ Whisper::Whisper(const std::string &model,
   whisper_ctx_init_openvino_encoder(this->ctx, nullptr,
                                     openvino_encode_device.c_str(), nullptr);
 
+  WHISPER_LOG_INFO("whisper.cpp version: %s", whisper_version());
+
   WHISPER_LOG_INFO("Processing, %d threads, lang = %s, task = %s",
                    this->wparams.n_threads, this->wparams.language,
                    this->wparams.translate ? "translate" : "transcribe");

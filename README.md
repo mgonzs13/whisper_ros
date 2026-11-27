@@ -111,6 +111,7 @@ ros2 launch whisper_bringup whisper.launch.py
 | `transcription.suppress_regex`       | `string` | `""`    | A regular expression that matches tokens to suppress (empty = disabled).              |
 | `transcription.suppress_blank`       | `bool`   | `true`  | Suppress blank outputs at the beginning of the sampling.                              |
 | `transcription.suppress_nst`         | `bool`   | `false` | Suppress non-speech tokens.                                                           |
+| `transcription.debug_mode`           | `bool`   | `false` | Enable extra debug information from whisper.cpp (e.g., dump the log-mel spectrogram). |
 
 ### Token Timestamps Parameters (`token_timestamps.*`)
 
@@ -143,11 +144,12 @@ ros2 launch whisper_bringup whisper.launch.py
 
 ### GPU / Backend Parameters (`gpu.*`)
 
-| Param            | Type    | Default | Description               |
-| ---------------- | ------- | ------- | ------------------------- |
-| `gpu.enabled`    | `bool`  | `false` | Enable GPU inference.     |
-| `gpu.flash_attn` | `bool`  | `true`  | Enable flash attention.   |
-| `gpu.device`     | `int32` | `0`     | CUDA device index to use. |
+| Param                   | Type    | Default | Description                                                                                  |
+| ----------------------- | ------- | ------- | -------------------------------------------------------------------------------------------- |
+| `gpu.enabled`           | `bool`  | `true`  | Enable GPU inference.                                                                        |
+| `gpu.flash_attn`        | `bool`  | `true`  | Enable flash attention.                                                                      |
+| `gpu.device`            | `int32` | `0`     | CUDA device index, or accelerator index when multiple backends are available.                |
+| `gpu.hexagon_mm_select` | `int32` | `-1`    | Hexagon matmul selection: `-1` keep environment, `0` CPU, `1` HVX, `2` HMX (VENTUNO Q only). |
 
 ### DTW Token Timestamps Parameters (`dtw.*`)
 

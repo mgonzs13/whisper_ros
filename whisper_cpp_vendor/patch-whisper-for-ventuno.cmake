@@ -1,6 +1,6 @@
 # Patches applied to the whisper.cpp sources on the Arduino VENTUNO Q build.
 #
-# Two upstream issues prevent whisper.cpp from using the accelerators:
+# Three upstream issues prevent whisper.cpp from using the accelerators:
 #
 # 1. Hexagon: whisper.cpp builds its HTP skels as `libggml-htp-vNN.so`, the
 #    same name llama.cpp uses. llama_ros and whisper_ros are deployed into the
@@ -74,9 +74,11 @@ ventuno_replace("${hexagon_cmake}"
   "list(APPEND HTP_SKELS \${CMAKE_CURRENT_BINARY_DIR}/libggml-htp-\${V}.so)"
   "list(APPEND HTP_SKELS \${CMAKE_CURRENT_BINARY_DIR}/libwhisper-htp-\${V}.so)")
 
+# v1.9.6 builds the URI from a prefix plus the library name, so patch the
+# quoted library name instead of the old hard-coded file:// URL.
 ventuno_replace("${hexagon_cpp}"
-  "file:///libggml-htp-v%u.so?htp_iface_skel_handle_invoke&_modver=1.0"
-  "file:///libwhisper-htp-v%u.so?htp_iface_skel_handle_invoke&_modver=1.0")
+  "\"libggml-htp-v\""
+  "\"libwhisper-htp-v\"")
 
 # --- OpenCL: create the backend context before reading it -------------------
 set(opencl_cpp
