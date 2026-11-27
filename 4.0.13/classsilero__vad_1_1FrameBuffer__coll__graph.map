@@ -1,0 +1,5 @@
+<map id="silero_vad::FrameBuffer" name="silero_vad::FrameBuffer">
+<area shape="rect" id="Node000001" title="Accumulates arbitrary&#45;length audio chunks into fixed&#45;size frames." alt="" coords="5,102,163,128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="21,5,147,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,87,101,81,101,81,46"/>
+</map>
