@@ -162,25 +162,6 @@ whisper.cpp offloads the whole model to a single accelerator: `gpu.device` (defa
 
 `gpu.flash_attn` only applies to the accelerator path. There is no layer split in whisper.cpp: the model is placed on the selected device in one piece, so a single HTP session is enough for all Whisper models.
 
-## Verified behaviour (VENTUNO Q)
-
-| `gpu.device` | model                                                   | result                                                           |
-| ------------ | ------------------------------------------------------- | ---------------------------------------------------------------- |
-| `1` (HTP0)   | `ggml-model.bin` (F16), `hexagon_mm_select: 2`          | **correct transcript, ~2.6 s** for the 11 s JFK sample           |
-| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 0`           | correct transcript, ~35.6 s                                      |
-| `1` (HTP0)   | `ggml-large-v3-turbo-q5_0.bin`, `hexagon_mm_select: -1` | correct transcript, ~40 s                                        |
-| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 2` (HMX)     | aborts with `dsp-rsp INTERNAL-ERROR`                             |
-| `1` (HTP0)   | `ggml-model-q4_0.bin`, `hexagon_mm_select: 1` (HVX)     | runs, but returns garbage text                                   |
-| `1` (HTP0)   | `ggml-tiny-q8_0.bin`, `hexagon_mm_select: 0`            | correct, ~3.5 s                                                  |
-| `0` (OpenCL) | `ggml-tiny-q8_0.bin`                                    | correct, ~15 s                                                   |
-| `0` (OpenCL) | `ggml-large-v3-turbo-q5_0.bin`                          | process SIGKILLed by the Adreno driver when transcription starts |
-
-F16 is both the most precise and the fastest variant because its matmuls are the ones that run reliably on **HMX**. The Q4_0/Q8_0 weights are repacked into HTP tiles, but with ggml 0.27 the HMX tiled kernel aborts on this model's final logits matmul (N = 51865, not 32-aligned) and the HVX tiled kernel returns wrong values, so those models must use CPU matmuls. Q5_0/Q5_1 are not repack types, so the NPU does not claim their matmuls at all and they also run on the CPU; the rest of the graph still runs on the NPU.
-
-`gpu.hexagon_mm_select` is exported as `GGML_HEXAGON_MM_SELECT` just before the whisper context is created: `-1` leaves the environment untouched, `0` = CPU matmuls, `1` = HVX, `2` = HMX → HVX → CPU.
-
-With `whisper_bringup/config/whisper_ventuno.yaml` the node activates in under a minute (1.62 GB HTP session) and transcribes the JFK sample correctly.
-
 ## Troubleshooting
 
 - `sudo: a terminal is required to read the password` during the sysroot pull: the `NOPASSWD` rule from step 1 is missing on the board.

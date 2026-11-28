@@ -20,18 +20,6 @@
 #   export CDSP_LIBRARY_PATH=<workspace>/install/lib
 #
 # Model/backend notes:
-#   Default model: F16 (`ggml-model.bin`). F16 is the highest-precision variant
-#   and the NPU's HMX unit runs its matmuls; the 11 s JFK sample transcribes in
-#   ~2.6 s (the HTP session is ~1.62 GB, still below the ~3 GiB mapping limit).
-#
-#   The NPU only runs MUL_MAT for F16/F32 and the "repack" quant types
-#   (Q4_0/Q4_1/Q5_K/Q8_0/...). Q5_0/Q5_1 are not repack types, so their
-#   matmuls fall back to the CPU automatically (correct, but slower: ~40 s).
-#   For the Q4_0/Q8_0 variants of this model the NPU's HMX kernel aborts
-#   (dsp-rsp INTERNAL-ERROR) and the HVX path returned garbage with the
-#   previous ggml 0.27 build, so those need gpu.hexagon_mm_select: 0
-#   (CPU matmuls, ~36 s).
-#
 #   gpu.hexagon_mm_select maps to GGML_HEXAGON_MM_SELECT (set before the context
 #   is created):
 #     -1 -> leave the environment variable untouched
@@ -46,12 +34,13 @@
 # Run it with:
 #   ros2 launch whisper_bringup whisper.launch.py \
 #     whisper_params_file:=$(ros2 pkg prefix whisper_bringup)/share/whisper_bringup/config/whisper_ventuno.yaml
+
 /whisper/whisper_node:
   ros__parameters:
     # Model parameters
     model:
       repo: "unileon-robotics/thewhisper-large-v3-turbo-GGML"
-      filename: "ggml-model.bin"
+      filename: "ggml-model-q4_0.bin"
       path: ""
       openvino_encode_device: "CPU"
 
